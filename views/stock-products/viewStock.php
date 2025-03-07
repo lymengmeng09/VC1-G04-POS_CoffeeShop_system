@@ -67,23 +67,5 @@
             </div>
         </div>
     </div>
-
-    <?php
-    // You could add PHP functionality here for handling form submissions, 
-    // database operations, etc.
-    
-    // Example function to update product quantity
-    function updateProductQuantity($productId, $newQuantity) {
-        // In a real application, this would update a database
-        // For this example, we're just demonstrating the PHP structure
-        return "Product $productId quantity updated to $newQuantity";
-    }
-
-    // Example function to add a new product
-    function addNewProduct($productData) {
-        // In a real application, this would insert into a database
-        return "New product added successfully";
-    }
-    ?>
 </body>
 </html>
