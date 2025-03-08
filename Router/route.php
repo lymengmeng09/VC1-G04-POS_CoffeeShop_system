@@ -9,5 +9,5 @@ require_once "Controllers/StockController.php";
 
 $route = new Router();
 $route->get("/", [WelcomeController::class, 'welcome']);
-$route->get("/products", [StockController::class, 'stock']);
+$route->get("/stock-products", [StockController::class, 'stock']);
 $route->route();
