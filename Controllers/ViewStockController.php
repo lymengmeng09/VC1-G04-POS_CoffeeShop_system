@@ -1,6 +1,6 @@
 <?php
 
-class StockController extends BaseController {
+class ViewStockController extends BaseController {
     public function stock() {
         $this->view('stock-products/viewStock');
     }
