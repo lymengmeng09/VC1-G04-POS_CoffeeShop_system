@@ -1,7 +1,7 @@
 <?php
 class Database {
     private $host = "localhost";
-    private $db_name = "stock_management";
+    private $db_name = "target_coffee_manage"; // Ensure this matches your actual database
     private $username = "root";
     private $password = "";
     public $conn;
@@ -12,9 +12,15 @@ class Database {
             $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $exception) {
-            echo "Connection error: " . $exception->getMessage();
+            die("Connection error: " . $exception->getMessage()); // Stop execution if connection fails
         }
         return $this->conn;
+    }
+
+    public function query($sql, $params = []) {
+        $stmt = $this->conn->prepare($sql); // Use $this->conn instead of $this->pdo
+        $stmt->execute($params);
+        return $stmt;
     }
 }
 ?>
