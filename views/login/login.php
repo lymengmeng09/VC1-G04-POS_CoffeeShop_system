@@ -27,7 +27,7 @@ if(isset($_SESSION["user"])){
               <div class="card-body p-md-5 mx-md-4">
 
                 <div class="text-center">
-                  <img src="images/logo.png"
+                  <img src="views/assets/images/logo.png"
                     style="width: 185px;" alt="logo">
                 </div>
 
@@ -60,7 +60,7 @@ if(isset($_SESSION["user"])){
 
               </div>
             </div>
-            <div class="col-lg-6 d-flex align-items-center gradient-custom-2" style="background-image: url(images/cofe.png);">
+            <div class="col-lg-6 d-flex align-items-center gradient-custom-2" style="background-image: url(views/assets/images/cofe.png);">
               <div class="text-white px-3 py-4 p-md-5 mx-md-4">
                 <h4 class="mb-4">We are more than just a company</h4>
                 <p class="small mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
