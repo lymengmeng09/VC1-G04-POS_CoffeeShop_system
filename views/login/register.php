@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/views/assets/css/login.css">
-    <title>Login Form</title>
+    <title>Register Form</title>
 </head>
 <body>
 
@@ -24,34 +24,39 @@
                 </div>
 
                 <form method="POST">
-                  <p class="text-center">Please login to your account</p>
+                  <p class="text-center">Create a new account</p>
 
-                  <div data-mdb-input-init class="form-outline mb-4">
-                    <label class="form-label" for="form2Example11">Email</label>
-                    <input type="text" id="form2Example11" class="form-control" name="email"
-                      placeholder="your email" />
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="name">Full Name</label>
+                    <input type="text" id="name" class="form-control" name="name"
+                      placeholder="Your full name" required />
                   </div>
 
-                  <div data-mdb-input-init class="form-outline mb-4">
-                    <label class="form-label" for="form2Example22">Password</label>
-                    <input type="password" name="password" id="form2Example22" class="form-control" placeholder="password" />
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="email">Email</label>
+                    <input type="email" id="email" class="form-control" name="email"
+                      placeholder="Your email address" required />
                   </div>
+
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" name="password" id="password" class="form-control" 
+                      placeholder="Create a password" required />
+                  </div>
+
                   <div class="text-center pt-1 mb-5 pb-1">
-                    <button data-mdb-button-init data-mdb-ripple-init class="btn text-light fa-lg gradient-custom-2 mb-3" type="submit">Log
-                      in</button><br>
-                    <a class="text-muted" href="#!">Forgot password?</a>
+                    <button class="btn text-light fa-lg gradient-custom-2 mb-3" type="submit">Register</button>
                   </div>
-                  <p class="mt-2 text-center"><a href="/login/register">Don't have an account? Register</a></p>
+                  
+                  <p class="mt-2 text-center"><a href="/login">Already have an account? Login</a></p>
                 </form>
 
               </div>
             </div>
             <div class="col-lg-6 d-flex align-items-center gradient-custom-2" style="background-image: url(views/assets/images/cofe.png);">
               <div class="text-white px-3 py-4 p-md-5 mx-md-4" style="background: #421f128d;">
-                <h4 class="mb-4">We are more than just a company</h4>
-                <p class="small mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <h4 class="mb-4">Join our Coffee Shop</h4>
+                <p class="small mb-0">Create an account to access our coffee shop management system. Manage inventory, track sales, and more with our easy-to-use platform.</p>
               </div>
             </div>
           </div>

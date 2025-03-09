@@ -17,3 +17,9 @@ $route->post("/edit-product/{id}", [ProductController::class, 'edit']); // POST:
 $route->post("/delete-product/{id}", [ProductController::class, 'delete']); // POST: handle delete
 $route->route();
 
+//login
+$route->get("/login", [LoginController::class, 'index']);
+$route->get("/login/logout", [LoginController::class, 'logout']);
+$route->get("/login/register", [LoginController::class, 'register']);
+
+$route->route();
