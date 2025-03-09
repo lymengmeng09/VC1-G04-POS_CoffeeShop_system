@@ -17,10 +17,6 @@ class Database {
         return $this->conn;
     }
 
-    public function query($sql, $params = []) {
-        $stmt = $this->conn->prepare($sql); // Use $this->conn instead of $this->pdo
-        $stmt->execute($params);
-        return $stmt;
-    }
+ 
 }
 ?>

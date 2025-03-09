@@ -2,12 +2,12 @@
 require_once "Router.php";
 require_once "Controllers/BaseController.php";
 require_once "Database/Database.php";
-require_once "Controllers/WelcomeController.php";
+require_once "Controllers/LoginController.php";
 require_once "Controllers/ViewStockController.php"; // Updated to use ProductController
 
 $route = new Router();
 ///produts-editor
-$route->get("/", [WelcomeController::class, 'welcome']);
+$route->get("/", [WelcomeController::class, 'index']);
 $route->get("/viewStock", [ProductController::class, 'index']);
 $route->get("/add-product", [ProductController::class, 'add']); // GET: show add product form
 $route->post("/add-product", [ProductController::class, 'add']); // POST: handle add submission
