@@ -92,6 +92,6 @@ class Router
         }
 
             http_response_code(404);
-            require_once 'views/errors/404.php';
+            // require_once 'views/errors/404.php';
     }
 }

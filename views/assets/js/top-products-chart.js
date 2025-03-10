@@ -1,121 +1,370 @@
-// Initialize the chart
-let topProductsChart;
-let currentChartType = 'bar'; // Default chart type
+  // Register the datalabels plugin
+  Chart.register(ChartDataLabels);
 
-function drawChart(data, chartType = currentChartType) {
-    const ctx = document.getElementById('topProductsChart').getContext('2d');
-    if (topProductsChart) {
-        topProductsChart.destroy(); // Destroy the old chart to prevent overlap
+  // Ensure DOM is fully loaded before initializing the chart
+  document.addEventListener('DOMContentLoaded', function () {
+      const ctx = document.getElementById('top-products-chart').getContext('2d');
+      if (!ctx) {
+          console.error('Canvas element with ID "top-products-chart" not found!');
+          return;
+      }
+
+      // Custom plugin for gradient fill
+      const gradientPlugin = {
+          id: 'gradientPlugin',
+          beforeDatasetsDraw(chart) {
+              const { ctx, chartArea: { top, bottom, left, right } } = chart;
+              const dataset = chart.data.datasets[0];
+              const meta = chart.getDatasetMeta(0);
+
+              meta.data.forEach((element, index) => {
+                  const gradient = ctx.createLinearGradient(left, top, right, bottom);
+                  if (index === 0) {
+                      gradient.addColorStop(0, 'rgba(34, 139, 34, 0.9)'); // Dark Green gradient start
+                      gradient.addColorStop(1, 'rgba(34, 139, 34, 0.5)'); // Dark Green gradient end
+                  } else {
+                      gradient.addColorStop(0, 'rgba(101, 67, 33, 0.9)');  // Dark Brown gradient start
+                      gradient.addColorStop(1, 'rgba(101, 67, 33, 0.5)'); // Dark Brown gradient end
+                  }
+                  element.options.backgroundColor = gradient;
+              });
+          }
+      };
+
+      // Register the custom gradient plugin
+      Chart.register(gradientPlugin);
+
+      const topProductsChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+              labels: ['Latte', 'Espresso'],
+              datasets: [{
+                  data: [30, 70],
+                  backgroundColor: [
+                      'rgba(34, 139, 34, 0.9)',  // Dark Green
+                      'rgba(101, 67, 33, 0.9)'   // Dark Brown
+                  ],
+                  borderColor: [
+                      'rgba(34, 139, 34, 1)',    // Dark Green border
+                      'rgba(101, 67, 33, 1)'     // Dark Brown border
+                  ],
+                  borderWidth: 1,
+                  hoverOffset: 10
+              }]
+          },
+          options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              cutout: '70%',
+              rotation: 0,
+              animation: {
+                  animateScale: true,
+                  animateRotate: true,
+                  duration: 1000
+              },
+              plugins: {
+                  legend: {
+                      position: 'bottom',
+                      labels: {
+                          font: {
+                              size: 12,
+                              weight: 'normal'
+                          },
+                          color: '#333',
+                          padding: 15,
+                          boxWidth: 20,
+                          boxHeight: 20
+                      }
+                  },
+                  title: {
+                      display: true,
+                      text: 'Top Selling Products Distribution',
+                      font: {
+                          size: 14,
+                          weight: 'bold',
+                          family: "'Arial', sans-serif"
+                      },
+                      color: '#333',
+                      padding: {
+                          top: 10,
+                          bottom: 20
+                      }
+                  },
+                  tooltip: {
+                      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                      titleFont: {
+                          size: 14,
+                          weight: 'bold'
+                      },
+                      bodyFont: {
+                          size: 12
+                      },
+                      padding: 10,
+                      callbacks: {
+                          label: function(tooltipItem) {
+                              const label = tooltipItem.label || '';
+                              const value = tooltipItem.raw || 0;
+                              return `${label}: ${value}% of Total Sales`;
+                          }
+                      }
+                  },
+                  datalabels: {
+                      color: '#fff',
+                      font: {
+                          size: 12,
+                          weight: 'bold',
+                          family: "'Arial', sans-serif"
+                      },
+                      formatter: (value) => {
+                          return value + '%';
+                      },
+                      textShadow: '0 0 3px rgba(0, 0, 0, 0.5)',
+                      anchor: 'center',
+                      align: 'center'
+                  }
+              },
+              elements: {
+                  arc: {
+                      borderWidth: 1,
+                      borderColor: '#fff'
+                  }
+              }
+          }
+      });
+  });
+
+
+
+
+
+
+// Register the datalabels plugin
+Chart.register(ChartDataLabels);
+
+// Ensure DOM is fully loaded before initializing the charts
+document.addEventListener('DOMContentLoaded', function () {
+    const ctxTopProducts = document.getElementById('top-products-chart').getContext('2d');
+    if (!ctxTopProducts) {
+        console.error('Canvas element with ID "top-products-chart" not found!');
+        return;
     }
-    topProductsChart = new Chart(ctx, {
-        type: chartType,
+
+    const ctxSalesReport = document.getElementById('chart-profile-visit').getContext('2d');
+    if (!ctxSalesReport) {
+        console.error('Canvas element with ID "chart-profile-visit" not found!');
+        return;
+    }
+
+    // Define sales data for Top Selling Products (update these values as needed)
+    const totalOrders = 183000; // From "Total Order" card
+    const productSales = [
+        { name: 'Latte', sales: 54900 },    // Example: 30% of 183,000
+        { name: 'Espresso', sales: 128100 } // Example: 70% of 183,000
+    ];
+
+    // Calculate percentages for Top Selling Products
+    const percentages = productSales.map(product => 
+        Math.round((product.sales / totalOrders) * 100)
+    );
+
+    // Custom plugin for gradient fill for Top Selling Products
+    const gradientPluginTopProducts = {
+        id: 'gradientPluginTopProducts',
+        beforeDatasetsDraw(chart) {
+            const { ctx, chartArea: { top, bottom, left, right } } = chart;
+            const dataset = chart.data.datasets[0];
+            const meta = chart.getDatasetMeta(0);
+
+            meta.data.forEach((element, index) => {
+                const gradient = ctx.createLinearGradient(left, top, right, bottom);
+                if (index === 0) {
+                    gradient.addColorStop(0, 'rgba(34, 139, 34, 0.9)'); // Dark Green gradient start
+                    gradient.addColorStop(1, 'rgba(34, 139, 34, 0.5)'); // Dark Green gradient end
+                } else {
+                    gradient.addColorStop(0, 'rgba(101, 67, 33, 0.9)');  // Dark Brown gradient start
+                    gradient.addColorStop(1, 'rgba(101, 67, 33, 0.5)'); // Dark Brown gradient end
+                }
+                element.options.backgroundColor = gradient;
+            });
+        }
+    };
+
+    // Register the custom gradient plugin for Top Selling Products
+    Chart.register(gradientPluginTopProducts);
+
+    // Top Selling Products Chart
+    const topProductsChart = new Chart(ctxTopProducts, {
+        type: 'doughnut',
         data: {
-            labels: data.map(item => item.product_name),
+            labels: productSales.map(product => product.name), // ['Latte', 'Espresso']
             datasets: [{
-                label: 'Total Sold',
-                data: data.map(item => item.total_sold),
+                data: percentages, // Calculated percentages [30, 70]
                 backgroundColor: [
-                    'rgba(54, 162, 235, 0.6)',
-                    'rgba(255, 99, 132, 0.6)',
-                    'rgba(75, 192, 192, 0.6)',
-                    'rgba(255, 206, 86, 0.6)',
-                    'rgba(153, 102, 255, 0.6)',
-                    'rgba(255, 159, 64, 0.6)',
-                    'rgba(201, 203, 207, 0.6)',
-                    'rgba(54, 162, 235, 0.6)',
-                    'rgba(255, 99, 132, 0.6)',
-                    'rgba(75, 192, 192, 0.6)'
+                    'rgba(34, 139, 34, 0.9)',  // Dark Green
+                    'rgba(101, 67, 33, 0.9)'   // Dark Brown
                 ],
                 borderColor: [
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
-                    'rgba(201, 203, 207, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(75, 192, 192, 1)'
+                    'rgba(34, 139, 34, 1)',    // Dark Green border
+                    'rgba(101, 67, 33, 1)'     // Dark Brown border
                 ],
+                borderWidth: 1,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            rotation: 0,
+            animation: {
+                animateScale: true,
+                animateRotate: true,
+                duration: 1000
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        font: {
+                            size: 12,
+                            weight: 'normal'
+                        },
+                        color: '#333',
+                        padding: 15,
+                        boxWidth: 20,
+                        boxHeight: 20
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Top Selling Products Distribution',
+                    font: {
+                        size: 14,
+                        weight: 'bold',
+                        family: "'Arial', sans-serif"
+                    },
+                    color: '#333',
+                    padding: {
+                        top: 10,
+                        bottom: 20
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleFont: {
+                        size: 14,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 12
+                    },
+                    padding: 10,
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            const label = tooltipItem.label || '';
+                            const value = tooltipItem.raw || 0;
+                            const sales = productSales[tooltipItem.dataIndex].sales;
+                            return `${label}: ${value}% (${sales} Cups)`;
+                        }
+                    }
+                },
+                datalabels: {
+                    color: '#fff',
+                    font: {
+                        size: 12,
+                        weight: 'bold',
+                        family: "'Arial', sans-serif"
+                    },
+                    formatter: (value) => {
+                        return value + '%';
+                    },
+                    textShadow: '0 0 3px rgba(0, 0, 0, 0.5)',
+                    anchor: 'center',
+                    align: 'center'
+                }
+            },
+            elements: {
+                arc: {
+                    borderWidth: 1,
+                    borderColor: '#fff'
+                }
+            }
+        }
+    });
+
+    // Sales Report Chart (Bar Chart with Dark Brown)
+    const salesReportChart = new Chart(ctxSalesReport, {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+            datasets: [{
+                label: 'Sales (L.E)',
+                data: [20000, 25000, 30000, 28000, 32000],
+                backgroundColor: 'rgba(101, 67, 33, 0.9)', // Dark Brown
+                borderColor: 'rgba(101, 67, 33, 1)', // Dark Brown border
                 borderWidth: 1
             }]
         },
         options: {
             responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                title: {
-                    display: true,
-                    text: 'Top Selling Products'
-                }
-            },
-            scales: chartType === 'bar' ? {
+            maintainAspectRatio: false,
+            scales: {
                 y: {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Units Sold'
+                        text: 'Sales Amount (L.E)'
                     }
                 },
                 x: {
                     title: {
                         display: true,
-                        text: 'Product Name'
+                        text: 'Months'
                     }
                 }
-            } : {}
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: {
+                            size: 12,
+                            weight: 'normal'
+                        },
+                        color: '#333'
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Monthly Sales Report',
+                    font: {
+                        size: 14,
+                        weight: 'bold',
+                        family: "'Arial', sans-serif"
+                    },
+                    color: '#333',
+                    padding: {
+                        top: 10,
+                        bottom: 20
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleFont: {
+                        size: 14,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 12
+                    },
+                    padding: 10,
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return `${tooltipItem.label}: ${tooltipItem.raw} L.E`;
+                        }
+                    }
+                }
+            }
         }
     });
-}
-
-// Function to update chart type
-function updateChartType() {
-    const chartTypeSelect = document.getElementById('chartType');
-    currentChartType = chartTypeSelect.value;
-    drawChart(currentData, currentChartType);
-}
-
-// Initial chart draw
-let currentData = INITIAL_DATA; // Placeholder for initial data
-drawChart(currentData);
-
-// Function to fetch updated data and redraw chart
-function updateTopProducts() {
-    const chartLoading = document.getElementById('chartLoading');
-    chartLoading.style.display = 'block'; // Show loading message
-    fetch('?action=dashboard', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json'
-        },
-        body: new FormData(document.querySelector('form'))
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        chartLoading.style.display = 'none'; // Hide loading message
-        if (data && data.length > 0) {
-            currentData = data;
-            drawChart(currentData, currentChartType);
-        } else {
-            document.querySelector('.chart-container').innerHTML = '<p class="text-muted">No sales data available.</p>';
-        }
-    })
-    .catch(error => {
-        chartLoading.style.display = 'none'; // Hide loading message
-        console.error('Error updating chart:', error);
-        document.querySelector('.chart-container').innerHTML = '<p class="text-muted">Failed to update chart. Please try again later.</p>';
-    });
-}
-
-// Update every 60 seconds
-setInterval(updateTopProducts, 60000);
-
-
+});
