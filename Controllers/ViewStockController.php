@@ -51,5 +51,26 @@ class ProductController {
         }
         include "views/stock-products/delete-product.php";
     }
+
+
+
+
+    // New method for top-selling products dashboard
+    public function dashboard() {
+        // Check if a time range filter is submitted via form
+        $startDate = isset($_POST['start_date']) ? $_POST['start_date'] : null;
+        $endDate = isset($_POST['end_date']) ? $_POST['end_date'] : null;
+
+        // Fetch top-selling products from the model
+        $topProducts = $this->productModel->getTopSellingProducts($startDate, $endDate);
+
+        // Load the dashboard view and pass the data
+        include "views/dashboard.php"; // Use your existing dashboard.php
+    }
+
+
 }
+
+
+
 ?>
