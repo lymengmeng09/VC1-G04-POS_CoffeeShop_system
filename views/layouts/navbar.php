@@ -1,3 +1,4 @@
+
 <div id="app">
         <div id="sidebar" class="active">
             <div class="sidebar-wrapper active">
@@ -16,7 +17,7 @@
                         <li class="sidebar-title"></li>
 
                         <li class="sidebar-item active ">
-                            <a href="index.html" class='sidebar-link'>
+                            <a href="/" class='sidebar-link'>
                                 <i class="bi bi-grid-fill"></i>
                                 <span>Dashboard</span>
                             </a>
@@ -57,12 +58,20 @@
                         <li class="sidebar-item  ">
                             <a href="table-datatable.html" class='sidebar-link'>
                                 <i class="bi bi-file-earmark-spreadsheet-fill"></i>
-                                <span>Sitting</span>
+                                <span>Setting</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="/login/logout" class='sidebar-link'>
+                                <i class="bi bi-file-earmark-spreadsheet-fill"></i>
+                                <span>Logout</span>
                             </a>
                         </li>
                     </ul>
                 </div>
                 <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
+                
             </div>
         </div>
         <div id="main">
