@@ -24,7 +24,7 @@
                         </li>
 
                         <li class="sidebar-item">
-                            <a href="/viewStock" class='sidebar-link'>
+                            <a href="/views/products/list-product.php" class='sidebar-link'>
                                 <i class="bi bi-stack"></i>
                                 <span>Products</span>
                             </a>
