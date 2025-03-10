@@ -24,8 +24,8 @@
                         </li>
 
                         <li class="sidebar-item">
-                            <a href="/viewStock" class='sidebar-link'>
-                                <i class="bi bi-stack"></i>
+                            <a href="/viewStock" class='sidebar-link ' >
+                                <i class="bi bi-shop"></i>
                                 <span>Products</span>
                             </a>
                             </li>
@@ -37,7 +37,7 @@
                                 </li>
                         <li class="sidebar-item">
                             <a href="#" class='sidebar-link'>
-                                <i class="bi bi-grid-1x2-fill"></i>
+                                <i class="bi bi-cart-fill"></i>
                                 <span>Stock</span>
                             </a>
                             </li>
@@ -50,21 +50,21 @@
                         </li>
                         <li class="sidebar-item  ">
                             <a href="table.html" class='sidebar-link'>
-                                <i class="bi bi-grid-1x2-fill"></i>
+                                <i class="bi bi-people-fill"></i>
                                 <span>Users</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item  ">
                             <a href="table-datatable.html" class='sidebar-link'>
-                                <i class="bi bi-file-earmark-spreadsheet-fill"></i>
+                                <i class="bi bi-gear-fill"></i>
                                 <span>Setting</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item  ">
                             <a href="/login/logout" class='sidebar-link'>
-                                <i class="bi bi-file-earmark-spreadsheet-fill"></i>
+                                <i class="bi bi-box-arrow-in-left"></i>
                                 <span>Logout</span>
                             </a>
                         </li>
