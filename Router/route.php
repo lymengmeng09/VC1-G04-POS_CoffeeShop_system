@@ -29,3 +29,10 @@ $route->post("/dashboard", [ProductController::class, 'dashboard']); // Add POST
 
 $route->route();
 
+//login
+$route->get("/login", [LoginController::class, 'index']);
+$route->get("/login/logout", [LoginController::class, 'logout']);
+$route->get("/login/register", [LoginController::class, 'register']);
+
+
+$route->route();
