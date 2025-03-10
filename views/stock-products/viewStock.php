@@ -6,17 +6,17 @@ if(isset($_SESSION["user"])){
 }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/views/assets/css/view.css">
-  <!-- Optional: Bootstrap CSS if needed for button styling -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <title>Stock Products</title>
   <style>
-    /* Optional custom styles */
     .product-card {
       margin-bottom: 20px;
       padding: 10px;
@@ -59,10 +59,6 @@ if(isset($_SESSION["user"])){
               <h3 class="origin"><?= htmlspecialchars($product['name']) ?></h3>
               <p class="price">Price: $<?= number_format($product['price'], 2) ?></p>
               <p class="quantity">Quantity: <?= $product['quantity'] ?></p>
-              <a href="/edit-product/<?= $product['id'] ?>" class="btn btn-warning">Edit</a>
-              <form method="POST" action="/delete-product/<?= $product['id'] ?>" class="d-inline">
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
-              </form>
             </div>
           </div>
         <?php endforeach; ?>

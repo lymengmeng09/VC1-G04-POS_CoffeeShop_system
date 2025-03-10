@@ -29,7 +29,7 @@
 
             <div class="mb-3">
                 <label class="form-label">Image URL:</label>
-                <input type="text" class="form-control" name="image" value="<?= $product['image'] ?>">
+                <input type="file" class="form-control" name="image" value="<?= $product['image'] ?>">
             </div>
 
             <div class="d-flex justify-content-between">

@@ -29,7 +29,7 @@
 
             <div class="mb-3">
                 <label class="form-label">Image URL:</label>
-                <input type="text" class="form-control" name="image">
+                <input type="file" class="form-control" name="image">
             </div>
 
             <button type="submit" class="btn btn-success w-100">Add Product</button>
