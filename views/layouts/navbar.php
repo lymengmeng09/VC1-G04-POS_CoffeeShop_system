@@ -56,9 +56,9 @@
                         </li>
 
                         <li class="sidebar-item  ">
-                            <a href="table-datatable.html" class='sidebar-link'>
+                            <a href="" class='sidebar-link'>
                                 <i class="bi bi-file-earmark-spreadsheet-fill"></i>
-                                <span>Sitting</span>
+                                <span>Setting</span>
                             </a>
                         </li>
 
