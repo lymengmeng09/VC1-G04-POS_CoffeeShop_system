@@ -56,7 +56,7 @@
                         </li>
 
                         <li class="sidebar-item  ">
-                            <a href="table-datatable.html" class='sidebar-link'>
+                            <a href="/setting" class='sidebar-link'>
                                 <i class="bi bi-gear-fill"></i>
                                 <span>Setting</span>
                             </a>
