@@ -8,13 +8,13 @@ class BaseController
      * @param string $view The view file to render.
      * @param array $data The data to pass to the view.
      */
-    protected function view($view, $data = [])
+    protected function view($view, $data = [], $layout = 'layout')
     {
         extract($data);
         ob_start();
         require "views/{$view}.php";
         $content = ob_get_clean();
-        require "views/layout.php";
+        require "views/{$layout}.php";
     }
 
     /**
