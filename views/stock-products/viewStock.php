@@ -23,6 +23,64 @@
     .custom-file-input {
       overflow: hidden;
     }
+    .user-icons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.notification-icon,
+.user-icon {
+    position: relative;
+    background: #f8f9fa; /* Light background */
+    border-radius: 50%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
+    height: 45px;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.notification-icon i,
+.user-icon i {
+    font-size: 20px;
+    color: #333;
+    transition: color 0.3s ease-in-out;
+}
+
+/* Hover effect */
+.notification-icon:hover,
+.user-icon:hover {
+    background: #007bff; /* Change to primary color */
+}
+
+.notification-icon:hover i,
+.user-icon:hover i {
+    color: white;
+}
+
+/* Notification badge */
+.notification-icon::after {
+    content: '3'; /* Example notification count */
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
   </style>
 </head>
 <body>
@@ -40,9 +98,17 @@
     <div class="header d-flex justify-content-between align-items-center my-4">
       <h1>Stock Products</h1>
       <div class="user-icons">
-        <div class="user-icon">G</div>
-        <div class="user-icon avatar">JD</div>
-      </div>
+    <div class="notification-icon">
+        <i class="fa fa-bell"></i> <!-- Notification Icon -->
+    </div>
+    <div class="user-icon avatar">
+        <i class="fa fa-user-circle"></i> <!-- User Avatar Icon -->
+    </div>
+</div>
+
+<!-- Add Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
     </div>
 
     <div class="search-section mb-4">
