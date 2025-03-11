@@ -1,0 +1,107 @@
+
+/* Settings Styles */
+.settings-container {
+    padding: 20px;
+}
+
+.settings-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #666;
+    border-radius: 4px 4px 0 0;
+}
+
+.tab.active {
+    background-color: #777;
+    color: white;
+}
+
+.settings-form {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-group.half {
+    flex: 1;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.input-hint {
+    display: block;
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+}
+
+.address-input {
+    height: 80px;
+    resize: none;
+}
+
+.time-input-container {
+    position: relative;
+}
+
+.time-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+}
+
+.form-actions {
+    margin-top: 20px;
+}
+
+.save-button {
+    background-color: #777;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.save-button:hover {
+    background-color: #666;
+}
