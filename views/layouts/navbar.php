@@ -1,4 +1,4 @@
-
+ 
 <div id="app">
         <div id="sidebar" class="active">
             <div class="sidebar-wrapper active">
@@ -43,7 +43,7 @@
                             </li>
 
                         <li class="sidebar-item  ">
-                            <a href="form-layout.html" class='sidebar-link'>
+                            <a href="f " class='sidebar-link'>
                                 <i class="bi bi-file-earmark-medical-fill"></i>
                                 <span>Analytics</span>
                             </a>
@@ -56,7 +56,7 @@
                         </li>
 
                         <li class="sidebar-item  ">
-                            <a href="table-datatable.html" class='sidebar-link'>
+                            <a href="/setting" class='sidebar-link'>
                                 <i class="bi bi-gear-fill"></i>
                                 <span>Setting</span>
                             </a>
@@ -80,3 +80,18 @@
                     <i class="bi bi-justify fs-3"></i>
                 </a>
             </header>
+            <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const sidebarItems = document.querySelectorAll(".sidebar-item");
+
+        sidebarItems.forEach((item) => {
+            item.addEventListener("click", function () {
+                // Remove "active" class from all sidebar items
+                sidebarItems.forEach((el) => el.classList.remove("active"));
+
+                // Add "active" class to the clicked item
+                this.classList.add("active");
+            });
+        });
+    });
+</script>

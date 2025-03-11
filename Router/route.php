@@ -6,6 +6,10 @@ require_once "Database/Database.php";
 require_once "Controllers/LoginController.php";
 require_once "Controllers/ListUserController.php";
 require_once "Controllers/ViewStockController.php";
+require_once "Controllers/SettingController.php";
+
+
+
 
 $route = new Router();
 
@@ -29,4 +33,8 @@ $route->get("/login/register", [LoginController::class, 'register']);
 // User routes
 $route->get("/list-users", [ListUserController::class, 'index']);
 
-$route->route();    
+
+//setting
+$route->get("/setting", [SettingController::class, 'index']);
+
+$route->route();
