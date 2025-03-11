@@ -24,7 +24,7 @@
                         </li>
 
                         <li class="sidebar-item">
-                            <a href="/viewStock" class='sidebar-link ' >
+                            <a href="#" class='sidebar-link ' >
                                 <i class="bi bi-shop"></i>
                                 <span>Products</span>
                             </a>
@@ -36,7 +36,7 @@
                            
                                 </li>
                         <li class="sidebar-item">
-                            <a href="#" class='sidebar-link'>
+                            <a href="/viewStock" class='sidebar-link'>
                                 <i class="bi bi-cart-fill"></i>
                                 <span>Stock</span>
                             </a>
