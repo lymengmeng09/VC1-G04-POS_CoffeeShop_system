@@ -33,7 +33,9 @@ $route->get("/login/register", [LoginController::class, 'register']);
 
 // User routes
 $route->get("/list-users", [ListUserController::class, 'index']);
-
+$route->get("/users/create", [ListUserController::class, 'create']);
+$route->post("/users/store", [ListUserController::class, 'store']);
+$route->delete("/users/delete", [ListUserController::class, 'destroy']);
 
 //setting
 $route->get("/setting", [SettingController::class, 'index']);

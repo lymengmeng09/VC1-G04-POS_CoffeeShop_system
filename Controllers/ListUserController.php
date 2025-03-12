@@ -24,4 +24,27 @@ class ListUserController extends BaseController {
         $users = $this->model->getUsers();
         $this->view('users/lists', ['users'=>$users]);
     }
+    function create(){
+        $roles=$this->model->getRoles();
+        $this->view('users/create', ['roles'=>$roles]);
+    }
+
+    
+    function store(){
+        if ($_SERVER['REQUEST_METHOD']=='POST'){
+            $data = [
+                'name' => $_POST['name'],
+                'email' => $_POST['email'],
+                'password'=>$_POST['password'],
+                'role_id'=>$_POST['role_id']
+            ];
+            $this->model->createUser($data);
+            $this->redirect('/list-users');
+        }
+    }
+    function destroy(){
+        $id = $_GET['id']; // Get ID from URL
+        $this->model->deleteUser($id);
+        $this->redirect('/list-users');
+    }
 }
