@@ -7,6 +7,8 @@ require_once "Controllers/LoginController.php";
 require_once "Controllers/ListUserController.php";
 require_once "Controllers/ViewStockController.php";
 require_once "Controllers/SettingController.php";
+require_once "Controllers/UserRoleController.php";
+require_once "Controllers/NotificationController.php";
 
 
 
@@ -36,5 +38,7 @@ $route->get("/list-users", [ListUserController::class, 'index']);
 
 //setting
 $route->get("/setting", [SettingController::class, 'index']);
+$route->get("/setting/UserRole", [UserRoleController::class, 'index']);
+$route->get("/setting/notification", [NotificationController::class, 'notification']);
 
 $route->route();

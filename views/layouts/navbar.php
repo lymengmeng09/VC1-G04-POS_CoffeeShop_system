@@ -56,7 +56,7 @@
                         </li>
 
                         <li class="sidebar-item  ">
-                            <a href="/setting" class='sidebar-link'>
+                            <a href="/setting/UserRole" class='sidebar-link'>
                                 <i class="bi bi-gear-fill"></i>
                                 <span>Setting</span>
                             </a>

@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings - Target Coffee</title>
-    <link rel="stylesheet" href="viwes/assets/css/settings.css">
+    <link rel="stylesheet" href="/views/assets/css/setting.css">
 </head>
+ 
 <body>
     <div class="container">
         <header>
