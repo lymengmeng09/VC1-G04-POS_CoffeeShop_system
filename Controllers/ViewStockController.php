@@ -1,5 +1,5 @@
 <?php
-require "Models/ProductModels.php";
+require "Models/StockModels.php";
 
 class ProductController {
     private $productModel;
@@ -19,57 +19,77 @@ class ProductController {
 
     public function add() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $name = $_POST["name"];
-            $price = $_POST["price"];
-            $quantity = $_POST["quantity"];
-
-            // Handle file upload
-            $image = null;
-            if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
-                $imageName = basename($_FILES['image']['name']);
-                $targetFile = $this->uploadDir . uniqid() . '_' . $imageName; // Unique filename to avoid conflicts
-                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                    $image = $targetFile;
-                } else {
-                    die("Failed to upload image.");
+            try {
+                // Get product data directly from $_POST
+                $name = $_POST['name'] ?? '';
+                $price = $_POST['price'] ?? '';
+                $quantity = $_POST['quantity'] ?? '';
+    
+                // Validate inputs
+                if (empty($name) || empty($price) || empty($quantity)) {
+                    throw new Exception('All fields are required');
                 }
+    
+                // Handle file upload
+                $image = null;
+                if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+                    $imageName = basename($_FILES['image']['name']);
+                    $targetFile = $this->uploadDir . uniqid() . '_' . $imageName; // Unique filename to avoid conflicts
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                        $image = $targetFile;
+                    } else {
+                        throw new Exception('Failed to upload image');
+                    }
+                }
+    
+                // Add product to database
+                $this->productModel->addProduct($name, $price, $quantity, $image);
+    
+                $_SESSION['notification'] = 'Product added successfully';
+                header("Location: /viewStock");
+                exit;
+            } catch (Exception $e) {
+                $_SESSION['notification'] = 'Error adding product: ' . $e->getMessage();
+                header("Location: /viewStock");
+                exit;
             }
-
-            $this->productModel->addProduct($name, $price, $quantity, $image);
-            header("Location: /viewStock");
-            exit;
         }
         header("Location: /viewStock");
         exit;
     }
-
     public function updateStock() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $productId = $_POST["product_id"];
             $newPrice = $_POST["price"];
             $newQuantity = $_POST["quantity"];
-
+    
             $product = $this->productModel->getProductById($productId);
             if (!$product) {
                 die("Product not found");
             }
-
-            // Update the product with new price and quantity
-            $this->productModel->updateProduct($productId, $product['name'], $newPrice, $newQuantity);
-
+    
+            // Sum the existing quantity with the new quantity
+            $existingQuantity = $product['quantity'];
+            $updatedQuantity = $existingQuantity + $newQuantity;
+    
+            // Update the product with new price and summed quantity
+            $this->productModel->updateProduct($productId, $product['name'], $newPrice, $updatedQuantity);
+    
             // Check for out of stock
-            if ($newQuantity == 0) {
+            if ($updatedQuantity == 0) {
                 session_start();
                 $_SESSION['notification'] = "Product '{$product['name']}' is now Out of Stock.";
+            } else {
+                session_start();
+                $_SESSION['notification'] = "Product '{$product['name']}' updated successfully. New quantity: $updatedQuantity.";
             }
-
+    
             header("Location: /viewStock");
             exit;
         }
         header("Location: /viewStock");
         exit;
     }
-
     public function dashboard() {
         $startDate = isset($_POST['start_date']) ? $_POST['start_date'] : null;
         $endDate = isset($_POST['end_date']) ? $_POST['end_date'] : null;

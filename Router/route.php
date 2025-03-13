@@ -9,6 +9,10 @@ require_once "Controllers/ViewStockController.php";
 require_once "Controllers/SettingController.php";
 require_once "Controllers/UserRoleController.php";
 require_once "Middleware/AuthMiddleware.php";
+require_once "Controllers/NotificationController.php";
+
+
+
 
 $route = new Router();
 
@@ -26,10 +30,10 @@ $route->get("/", [DashboardController::class, 'index'])
 $route->get("/viewStock", [ProductController::class, 'index'])
       ->middleware("/viewStock", AuthMiddleware::class, 'view_products');
 
-$route->get("/add-product", [ProductController::class, 'add'])
-      ->middleware("/add-product", AuthMiddleware::class, 'manage_products');
-$route->post("/add-product", [ProductController::class, 'add'])
-      ->middleware("/add-product", AuthMiddleware::class, 'manage_products');
+//setting
+$route->get("/setting", [SettingController::class, 'index']);
+$route->get("/setting/UserRole", [UserRoleController::class, 'index']);
+$route->get("/setting/notification", [NotificationController::class, 'notification']);
 
 // User management routes (admin only for create)
 $route->get("/list-users", [ListUserController::class, 'index'])
