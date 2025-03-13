@@ -1,4 +1,4 @@
-<?php
+ <?php
 require_once "Database/Database.php";
 
 class ProductModel {
@@ -34,7 +34,6 @@ class ProductModel {
         $stmt->bindParam(":image", $image, PDO::PARAM_STR | PDO::PARAM_NULL); // Allow NULL if no image
         return $stmt->execute();
     }
-
     public function updateProduct($id, $name, $price, $quantity) {
         $query = "UPDATE " . $this->table . " SET name = :name, price = :price, quantity = :quantity WHERE id = :id";
         $stmt = $this->conn->prepare($query);

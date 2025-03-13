@@ -20,46 +20,36 @@ class ProductController {
     public function add() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             try {
-                // Check if products array exists
-                $products = $_POST['products'] ?? [];
-                $files = $_FILES['products'] ?? [];
-
-                if (empty($products)) {
-                    throw new Exception('No products submitted');
+                // Get product data directly from $_POST
+                $name = $_POST['name'] ?? '';
+                $price = $_POST['price'] ?? '';
+                $quantity = $_POST['quantity'] ?? '';
+    
+                // Validate inputs
+                if (empty($name) || empty($price) || empty($quantity)) {
+                    throw new Exception('All fields are required');
                 }
-
-                foreach ($products as $index => $product) {
-                    // Get product data with fallback to prevent undefined key errors
-                    $name = $product['name'] ?? '';
-                    $price = $product['price'] ?? '';
-                    $quantity = $product['quantity'] ?? '';
-
-                    // Validate inputs
-                    if (empty($name) || empty($price) || empty($quantity)) {
-                        throw new Exception('All fields are required for product #' . ($index + 1));
+    
+                // Handle file upload
+                $image = null;
+                if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+                    $imageName = basename($_FILES['image']['name']);
+                    $targetFile = $this->uploadDir . uniqid() . '_' . $imageName; // Unique filename to avoid conflicts
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                        $image = $targetFile;
+                    } else {
+                        throw new Exception('Failed to upload image');
                     }
-
-                    // Handle file upload
-                    $image = null;
-                    if (isset($files['image']) && isset($files['image']['error'][$index]) && $files['image']['error'][$index] == UPLOAD_ERR_OK) {
-                        $imageName = basename($files['image']['name'][$index]);
-                        $targetFile = $this->uploadDir . uniqid() . '_' . $imageName; // Unique filename to avoid conflicts
-                        if (move_uploaded_file($files['image']['tmp_name'][$index], $targetFile)) {
-                            $image = $targetFile;
-                        } else {
-                            throw new Exception('Failed to upload image for product #' . ($index + 1));
-                        }
-                    }
-
-                    // Add product to database
-                    $this->productModel->addProduct($name, $price, $quantity, $image);
                 }
-
-                $_SESSION['notification'] = 'Products added successfully';
+    
+                // Add product to database
+                $this->productModel->addProduct($name, $price, $quantity, $image);
+    
+                $_SESSION['notification'] = 'Product added successfully';
                 header("Location: /viewStock");
                 exit;
             } catch (Exception $e) {
-                $_SESSION['notification'] = 'Error adding products: ' . $e->getMessage();
+                $_SESSION['notification'] = 'Error adding product: ' . $e->getMessage();
                 header("Location: /viewStock");
                 exit;
             }
@@ -67,7 +57,6 @@ class ProductController {
         header("Location: /viewStock");
         exit;
     }
-
     public function updateStock() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $productId = $_POST["product_id"];
