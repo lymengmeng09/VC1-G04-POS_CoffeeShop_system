@@ -130,8 +130,8 @@ if(isset($_SESSION["user"])){
     </div>
 
     <div class="products-section">
-      <h2 class="section-title">Products In Stock</h2>
-      <div class="products-grid">
+    <h2 class="section-title">Products In Stock</h2>
+    <div class="products-grid">
         <?php foreach ($products as $product) : ?>
           <div class="product-card <?= $product['quantity'] == 0 ? 'out-of-stock' : '' ?>">
             <div class="product-image">
@@ -140,16 +140,56 @@ if(isset($_SESSION["user"])){
             <div class="product-info">
               <h3 class="origin"><?= htmlspecialchars($product['name']) ?></h3>
               <p class="price">Price: $<?= number_format($product['price'], 2) ?></p>
-              <p class="quantity">Quantity: <?= $product['quantity'] ?></p>
-              <a href="/edit-product/<?= $product['id'] ?>" class="btn btn-warning">Edit</a>
-              <form method="POST" action="/delete-product/<?= $product['id'] ?>" class="d-inline">
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
-              </form>
+              <p class="quantity">Quantity: <?= $product['quantity'] ?> <?= $product['quantity'] == 0 ? '(Out of Stock)' : '' ?></p>
+              <!-- Only show total value for existing products with quantity > 0 -->
+              <?php if ($product['quantity'] > 0) : ?>
+              <?php endif; ?>
             </div>
           </div>
         <?php endforeach; ?>
-      </div>
     </div>
+</div>
+
+<!-- ✅ CSS for Styling -->
+<style>
+    .dropdown {
+        position: relative; 
+        display: inline-block;
+        margin-left: 90%;
+    }
+
+    .dropbtn {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: white;
+        min-width: 100px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+    }
+
+    .dropdown-content a {
+        color: black;
+        padding: 8px 12px;
+        display: block;
+        text-decoration: none;
+    }
+
+    .dropdown-content a:hover {
+        background-color: #f1f1f1;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+</style>
+
 
     <!-- Add New Product Modal -->
     <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
