@@ -68,10 +68,9 @@ body {
 }
 
 .search-input {
+  height: 40px;
   padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px 0 0 4px;
-  width: 70%;
+  width: 60%;
 }
 
 .filter-dropdown {

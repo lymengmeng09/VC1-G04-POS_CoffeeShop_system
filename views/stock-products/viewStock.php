@@ -1,9 +1,16 @@
-<?php require "views/layouts/header.php";?>
-<?php require "views/layouts/navbar.php";?>
+<?php
+session_start(); 
+if(isset($_SESSION["user"])){ 
+    header("location: .php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/views/assets/css/view.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -133,10 +140,11 @@
             <div class="product-info">
               <h3 class="origin"><?= htmlspecialchars($product['name']) ?></h3>
               <p class="price">Price: $<?= number_format($product['price'], 2) ?></p>
-              <p class="quantity">Quantity: <?= $product['quantity'] ?> <?= $product['quantity'] == 0 ? '(Out of Stock)' : '' ?></p>
-              <!-- Only show total value for existing products with quantity > 0 -->
-              <?php if ($product['quantity'] > 0) : ?>
-              <?php endif; ?>
+              <p class="quantity">Quantity: <?= $product['quantity'] ?></p>
+              <a href="/edit-product/<?= $product['id'] ?>" class="btn btn-warning">Edit</a>
+              <form method="POST" action="/delete-product/<?= $product['id'] ?>" class="d-inline">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
+              </form>
             </div>
           </div>
         <?php endforeach; ?>
