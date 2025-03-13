@@ -23,7 +23,7 @@ $route->get("/login/register", [LoginController::class, 'register']);
 $route->post("/login/register", [LoginController::class, 'register']);
 $route->get("/login/logout", [LoginController::class, 'logout']);
 
-// Protected routes (require authentication)
+ 
 $route->get("/", [DashboardController::class, 'index'])
       ->middleware("/", AuthMiddleware::class, 'view_dashboard');
 

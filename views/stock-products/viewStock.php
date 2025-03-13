@@ -1,16 +1,9 @@
-<?php
-session_start(); 
-if(isset($_SESSION["user"])){ 
-    header("location: .php");
-    exit();
-}
-?>
-
+<?php require "views/layouts/header.php";?>
+<?php require "views/layouts/navbar.php";?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Stock Products</title>
@@ -59,19 +52,27 @@ if(isset($_SESSION["user"])){
     <h2 class="section-title">Products In Stock</h2>
     <div class="products-grid">
         <?php foreach ($products as $product) : ?>
-          <div class="product-card <?= $product['quantity'] == 0 ? 'out-of-stock' : '' ?>">
-            <div class="product-image">
-              <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
+            <div class="product-card <?= $product['quantity'] == 0 ? 'out-of-stock' : '' ?>">
+                <div class="product-image">
+                    <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
+                </div>
+                <div class="product-info">
+                    <h3 class="origin"><?= htmlspecialchars($product['name']) ?></h3>
+                    <p class="price">Price: $<?= number_format($product['price'], 2) ?></p>
+                    <p class="quantity">Quantity: <?= $product['quantity'] ?> <?= $product['quantity'] == 0 ? '(Out of Stock)' : '' ?></p>
+                    
+                    <!-- More Vert Button -->
+                    <div class="dropdown">
+                        <button class="dropbtn">
+                            &#8942; <!-- Unicode for three-dot icon -->
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="edit_product.php?id=<?= $product['id'] ?>">Edit</a>
+                            <a href="delete_product.php?id=<?= $product['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="product-info">
-              <h3 class="origin"><?= htmlspecialchars($product['name']) ?></h3>
-              <p class="price">Price: $<?= number_format($product['price'], 2) ?></p>
-              <p class="quantity">Quantity: <?= $product['quantity'] ?> <?= $product['quantity'] == 0 ? '(Out of Stock)' : '' ?></p>
-              <!-- Only show total value for existing products with quantity > 0 -->
-              <?php if ($product['quantity'] > 0) : ?>
-              <?php endif; ?>
-            </div>
-          </div>
         <?php endforeach; ?>
     </div>
 </div>
