@@ -62,28 +62,34 @@ class ProductController {
             $productId = $_POST["product_id"];
             $newPrice = $_POST["price"];
             $newQuantity = $_POST["quantity"];
-
+    
             $product = $this->productModel->getProductById($productId);
             if (!$product) {
                 die("Product not found");
             }
-
-            // Update the product with new price and quantity
-            $this->productModel->updateProduct($productId, $product['name'], $newPrice, $newQuantity);
-
+    
+            // Sum the existing quantity with the new quantity
+            $existingQuantity = $product['quantity'];
+            $updatedQuantity = $existingQuantity + $newQuantity;
+    
+            // Update the product with new price and summed quantity
+            $this->productModel->updateProduct($productId, $product['name'], $newPrice, $updatedQuantity);
+    
             // Check for out of stock
-            if ($newQuantity == 0) {
+            if ($updatedQuantity == 0) {
                 session_start();
                 $_SESSION['notification'] = "Product '{$product['name']}' is now Out of Stock.";
+            } else {
+                session_start();
+                $_SESSION['notification'] = "Product '{$product['name']}' updated successfully. New quantity: $updatedQuantity.";
             }
-
+    
             header("Location: /viewStock");
             exit;
         }
         header("Location: /viewStock");
         exit;
     }
-
     public function dashboard() {
         $startDate = isset($_POST['start_date']) ? $_POST['start_date'] : null;
         $endDate = isset($_POST['end_date']) ? $_POST['end_date'] : null;
