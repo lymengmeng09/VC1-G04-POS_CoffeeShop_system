@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="/views/assets/css/app.css">
     <link rel="shortcut icon" href="/views/assets/images/favicon.svg" type="image/x-icon">
     <link rel="stylesheet" href="/views/assets/css/setting.css">
+   <link rel="stylesheet" href="/views/assets/css/general.css">
 </head>
 
 <body>

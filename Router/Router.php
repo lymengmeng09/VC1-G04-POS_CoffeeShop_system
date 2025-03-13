@@ -5,6 +5,7 @@ class Router
     private $uri;
     private $method;
     private $routes = [];
+    private $middlewares = []; // New property to store middlewares
 
     /**
      * Constructor to initialize the URI and request method.
@@ -20,6 +21,7 @@ class Router
      *
      * @param string $uri The URI of the route.
      * @param array $action The controller class and method to be executed.
+     * @return $this For method chaining
      */
     public function get($uri, $action)
     {
@@ -27,6 +29,7 @@ class Router
             'method' => 'GET',
             'action' => $action
         ];
+        return $this; // Return $this for method chaining
     }
 
     /**
@@ -34,6 +37,7 @@ class Router
      *
      * @param string $uri The URI of the route.
      * @param array $action The controller class and method to be executed.
+     * @return $this For method chaining
      */
     public function post($uri, $action)
     {
@@ -41,6 +45,7 @@ class Router
             'method' => 'POST',
             'action' => $action
         ];
+        return $this; // Return $this for method chaining
     }
 
     /**
@@ -48,6 +53,7 @@ class Router
      *
      * @param string $uri The URI of the route.
      * @param array $action The controller class and method to be executed.
+     * @return $this For method chaining
      */
     public function put($uri, $action)
     {
@@ -55,6 +61,7 @@ class Router
             'method' => 'PUT',
             'action' => $action
         ];
+        return $this; // Return $this for method chaining
     }
 
     /**
@@ -62,6 +69,7 @@ class Router
      *
      * @param string $uri The URI of the route.
      * @param array $action The controller class and method to be executed.
+     * @return $this For method chaining
      */
     public function delete($uri, $action)
     {
@@ -69,6 +77,24 @@ class Router
             'method' => 'DELETE',
             'action' => $action
         ];
+        return $this; // Return $this for method chaining
+    }
+
+    /**
+     * Adds middleware to a route.
+     *
+     * @param string $uri The URI of the route.
+     * @param callable $middleware The middleware function.
+     * @param string|null $permission Optional permission to check.
+     * @return $this For method chaining
+     */
+    public function middleware($uri, $middleware, $permission = null)
+    {
+        $this->middlewares[$uri] = [
+            'middleware' => $middleware,
+            'permission' => $permission
+        ];
+        return $this;
     }
 
     /**
@@ -81,6 +107,19 @@ class Router
             $pattern = preg_replace('/\{[a-zA-Z0-9_]+\}/', '([0-9]+)', trim($uri, '/'));
 
             if (preg_match("#^$pattern$#", trim($this->uri, '/'), $matches)) {
+                // Check if middleware exists for this route
+                if (isset($this->middlewares[$uri])) {
+                    $middleware = $this->middlewares[$uri]['middleware'];
+                    $permission = $this->middlewares[$uri]['permission'];
+                    
+                    // Call the middleware
+                    if ($permission) {
+                        call_user_func([$middleware, 'checkPermission'], $permission);
+                    } else {
+                        call_user_func([$middleware, 'authenticate']);
+                    }
+                }
+                
                 array_shift($matches); // Remove full match
                 $controllerClass = $route['action'][0];
                 $function = $route['action'][1];
@@ -91,7 +130,7 @@ class Router
             }
         }
 
-            http_response_code(404);
-            // require_once 'views/errors/404.php';
+        http_response_code(404);
+        // require_once 'views/errors/404.php';
     }
 }

@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings - Target Coffee</title>
-    <link rel="stylesheet" href="/views/assets/css/setting.css">
+    <link rel="stylesheet" href="viwes/assets/css/settings.css">
 </head>
- 
 <body>
     <div class="container">
         <header>
@@ -46,13 +45,12 @@
                         <label for="opening-time">Opening Time</label>
                         <input type="time" id="opening-time" value="09:00" required>
                     </div>
-                    <div>
-                        <label for="close-time">Close Time</label>
-                        <input type="time" id="close-time" value="20:00" required>
+                    
+                    <div class="form-actions">
+                        <button class="save-button">Save Change</button>
                     </div>
                 </div>
-                <button type="submit" class="save-btn">Save Change</button>
-            </form>
+            </div>
         </div>
     </div>
 </body>

@@ -1,5 +1,6 @@
 <?php
- 
+// Start session to maintain user state
+session_start();
 
 // Mock database functions
 function getRoles() {
@@ -63,13 +64,13 @@ $currentPermissions = getPermissions($selectedRole);
         <!-- Settings Tabs -->
         <ul class="nav nav-tabs mb-4">
             <li class="nav-item">
-                <a class="nav-link" href="#">General</a>
+                <a class="nav-link" href="/setting">General</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/setting/notification">Notification</a>
+                <a class="nav-link" href="#">Notification</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="#">Role & Permission</a>
+                <a class="nav-link active" href="/setting/UserRole">Role & Permission</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Security</a>

@@ -6,9 +6,19 @@ class UserModel {
         $database = new Database();
         $this->db = $database->getConnection(); // Get the connection instead of assigning the class
     }
+    public function getRoles() {
+        $role = $this->db->prepare("SELECT * FROM roles");
+        $role->execute();
+        $result = $role->fetchAll(PDO::FETCH_ASSOC);
 
+        return $result;
+    }
     public function getUsers() {
-        $stmt = $this->db->prepare("SELECT * FROM users");
+        $stmt = $this->db->prepare("
+        SELECT users.id, users.name, users.email, roles.role_name 
+        FROM users 
+        LEFT JOIN roles ON users.role_id = roles.id
+        ");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -18,24 +28,26 @@ class UserModel {
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-
-    public function createUser($name, $email, $password, $role) {
-        $stmt = $this->db->prepare("INSERT INTO users (name, email, password, role) VALUES (:name, :email, :password, :role)");
+    function createUser($data) {
+        // Hash the password before storing
+        $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
+    
+        $stmt = $this->db->prepare("INSERT INTO users (name, email, password, role_id) VALUES (:name, :email, :password, :role_id)");
         return $stmt->execute([
-            'name' => $name,
-            'email' => $email,
-            'password' => $password,
-            'role' => $role
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => $hashedPassword,
+            'role_id' => $data['role_id']
         ]);
     }
 
-    public function updateUser($id, $name, $email, $role) {
-        $stmt = $this->db->prepare("UPDATE users SET name = :name, email = :email, role = :role WHERE id = :id");
+    public function updateUser($id, $name, $email, $role_id) {
+        $stmt = $this->db->prepare("UPDATE users SET name = :name, email = :email, role_id = :role_id WHERE id = :id");
         return $stmt->execute([
             'id' => $id,
             'name' => $name,
             'email' => $email,
-            'role' => $role
+            'role_id' => $role_id
         ]);
     }
 
