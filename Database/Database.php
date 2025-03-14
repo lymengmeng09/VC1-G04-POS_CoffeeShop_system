@@ -16,11 +16,7 @@ class Database {
         }
         return $this->conn;
     }
-    public function query($sql,$params=[]){
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute($params);
-        return $stmt;
-    }
+    
     
 
  

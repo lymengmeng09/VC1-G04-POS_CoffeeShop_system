@@ -1,4 +1,4 @@
- <?php
+<?php
 require_once "Database/Database.php";
 
 class ProductModel {
@@ -26,22 +26,37 @@ class ProductModel {
     }
 
     public function addProduct($name, $price, $quantity, $image) {
-        $query = "INSERT INTO " . $this->table . " (name, price, quantity, image) VALUES (:name, :price, :quantity, :image)";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":name", $name);
-        $stmt->bindParam(":price", $price);
-        $stmt->bindParam(":quantity", $quantity);
-        $stmt->bindParam(":image", $image, PDO::PARAM_STR | PDO::PARAM_NULL); // Allow NULL if no image
-        return $stmt->execute();
+        try {
+            $query = "INSERT INTO " . $this->table . " (name, price, quantity, image) VALUES (:name, :price, :quantity, :image)";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(":name", $name, PDO::PARAM_STR);
+            $stmt->bindParam(":price", $price, PDO::PARAM_STR);
+            $stmt->bindParam(":quantity", $quantity, PDO::PARAM_INT);
+            $stmt->bindParam(":image", $image, PDO::PARAM_STR | PDO::PARAM_NULL);
+            if (!$stmt->execute()) {
+                throw new Exception('Database error: ' . implode(', ', $stmt->errorInfo()));
+            }
+            return true;
+        } catch (Exception $e) {
+            throw new Exception('Failed to add product: ' . $e->getMessage());
+        }
     }
+    
     public function updateProduct($id, $name, $price, $quantity) {
-        $query = "UPDATE " . $this->table . " SET name = :name, price = :price, quantity = :quantity WHERE id = :id";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":id", $id);
-        $stmt->bindParam(":name", $name);
-        $stmt->bindParam(":price", $price);
-        $stmt->bindParam(":quantity", $quantity);
-        return $stmt->execute();
+        try {
+            $query = "UPDATE " . $this->table . " SET name = :name, price = :price, quantity = :quantity WHERE id = :id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+            $stmt->bindParam(":name", $name, PDO::PARAM_STR);
+            $stmt->bindParam(":price", $price, PDO::PARAM_STR);
+            $stmt->bindParam(":quantity", $quantity, PDO::PARAM_INT);
+            if (!$stmt->execute()) {
+                throw new Exception('Database error: ' . implode(', ', $stmt->errorInfo()));
+            }
+            return true;
+        } catch (Exception $e) {
+            throw new Exception('Failed to update product: ' . $e->getMessage());
+        }
     }
 
     public function getTopSellingProducts($start_date = null, $end_date = null) {
