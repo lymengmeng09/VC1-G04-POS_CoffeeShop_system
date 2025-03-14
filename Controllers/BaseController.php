@@ -27,4 +27,11 @@ class BaseController
         header("Location: $url");
         exit;
     }
+    protected function checkPermission($permission) {
+        if (!AccessControl::hasPermission($permission)) {
+            // You can customize this to redirect or show an error
+            header('Location: /?error=unauthorized');
+            exit();
+        }
+    }
 }

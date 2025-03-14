@@ -6,9 +6,19 @@ class LoginModel {
         $database = new Database();
         $this->conn = $database->getConnection();
     }
+    // public function getUserByEmail($email) {
+    //     $stmt = $this->conn->prepare("SELECT * FROM users WHERE email = ?");
+    //     $stmt->execute([$email]);
+    //     return $stmt->fetch(PDO::FETCH_ASSOC);
+    // }
     public function getUserByEmail($email) {
-        $stmt = $this->conn->prepare("SELECT * FROM users WHERE email = ?");
-        $stmt->execute([$email]);
+        $stmt = $this->conn->prepare("
+            SELECT users.*, roles.role_name 
+            FROM users 
+            LEFT JOIN roles ON users.role_id = roles.id 
+            WHERE users.email = :email
+        ");
+        $stmt->execute(['email' => $email]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     public function emailExists($email) {

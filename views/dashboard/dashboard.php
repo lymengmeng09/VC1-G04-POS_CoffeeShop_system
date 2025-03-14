@@ -1,4 +1,6 @@
-
+<?php
+$user = $_SESSION['user'];
+?>
 <!-- Include Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- Include Chart.js Data Labels Plugin for displaying percentages -->
@@ -142,7 +144,7 @@
                                 <img src="/views/assets/images/faces/1.jpg" alt="Face 1">
                             </div>
                             <div class="ms-3 name">
-                                <h4 class="font-bold">Group4</h4>
+                                <h4 class="font-bold"><?php echo htmlspecialchars($user['name']); ?></h4>
                                 <h6 class="text-muted mb-0">@targetcoffee</h6>
                             </div>
                         </div>
