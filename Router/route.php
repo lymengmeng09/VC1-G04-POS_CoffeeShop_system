@@ -6,6 +6,7 @@ require_once "Database/Database.php";
 require_once "Controllers/LoginController.php";
 require_once "Controllers/ViewStockController.php"; // Updated to use ProductController
 require_once "Controllers/ListUserController.php";
+require_once "Controllers/AddProductController.php";
 
 
 
@@ -40,4 +41,10 @@ $route->get("/login/register", [LoginController::class, 'register']);
 //user
 $route->get("/list-users", [ListUserController::class, 'index']);
 
+$route->route();
+
+
+// products
+$route->get("products", [AddProductController::class, 'index']);
+$route->get("products/create", [AddProductController::class, 'create']);
 $route->route();
