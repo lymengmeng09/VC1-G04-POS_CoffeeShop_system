@@ -68,10 +68,9 @@ body {
 }
 
 .search-input {
+  height: 40px;
   padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px 0 0 4px;
-  width: 70%;
+  width: 60%;
 }
 
 .filter-dropdown {
@@ -219,4 +218,110 @@ body {
     grid-template-columns: 1fr;
   }
 }
- 
+.product-card {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+.out-of-stock {
+  background-color: #ffcccc;
+  color: #ff0000;
+  font-weight: bold;
+}
+.custom-file-input {
+  overflow: hidden;
+}
+.user-icons {
+display: flex;
+gap: 15px;
+align-items: center;
+}
+
+.notification-icon,
+.user-icon {
+position: relative;
+background: #f8f9fa; /* Light background */
+border-radius: 50%;
+padding: 10px;
+display: flex;
+justify-content: center;
+align-items: center;
+width: 45px;
+height: 45px;
+transition: all 0.3s ease-in-out;
+cursor: pointer;
+box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.notification-icon i,
+.user-icon i {
+font-size: 20px;
+color: #333;
+transition: color 0.3s ease-in-out;
+}
+
+/* Hover effect */
+.notification-icon:hover,
+.user-icon:hover {
+background: #007bff; /* Change to primary color */
+}
+
+.notification-icon:hover i,
+.user-icon:hover i {
+color: white;
+}
+
+/* Notification badge */
+.notification-icon::after {
+content: '3'; /* Example notification count */
+position: absolute;
+top: 5px;
+right: 5px;
+background: red;
+color: white;
+font-size: 12px;
+font-weight: bold;
+width: 18px;
+height: 18px;
+border-radius: 50%;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.dropdown {
+  position: relative; 
+  display: inline-block;
+  margin-left: 90%;
+}
+
+.dropbtn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 100px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 8px 12px;
+  display: block;
+  text-decoration: none;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}

@@ -1,11 +1,15 @@
 <?php
-require "Models/ProductModels.php";
+require "Models/StockModels.php";
 
 class ProductController {
     private $productModel;
+    private $uploadDir = "uploads/"; // Directory to store uploaded images
 
     public function __construct() {
         $this->productModel = new ProductModel();
+        if (!file_exists($this->uploadDir)) {
+            mkdir($this->uploadDir, 0777, true); // Create directory if it doesn't exist
+        }
     }
 
     public function index() {
@@ -15,62 +19,82 @@ class ProductController {
 
     public function add() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $name = $_POST["name"];
-            $price = $_POST["price"];
-            $quantity = $_POST["quantity"];
-            $image = $_POST["image"];
-            $this->productModel->addProduct($name, $price, $quantity, $image);
-            header("Location: /viewStock");
-            exit;
+            try {
+                // Get product data directly from $_POST
+                $name = $_POST['name'] ?? '';
+                $price = $_POST['price'] ?? '';
+                $quantity = $_POST['quantity'] ?? '';
+    
+                // Validate inputs
+                if (empty($name) || empty($price) || empty($quantity)) {
+                    throw new Exception('All fields are required');
+                }
+    
+                // Handle file upload
+                $image = null;
+                if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+                    $imageName = basename($_FILES['image']['name']);
+                    $targetFile = $this->uploadDir . uniqid() . '_' . $imageName; // Unique filename to avoid conflicts
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                        $image = $targetFile;
+                    } else {
+                        throw new Exception('Failed to upload image');
+                    }
+                }
+    
+                // Add product to database
+                $this->productModel->addProduct($name, $price, $quantity, $image);
+    
+                $_SESSION['notification'] = 'Product added successfully';
+                header("Location: /viewStock");
+                exit;
+            } catch (Exception $e) {
+                $_SESSION['notification'] = 'Error adding product: ' . $e->getMessage();
+                header("Location: /viewStock");
+                exit;
+            }
         }
-        include "views/stock-products/add-product.php";
+        header("Location: /viewStock");
+        exit;
     }
-
-    public function edit($id) {
-        $product = $this->productModel->getProductById($id);
-        if (!$product) {
-            die("Product not found");
-        }
+    public function updateStock() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $name = $_POST["name"];
-            $price = $_POST["price"];
-            $quantity = $_POST["quantity"];
-            $image = $_POST["image"];
-            $this->productModel->updateProduct($id, $name, $price, $quantity, $image);
+            $productId = $_POST["product_id"];
+            $newPrice = $_POST["price"];
+            $newQuantity = $_POST["quantity"];
+    
+            $product = $this->productModel->getProductById($productId);
+            if (!$product) {
+                die("Product not found");
+            }
+    
+            // Sum the existing quantity with the new quantity
+            $existingQuantity = $product['quantity'];
+            $updatedQuantity = $existingQuantity + $newQuantity;
+    
+            // Update the product with new price and summed quantity
+            $this->productModel->updateProduct($productId, $product['name'], $newPrice, $updatedQuantity);
+    
+            // Check for out of stock
+            if ($updatedQuantity == 0) {
+                session_start();
+                $_SESSION['notification'] = "Product '{$product['name']}' is now Out of Stock.";
+            } else {
+                session_start();
+                $_SESSION['notification'] = "Product '{$product['name']}' updated successfully. New quantity: $updatedQuantity.";
+            }
+    
             header("Location: /viewStock");
             exit;
         }
-        include "views/stock-products/edit-product.php";
+        header("Location: /viewStock");
+        exit;
     }
-
-    public function delete($id) {
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $this->productModel->deleteProduct($id);
-            header("Location: /viewStock");
-            exit;
-        }
-        include "views/stock-products/delete-product.php";
-    }
-
-
-
-
-    // New method for top-selling products dashboard
     public function dashboard() {
-        // Check if a time range filter is submitted via form
         $startDate = isset($_POST['start_date']) ? $_POST['start_date'] : null;
         $endDate = isset($_POST['end_date']) ? $_POST['end_date'] : null;
-
-        // Fetch top-selling products from the model
         $topProducts = $this->productModel->getTopSellingProducts($startDate, $endDate);
-
-        // Load the dashboard view and pass the data
-        include "views/dashboard.php"; // Use your existing dashboard.php
+        include "views/dashboard.php";
     }
-
-
 }
-
-
-
 ?>

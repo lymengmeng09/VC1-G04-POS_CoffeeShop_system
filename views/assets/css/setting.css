@@ -1,0 +1,63 @@
+body {
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+.settings-container {
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+}
+.nav-tabs .nav-link {
+    color:rgb(66, 31, 18);
+    border: none;
+    padding: 10px 20px;
+}
+.nav-tabs .nav-link.active {
+    background-color:rgba(66, 31, 18, 0.87);
+    color: white;
+    border-radius: 5px;
+}
+.permission-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+.form-select {
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+}
+.form-text {
+    color: #6c757d;
+    margin-bottom: 20px;
+}
+.form-check-input {
+    width: 50px;
+    height: 24px;
+}
+.form-switch .form-check-input {
+    margin-left: 0;
+}
+.btn-save {
+    background-color:rgb(66, 31, 18);
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+}
+.btn-save:hover {
+    background-color:rgba(66, 31, 18, 0.71);
+    color: white;
+}
+.permission-title {
+    font-size: 16px;
+    margin-bottom: 0;
+}
+.permission-description {
+    font-size: 14px;
+    color: #421f128d;
+    margin-bottom: 0;
+}
+

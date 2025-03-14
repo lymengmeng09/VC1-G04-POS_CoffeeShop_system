@@ -17,7 +17,7 @@ class LoginController extends BaseController {
             header('Location: /');
             exit();
         }
-
+        
         // Handle the POST request for login
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $email = $_POST['email'] ?? '';
@@ -31,6 +31,7 @@ class LoginController extends BaseController {
 
                 if ($user && password_verify($password, $user['password'])) {
                     $_SESSION['user'] = $user;
+                    $_SESSION['role_id'] = $user['role_id'];
                     header("Location: /");
                     exit;
                 } else {
