@@ -1,19 +1,3 @@
-<?php
-require_once '../layouts/header.php';
-require_once '../layouts/navbar.php'
-?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coffee Shop</title>
-    <link rel="stylesheet" href="/views/assets/css/add-product.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <script src="/views/assets/js/add-product.js" defer></script>
-</head>
-
 <body>
     <div class="container">
         <!-- Left side: Products -->
@@ -110,7 +94,3 @@ require_once '../layouts/navbar.php'
             <button class="pay-btn">PAY NOW</button>
         </div>
     </div>
-
-</body>
-
-</html>

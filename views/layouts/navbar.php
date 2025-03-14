@@ -23,7 +23,7 @@
                      </li>
 
                      <li class="sidebar-item">
-                         <a href="views/products/list-product.php" class='sidebar-link '>
+                         <a href="/products" class='sidebar-link '>
                              <i class="bi bi-shop"></i>
                              <span>Products</span>
                          </a>

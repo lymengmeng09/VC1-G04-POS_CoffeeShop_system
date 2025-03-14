@@ -1,21 +1,10 @@
 <?php
-session_start(); 
-if(isset($_SESSION["user"])){ 
-    header("location: .php");
-    exit();
-}
+ 
+require "views/layouts/header.php";
+require "views/layouts/navbar.php";
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Stock Products</title>
-   
-</head>
+ 
 <body>
   <div class="container">
     <?php
@@ -24,30 +13,25 @@ if(isset($_SESSION["user"])){
         echo $_SESSION['notification'];
         echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
         echo '</div>';
-        unset($_SESSION['notification']); // Clear the notification after displaying it
+        unset($_SESSION['notification']);
     }
     ?>
 
     <div class="header d-flex justify-content-between align-items-center my-4">
       <h1>Stock Products</h1>
       <div class="user-icons">
-    <div class="notification-icon">
-        <i class="fa fa-bell"></i> <!-- Notification Icon -->
-    </div>
-    <div class="user-icon avatar">
-        <i class="fa fa-user-circle"></i> <!-- User Avatar Icon -->
-    </div>
-</div>
-
-<!-- Add Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
+        <div class="notification-icon">
+          <i class="fa fa-bell"></i>
+        </div>
+        <div class="user-icon avatar">
+          <i class="fa fa-user-circle"></i>
+        </div>
+      </div>
     </div>
 
     <div class="search-section mb-4">
       <div class="search-bar">
         <input type="text" class="form-control search-input" placeholder="Search products...">
-     
       </div>
       <div class="action-buttons mt-2">
         <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#updateProductModal">+ Existing Product</button>
@@ -56,8 +40,8 @@ if(isset($_SESSION["user"])){
     </div>
 
     <div class="products-section">
-    <h2 class="section-title">Products In Stock</h2>
-    <div class="products-grid">
+      <h2 class="section-title">Products In Stock</h2>
+      <div class="products-grid">
         <?php foreach ($products as $product) : ?>
           <div class="product-card <?= $product['quantity'] == 0 ? 'out-of-stock' : '' ?>">
             <div class="product-image">
@@ -67,15 +51,19 @@ if(isset($_SESSION["user"])){
               <h3 class="origin"><?= htmlspecialchars($product['name']) ?></h3>
               <p class="price">Price: $<?= number_format($product['price'], 2) ?></p>
               <p class="quantity">Quantity: <?= $product['quantity'] ?> <?= $product['quantity'] == 0 ? '(Out of Stock)' : '' ?></p>
-              <!-- Only show total value for existing products with quantity > 0 -->
-              <?php if ($product['quantity'] > 0) : ?>
-              <?php endif; ?>
+              <div class="dropdown">
+                <button class="dropbtn">⋮</button>
+                <div class="dropdown-content">
+                  <a href="edit_product.php?id=<?= $product['id'] ?>">Edit</a>
+                  <a href="delete_product.php?id=<?= $product['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
+                </div>
+              </div>
             </div>
           </div>
         <?php endforeach; ?>
+      </div>
     </div>
-</div>
- <!-- Add New Product Modal -->
+    <!-- Add New Product Modal -->
     <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -118,34 +106,40 @@ if(isset($_SESSION["user"])){
           </div>
           <div class="modal-body">
             <form method="POST" action="/update-stock">
-              <div class="mb-3">
-                <label for="updateProduct" class="form-label">Select Product</label>
-                <select class="form-control" id="updateProduct" name="product_id" required>
-                  <option value="">Select a product...</option>
-                  <?php foreach ($products as $product) : ?>
-                    <option value="<?= $product['id'] ?>" 
-                            data-price="<?= $product['price'] ?>">
-                      <?= htmlspecialchars($product['name']) ?>
-                    </option>
-                  <?php endforeach; ?>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label for="updatePrice" class="form-label">Price</label>
-                <input type="number" step="0.01" class="form-control" id="updatePrice" name="price" required>
-              </div>
-              <div class="mb-3">
-                <label for="updateQuantity" class="form-label">New Quantity</label>
-                <input type="number" class="form-control" id="updateQuantity" name="quantity" required>
-              </div>
-              <div class="mb-3">
-                <label for="totalPrice" class="form-label">Total Price</label>
-                <div class="input-group">
-                  <span class="input-group-text">$</span>
-                  <input type="text" class="form-control" id="totalPrice" readonly>
+              <div id="product-entries">
+                <!-- Initial product entry -->
+                <div class="product-entry mb-3">
+                  <div class="mb-3">
+                    <label for="updateProduct-0" class="form-label">Select Product</label>
+                    <select class="form-control update-product" id="updateProduct-0" name="product_id[]" required>
+                      <option value="">Select a product...</option>
+                      <?php foreach ($products as $product) : ?>
+                        <option value="<?= $product['id'] ?>" data-price="<?= $product['price'] ?>">
+                          <?= htmlspecialchars($product['name']) ?>
+                        </option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="updatePrice-0" class="form-label">Price</label>
+                    <input type="number" step="0.01" class="form-control update-price" id="updatePrice-0" name="price[]" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="updateQuantity-0" class="form-label">Quantity to Add/Subtract</label>
+                    <input type="number" class="form-control update-quantity" id="updateQuantity-0" name="quantity[]" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="totalPrice-0" class="form-label">Total Price</label>
+                    <div class="input-group">
+                      <span class="input-group-text">$</span>
+                      <input type="text" class="form-control total-price" id="totalPrice-0" readonly>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-danger remove-entry" style="display: none;">Remove</button>
                 </div>
               </div>
-              <button type="submit" class="btn btn-success">Update</button>
+              <button type="button" class="btn btn-secondary mb-3" id="add-more">Add More</button>
+              <button type="submit" class="btn btn-success">Update All</button>
             </form>
           </div>
         </div>
@@ -158,37 +152,102 @@ if(isset($_SESSION["user"])){
     document.querySelector('.search-input').addEventListener('input', function() {
       const query = this.value.toLowerCase();
       const productCards = document.querySelectorAll('.product-card');
-      
       productCards.forEach(card => {
         const productName = card.querySelector('.origin').innerText.toLowerCase();
-        if (productName.indexOf(query) !== -1) {
-          card.style.display = '';
-        } else {
-          card.style.display = 'none';
-        }
+        card.style.display = productName.includes(query) ? '' : 'none';
       });
     });
 
-    // Update product selection and total price calculation
-    document.getElementById('updateProduct').addEventListener('change', function() {
-      const selectedOption = this.options[this.selectedIndex];
-      if (selectedOption.value) {
-        const price = parseFloat(selectedOption.dataset.price);
-        document.getElementById('updatePrice').value = price.toFixed(2);
-        calculateTotal();
+    // Dynamic form handling for Update Existing Product modal
+    let entryCount = 0;
+
+    document.getElementById('add-more').addEventListener('click', function() {
+      entryCount++;
+      const productEntries = document.getElementById('product-entries');
+      const newEntry = document.createElement('div');
+      newEntry.classList.add('product-entry', 'mb-3');
+      newEntry.innerHTML = `
+        <div class="mb-3">
+          <label for="updateProduct-${entryCount}" class="form-label">Select Product</label>
+          <select class="form-control update-product" id="updateProduct-${entryCount}" name="product_id[]" required>
+            <option value="">Select a product...</option>
+            <?php foreach ($products as $product) : ?>
+              <option value="<?= $product['id'] ?>" data-price="<?= $product['price'] ?>">
+                <?= htmlspecialchars($product['name']) ?>
+              </option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="updatePrice-${entryCount}" class="form-label">Price</label>
+          <input type="number" step="0.01" class="form-control update-price" id="updatePrice-${entryCount}" name="price[]" required>
+        </div>
+        <div class="mb-3">
+          <label for="updateQuantity-${entryCount}" class="form-label">Quantity to Add/Subtract</label>
+          <input type="number" class="form-control update-quantity" id="updateQuantity-${entryCount}" name="quantity[]" required>
+        </div>
+        <div class="mb-3">
+          <label for="totalPrice-${entryCount}" class="form-label">Total Price</label>
+          <div class="input-group">
+            <span class="input-group-text">$</span>
+            <input type="text" class="form-control total-price" id="totalPrice-${entryCount}" readonly>
+          </div>
+        </div>
+        <button type="button" class="btn btn-danger remove-entry">Remove</button>
+      `;
+      productEntries.appendChild(newEntry);
+
+      // Update visibility of Remove buttons
+      updateRemoveButtons();
+    });
+
+    // Handle removal of product entries
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('remove-entry')) {
+        e.target.closest('.product-entry').remove();
+        updateRemoveButtons();
       }
     });
 
-    // Calculate total when price or quantity changes
-    document.getElementById('updatePrice').addEventListener('input', calculateTotal);
-    document.getElementById('updateQuantity').addEventListener('input', calculateTotal);
-
-    function calculateTotal() {
-      const price = parseFloat(document.getElementById('updatePrice').value) || 0;
-      const quantity = parseInt(document.getElementById('updateQuantity').value) || 0;
-      const total = price * quantity;
-      document.getElementById('totalPrice').value = total.toFixed(2);
+    // Update visibility of Remove buttons (hide for the last entry if only one remains)
+    function updateRemoveButtons() {
+      const entries = document.querySelectorAll('.product-entry');
+      entries.forEach((entry, index) => {
+        const removeBtn = entry.querySelector('.remove-entry');
+        removeBtn.style.display = entries.length > 1 ? 'block' : 'none';
+      });
     }
+    // Update total price when product, price, or quantity changes
+    document.addEventListener('change', function(e) {
+      if (e.target.classList.contains('update-product')) {
+        const entry = e.target.closest('.product-entry');
+        const selectedOption = e.target.options[e.target.selectedIndex];
+        if (selectedOption.value) {
+          const price = parseFloat(selectedOption.dataset.price);
+          const priceInput = entry.querySelector('.update-price');
+          priceInput.value = price.toFixed(2);
+          calculateTotal(entry);
+        }
+      }
+    });
+
+    document.addEventListener('input', function(e) {
+  if (e.target.classList.contains('update-price') || e.target.classList.contains('update-quantity')) {
+    const entry = e.target.closest('.product-entry');
+    calculateTotal(entry);
+  }
+});
+
+
+    function calculateTotal(entry) {
+      const price = parseFloat(entry.querySelector('.update-price').value)  || 0;
+      const quantity = parseInt(entry.querySelector('.update-quantity').value) || 0;
+      const total = price * quantity;
+      entry.querySelector('.total-price').value = total.toFixed(2);
+    }
+
+    // Initialize Remove buttons visibility on modal load
+    document.getElementById('updateProductModal').addEventListener('shown.bs.modal', updateRemoveButtons);
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

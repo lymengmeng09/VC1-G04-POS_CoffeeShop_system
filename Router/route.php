@@ -19,21 +19,17 @@ $route = new Router();
 
 
 
-// Dashboard route
-$route->get("/dashboard", [ProductController::class, 'dashboard']);
-$route->post("/dashboard", [ProductController::class, 'dashboard']); // Add POST for form submission
 
 
 
-$route->route();
+
+
 
 
 
 //login
 // Public routes (no middleware)
-$route->get("/login", [LoginController::class, 'index']);
 $route->post("/login", [LoginController::class, 'index']);
-$route->get("/login/register", [LoginController::class, 'register']);
 $route->post("/login/register", [LoginController::class, 'register']);
 $route->get("/login/logout", [LoginController::class, 'logout']);
 
@@ -41,8 +37,11 @@ $route->get("/login/logout", [LoginController::class, 'logout']);
 $route->get("/", [DashboardController::class, 'index'])
       ->middleware("/", AuthMiddleware::class, 'view_dashboard');
 
-$route->get("/viewStock", [ProductController::class, 'index'])
+      $route->get("/viewStock", [ProductController::class, 'index'])
       ->middleware("/viewStock", AuthMiddleware::class, 'view_products');
+      $route->post("/add-product", [ProductController::class, 'add']);
+$route->post("/update-stock", [ProductController::class, 'updateStock']);
+
 
 //setting
 $route->get("/setting", [SettingController::class, 'index']);
@@ -65,10 +64,8 @@ $route->get("/setting", [SettingController::class, 'index'])
 $route->get("/setting/UserRole", [UserRoleController::class, 'index'])
       ->middleware("/setting/UserRole", AuthMiddleware::class, 'access_settings');
 
-$route->route();
-
 
 // products
-$route->get("products", [AddProductController::class, 'index']);
-$route->get("products/create", [AddProductController::class, 'create']);
+$route->get("/products", [AddProductController::class, 'index']);
+$route->get("/products/create", [AddProductController::class, 'create']);
 $route->route();
