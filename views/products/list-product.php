@@ -17,59 +17,26 @@
 
         <!-- Coffee thumbnails -->
         <div class="coffee-thumbnails">
-            <div class="thumbnail">
+            <div class="thumbnail" data-product-id="1">
                 <img src="/views/assets/images/coffee.jpg" alt="Coffee">
             </div>
-            <div class="thumbnail">
+            <div class="thumbnail" data-product-id="4">
                 <img src="/views/assets/images/coffee.jpg" alt="Coffee">
             </div>
-            <div class="thumbnail">
-                <img src="/views/assets/images/coffee.jpg" alt="Coffee">
-            </div>
-            <div class="thumbnail">
-                <img src="/views/assets/images/coffee.jpg" alt="Coffee">
-            </div>
-            <div class="thumbnail">
+            <div class="thumbnail" data-product-id="5">
                 <img src="/views/assets/images/coffee.jpg" alt="Coffee">
             </div>
         </div>
 
-        <h2>Coffee Menu</h2>
+        <!-- <h2>Coffee Menu</h2> -->
 
-        <div class="coffee-grid">
-            <!-- Americano Card -->
-            <div class="coffee-card" data-id="americano" data-name="Americano" data-price="1.15">
-                <div class="coffee-info">
-                    <div class="coffee-image">
-                        <img src="/views/assets/images/cofe.png" alt="Americano">
-                    </div>
-                    <div class="coffee-details">
-                        <h3>Americano</h3>
-                        <p class="price">$ 1,15</p>
-                    </div>
-                </div>
-                <button class="add-btn">Order New</button>
-            </div>
-
-            <!-- Espresso Card -->
-            <div class="coffee-card" data-id="espresso" data-name="Espresso" data-price="1.15">
-                <div class="coffee-info">
-                    <div class="coffee-image">
-                        <img src="/views/assets/images/cofe.png" alt="Espresso">
-                    </div>
-                    <div class="coffee-details">
-                        <h3>Espresso</h3>
-                        <p class="price">$ 1,15</p>
-                    </div>
-                </div>
-                <button class="add-btn">Order New</button>
-
-            </div>
+        <div class="coffee-grid" id="coffee-grid">
+            <!-- Dynamic Product Cards will be added here -->
         </div>
     </div>
 
     <!-- Right side: Bill -->
-    <div class="bill-section">
+    <div class="bill-section" id="bill-section">
         <div class="user-info">
             <div class="user-avatar">
                 <img src="/views/assets/images/cofe.png" alt="User">
