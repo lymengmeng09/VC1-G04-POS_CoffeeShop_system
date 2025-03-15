@@ -40,7 +40,7 @@ $route->get("/users/create", [ListUserController::class, 'create'])
       ->middleware("/users/create", AuthMiddleware::class, 'create_users');
 $route->post("/users/store", [ListUserController::class, 'store'])
       ->middleware("/users/store", AuthMiddleware::class, 'create_users');
-$route->post("/users/delete", [ListUserController::class, 'destroy'])
+$route->delete("/users/delete", [ListUserController::class, 'destroy'])
       ->middleware("/users/delete", AuthMiddleware::class, 'delete_users');
 
 // Settings routes (admin only)
