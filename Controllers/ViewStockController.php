@@ -1,5 +1,9 @@
 <?php
-require "Models/ProductModels.php";
+require "Models/StockModels.php";
+
+require_once "BaseController.php";
+
+class ProductController extends BaseController{
 
 class ViewStockController {
     private $productModel;
@@ -155,6 +159,7 @@ class ViewStockController {
             exit;
         }
     }
+
 
     public function dashboard() {
         try {

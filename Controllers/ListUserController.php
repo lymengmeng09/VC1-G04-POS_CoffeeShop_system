@@ -27,6 +27,7 @@ class ListUserController extends BaseController {
     function create(){
         $roles=$this->model->getRoles();
         $this->view('users/create', ['roles'=>$roles]);
+        $this->checkPermission('create_users');
     }
 
     
@@ -39,6 +40,7 @@ class ListUserController extends BaseController {
                 'role_id'=>$_POST['role_id']
             ];
             $this->model->createUser($data);
+            $this->checkPermission('create_users');
             $this->redirect('/list-users');
         }
     }

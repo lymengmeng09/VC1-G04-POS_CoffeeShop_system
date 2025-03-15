@@ -89,7 +89,7 @@ class ProductModel {
             throw new Exception("Failed to add product: " . $e->getMessage());
         }
     }
-
+    
     public function updateProduct($id, $name, $price, $quantity) {
         try {
             // Validate inputs

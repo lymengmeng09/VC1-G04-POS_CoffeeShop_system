@@ -7,7 +7,9 @@
         </div>
         <div class="d-flex justify-content-between mb-3">
             <div class="d-flex gap-2 me-2">
-                <a href="/users/create" class="btn btn-primary add-user-btn">+ Add User</a>
+                <?php if (AccessControl::hasPermission('create_users')): ?>
+                    <a href="/users/create" class="btn btn-primary add-user-btn">+ Add User</a>
+                <?php endif; ?>
             </div>
             <div class="dropdown me-2">
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -44,11 +46,11 @@
                             <td>
                                 <a href="" class="btn text-dark btn-warning">Edit</a>
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#user<?= $user['id'] ?>">
-                                                        delete
-                                                    </button>
+                                    delete
+                                </button>
 
-                                                    <!-- Modal -->
-                                                    <?php require 'delete.php' ?>
+                                <!-- Modal -->
+                                <?php require 'delete.php' ?>
                             </td>
                         </tr>
                         <?php endforeach; ?><?php else: ?>

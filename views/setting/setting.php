@@ -1,5 +1,4 @@
-
-    <div class="settings-container">
+<div class="settings-container">
         <h2 class="mb-4">Settings</h2>
    
 
@@ -79,5 +78,3 @@
             </div>
         </div>
     </div>
-</body>
-</html>
