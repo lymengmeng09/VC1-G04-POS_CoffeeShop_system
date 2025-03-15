@@ -215,7 +215,7 @@ class ViewStockController extends BaseController{
                 die("Product not found.");
             }
             
-            $this->productModel->updateProduct($id, $data);
+            $this->productModel->updateProducts($id, $data);
             $this->redirect('/viewStock');
         }
     }
