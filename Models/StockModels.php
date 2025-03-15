@@ -1,4 +1,4 @@
-<?php
+ <?php
 require_once "Database/Database.php";
 
 class ProductModel {

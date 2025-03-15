@@ -85,7 +85,6 @@ class ProductController {
         header("Location: /viewStock");
         exit;
     }
-
     public function updateStock() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             try {
