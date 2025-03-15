@@ -27,15 +27,8 @@ $route->get("/login/logout", [LoginController::class, 'logout']);
  
 $route->get("/", [DashboardController::class, 'index'])
       ->middleware("/", AuthMiddleware::class, 'view_dashboard');
-<<<<<<< HEAD
-=======
+ 
 
-      $route->get("/viewStock", [ProductController::class, 'index'])
-      ->middleware("/viewStock", AuthMiddleware::class, 'view_products');
-      $route->post("/add-product", [ProductController::class, 'add']);
-$route->post("/update-stock", [ProductController::class, 'updateStock']);
-
->>>>>>> bfebee298bbd9df48f243be6b7a18ad8f9bc452d
 //setting
  
 
