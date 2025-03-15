@@ -1,6 +1,6 @@
 <?php
 // Start session to maintain user state
-session_start();
+// session_start();
 
 // Mock database functions
 function getRoles() {

@@ -63,7 +63,6 @@ require "views/layouts/navbar.php";
         <?php endforeach; ?>
       </div>
     </div>
-
     <!-- Add New Product Modal -->
     <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -218,7 +217,6 @@ require "views/layouts/navbar.php";
         removeBtn.style.display = entries.length > 1 ? 'block' : 'none';
       });
     }
-
     // Update total price when product, price, or quantity changes
     document.addEventListener('change', function(e) {
       if (e.target.classList.contains('update-product')) {

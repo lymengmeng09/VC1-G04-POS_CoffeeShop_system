@@ -1,7 +1,10 @@
 <?php
 require "Models/StockModels.php";
 
-class ProductController {
+require_once "BaseController.php";
+
+class ProductController extends BaseController{
+
     private $productModel;
     private $uploadDir = "uploads/";
 
