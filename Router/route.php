@@ -37,11 +37,17 @@ $route->get("/", [DashboardController::class, 'index'])
 $route->get("/list-users", [ListUserController::class, 'index'])
       ->middleware("/list-users", AuthMiddleware::class, 'view_users');
 
+
 // Only admins can create users
 $route->get("/users/create", [ListUserController::class, 'create'])
       ->middleware("/users/create", AuthMiddleware::class, 'create_users');
 $route->post("/users/store", [ListUserController::class, 'store'])
       ->middleware("/users/store", AuthMiddleware::class, 'create_users');
+$route->get("/users/edit/{id}", [ListUserController::class, 'edit'])
+      ->middleware("/users/edit/{id}", AuthMiddleware::class, 'edit_users');
+$route->put("/users/delete/{id}", [ListUserController::class, 'destroy'])
+      ->middleware("/users/delete/{id}", AuthMiddleware::class, 'delete_users');
+    
 
 // Settings routes (admin only)
 $route->get("/setting", [SettingController::class, 'index'])

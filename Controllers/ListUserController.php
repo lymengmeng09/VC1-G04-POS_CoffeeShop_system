@@ -49,4 +49,27 @@ class ListUserController extends BaseController {
         $this->model->deleteUser($id);
         $this->redirect('/list-users');
     }
+
+    public function edit($id)
+    {
+        // Check permission before allowing edit
+        if (!AccessControl::hasPermission('edit_users')) {
+            $result = $this->users->getUserById($id);
+            $this->view('users/edit', ['user' => $result]);
+        }
+
+        // Continue with edit logic
+    }
+    public function update($id)
+    {
+        $username = $_POST['username'];
+        $email = $_POST['email'];
+        $role = $_POST['role'];
+        
+        $this->users->updateUser($id, $username, $email, $role);
+        $this->redirect('/users');
+    }
+
+    
+ 
 }

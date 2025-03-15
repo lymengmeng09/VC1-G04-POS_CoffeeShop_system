@@ -44,7 +44,7 @@
                             <td><?= htmlspecialchars($user['email']) ?></td>
                             <td><?= htmlspecialchars($user['role_name']) ?></td>
                             <td>
-                                <a href="" class="btn text-dark btn-warning">Edit</a>
+                            <a href="/users/edit/<?= $user['id'] ?>" class="btn text-dark btn-warning">Edit</a>
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#user<?= $user['id'] ?>">
                                     delete
                                 </button>

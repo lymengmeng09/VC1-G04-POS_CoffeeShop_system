@@ -41,6 +41,11 @@ class UserModel {
         ]);
     }
 
+    
+    public function deleteUser($id) {
+        $stmt = $this->db->prepare("DELETE FROM users WHERE id = :id");
+        return $stmt->execute(['id' => $id]);
+    }
     public function updateUser($id, $name, $email, $role_id) {
         $stmt = $this->db->prepare("UPDATE users SET name = :name, email = :email, role_id = :role_id WHERE id = :id");
         return $stmt->execute([
@@ -49,11 +54,6 @@ class UserModel {
             'email' => $email,
             'role_id' => $role_id
         ]);
-    }
-
-    public function deleteUser($id) {
-        $stmt = $this->db->prepare("DELETE FROM users WHERE id = :id");
-        return $stmt->execute(['id' => $id]);
     }
 
     public function getUserByEmail($email) {
