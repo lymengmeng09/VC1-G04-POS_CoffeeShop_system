@@ -14,9 +14,7 @@ $route = new Router();
 
 // Public routes (no middleware)
 $route->get("/login", [LoginController::class, 'index']);
-$route->post("/login", [LoginController::class, 'index']);
 $route->get("/login/register", [LoginController::class, 'register']);
-$route->post("/login/register", [LoginController::class, 'register']);
 $route->get("/login/logout", [LoginController::class, 'logout']);
 
 // Protected routes (require authentication)
@@ -40,6 +38,8 @@ $route->get("/users/create", [ListUserController::class, 'create'])
       ->middleware("/users/create", AuthMiddleware::class, 'create_users');
 $route->post("/users/store", [ListUserController::class, 'store'])
       ->middleware("/users/store", AuthMiddleware::class, 'create_users');
+$route->post("/users/delete", [ListUserController::class, 'destroy'])
+      ->middleware("/users/delete", AuthMiddleware::class, 'delete_users');
 
 // Settings routes (admin only)
 $route->get("/setting", [SettingController::class, 'index'])

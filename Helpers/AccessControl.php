@@ -75,6 +75,7 @@ class AccessControl {
             'manage_products' => true,
             'view_users' => true,
             'create_users' => false, // Staff cannot create users
+            'delete_users' => false,
             'access_settings' => false, // Staff cannot access settings
         ];
         
