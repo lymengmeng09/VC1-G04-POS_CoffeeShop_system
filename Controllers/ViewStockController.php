@@ -100,6 +100,7 @@ class ViewStockController extends BaseController{
                 $newPrices = $_POST["price"] ?? [];
                 $newQuantities = $_POST["quantity"] ?? [];
 
+
                 // Validate that arrays are not empty and have the same length
                 if (empty($productIds) || count($productIds) !== count($newPrices) || count($productIds) !== count($newQuantities)) {
                     throw new Exception('Invalid form data: All fields are required for each product');
@@ -184,6 +185,7 @@ class ViewStockController extends BaseController{
         header("Location: /viewStock");
         exit;
     }
+
 
     public function dashboard() {
         $startDate = isset($_POST['start_date']) ? $_POST['start_date'] : null;
