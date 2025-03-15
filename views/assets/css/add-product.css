@@ -49,6 +49,7 @@ body {
     position: relative;
     width: 100%;
     max-width: 300px;
+    margin-left: 80px;
 }
 
 .search-container input {
@@ -153,18 +154,19 @@ body {
 }
 
 .coffee-details h3 {
-    font-size: 16px;
+    font-size: 25px;
     margin-bottom: 10px;
 }
 
 .coffee-details p {
-    font-size: 14px;
+    font-size: 18px;
     color: #777;
 }
 
 .price {
     font-weight: bold;
     color: #000;
+    
 }
 
 .coffee-options {

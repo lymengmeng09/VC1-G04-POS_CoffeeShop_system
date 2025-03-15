@@ -15,15 +15,10 @@ require_once "Controllers/NotificationController.php";
 $route = new Router();
 
 // Product management routes
-// Product management routes
-$route->get("/", [DashboardController::class, 'index']);
-$route->get("/viewStock", [ViewStockController::class, 'index']);
-$route->post("/add-product", [ViewStockController::class, 'add']);
+$route->get("/viewStock", [ViewStockController::class, 'index'])
+      ->middleware("/viewStock", AuthMiddleware::class, 'view_products');
+      $route->post("/add-product", [ViewStockController::class, 'add']);
 $route->post("/update-stock", [ViewStockController::class, 'updateStock']);
-$route->post("/delete-product", [ViewStockController::class, 'deleteProduct']);
-// Dashboard route
-$route->get("/dashboard", [ProductController::class, 'dashboard']);
-$route->post("/dashboard", [ProductController::class, 'dashboard']); // Add POST for form submission
 
 // Login routes
 $route->get("/login", [LoginController::class, 'index']);
@@ -32,17 +27,8 @@ $route->get("/login/logout", [LoginController::class, 'logout']);
  
 $route->get("/", [DashboardController::class, 'index'])
       ->middleware("/", AuthMiddleware::class, 'view_dashboard');
-
-      $route->get("/viewStock", [ProductController::class, 'index'])
-      ->middleware("/viewStock", AuthMiddleware::class, 'view_products');
-      $route->post("/add-product", [ProductController::class, 'add']);
-$route->post("/update-stock", [ProductController::class, 'updateStock']);
-
-
 //setting
-$route->get("/setting", [SettingController::class, 'index']);
-$route->get("/setting/UserRole", [UserRoleController::class, 'index']);
-$route->get("/setting/notification", [NotificationController::class, 'notification']);
+ 
 
 // User management routes (admin only for create)
 $route->get("/list-users", [ListUserController::class, 'index'])

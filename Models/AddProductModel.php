@@ -21,7 +21,7 @@ class AddProductModel
         
         // Execute the query and return the results
         $stmt = $this->conn->prepare($query);
-        $stmt->execute();  // Execute the statement
+         // Execute the statement
         return $stmt->fetchAll(PDO::FETCH_ASSOC);  // Fetch all the results as an associative array
     }
 
