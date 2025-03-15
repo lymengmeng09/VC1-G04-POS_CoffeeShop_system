@@ -193,5 +193,11 @@ class ViewStockController extends BaseController{
         $topProducts = $this->productModel->getTopSellingProducts($startDate, $endDate);
         include "views/dashboard.php";
     }
+
+
+    public function destroy($id) {
+        $this->productModel->deleteProduct($id);
+        $this->redirect('/viewStock');
+    }
 }
 ?>
