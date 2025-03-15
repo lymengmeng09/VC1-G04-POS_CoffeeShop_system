@@ -276,7 +276,39 @@ body {
     width: 48%; /* Adjust button width for small screens */
   }
 }
+.btn-secondary{
+  margin-top:15px;
+  background-color: #4a90e2;
+}
+.user-icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
 
+.notification-icon,
+.user-icon {
+  position: relative;
+  cursor: pointer;
+  font-size: 26px;
+  color: #333;
+  transition: color 0.3s ease-in-out;
+}
+
+.notification-icon:hover,
+.user-icon:hover {
+  color: #007bff;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+}
 
 /* Existing styles remain the same, add the following */
 

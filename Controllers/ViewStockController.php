@@ -24,61 +24,90 @@ class ViewStockController {
                     session_start();
                 }
 
-                $name = trim($_POST['name'] ?? '');
-                $price = $_POST['price'] ?? '';
-                $quantity = $_POST['quantity'] ?? '';
+                error_log("Received POST request to /add-product");
+                error_log("POST data: " . json_encode($_POST));
+                error_log("FILES data: " . json_encode($_FILES));
 
-                if (empty($name) || empty($price) || empty($quantity)) {
-                    throw new Exception('All fields are required');
+                $names = $_POST['name'] ?? [];
+                $prices = $_POST['price'] ?? [];
+                $quantities = $_POST['quantity'] ?? [];
+                $files = $_FILES['image'] ?? [];
+
+                if (empty($names) || empty($prices) || empty($quantities)) {
+                    throw new Exception('All fields are required for at least one product');
                 }
 
-                if (!is_numeric($price) || $price <= 0) {
-                    throw new Exception('Price must be a positive number');
-                }
+                $receiptItems = [];
+                $timestamp = date('Y-m-d H:i:s');
 
-                if (!is_numeric($quantity) || $quantity < 0 || floor($quantity) != $quantity) {
-                    throw new Exception('Quantity must be a non-negative integer');
-                }
+                for ($i = 0; $i < count($names); $i++) {
+                    $name = trim($names[$i] ?? '');
+                    $price = $prices[$i] ?? '';
+                    $quantity = $quantities[$i] ?? '';
 
-                $image = null;
-                if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
-                    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-                    $fileType = mime_content_type($_FILES['image']['tmp_name']);
-                    if (!in_array($fileType, $allowedTypes)) {
-                        throw new Exception('Only JPEG, PNG, and GIF images are allowed');
+                    error_log("Processing product $i: name=$name, price=$price, quantity=$quantity");
+
+                    if (empty($name) || empty($price) || empty($quantity)) {
+                        throw new Exception("All fields are required for product " . ($i + 1));
                     }
 
-                    $maxFileSize = 5 * 1024 * 1024;
-                    if ($_FILES['image']['size'] > $maxFileSize) {
-                        throw new Exception('Image size must not exceed 5MB');
+                    if (!is_numeric($price) || $price <= 0) {
+                        throw new Exception("Price must be a positive number for product " . ($i + 1));
                     }
 
-                    $imageName = basename($_FILES['image']['name']);
-                    $targetFile = $this->uploadDir . uniqid() . '_' . $imageName;
-                    if (!move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                        throw new Exception('Failed to upload image');
+                    if (!is_numeric($quantity) || $quantity < 0 || floor($quantity) != $quantity) {
+                        throw new Exception("Quantity must be a non-negative integer for product " . ($i + 1));
                     }
-                    $image = $targetFile;
-                } else {
-                    throw new Exception('Image upload is required');
+
+                    $image = null;
+                    if (isset($files['name'][$i]) && $files['error'][$i] == UPLOAD_ERR_OK) {
+                        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                        $fileType = mime_content_type($files['tmp_name'][$i]);
+                        if (!in_array($fileType, $allowedTypes)) {
+                            throw new Exception("Only JPEG, PNG, and GIF images are allowed for product " . ($i + 1));
+                        }
+
+                        $maxFileSize = 5 * 1024 * 1024;
+                        if ($files['size'][$i] > $maxFileSize) {
+                            throw new Exception("Image size must not exceed 5MB for product " . ($i + 1));
+                        }
+
+                        $imageName = basename($files['name'][$i]);
+                        $targetFile = $this->uploadDir . uniqid() . '_' . $imageName;
+                        if (!move_uploaded_file($files['tmp_name'][$i], $targetFile)) {
+                            throw new Exception("Failed to upload image for product " . ($i + 1));
+                        }
+                        $image = $targetFile;
+                    } else {
+                        throw new Exception("Image upload is required for product " . ($i + 1));
+                    }
+
+                    error_log("Adding product $i to database");
+                    $result = $this->productModel->addProduct($name, (float)$price, (int)$quantity, $image);
+                    if (!$result) {
+                        throw new Exception("Failed to add product " . ($i + 1) . " to database");
+                    }
+
+                    $receiptItems[] = [
+                        'name' => $name,
+                        'change_quantity' => $quantity,
+                        'price' => $price,
+                        'timestamp' => $timestamp
+                    ];
                 }
 
-                $result = $this->productModel->addProduct($name, (float)$price, (int)$quantity, $image);
-                if (!$result) {
-                    throw new Exception('Failed to add product to database');
-                }
+                error_log("All products added successfully");
 
-                // Store receipt details with specific timestamp
-                $timestamp = date('Y-m-d H:i:s'); // Ensures specific time (e.g., 2025-03-15 14:30:45)
                 $_SESSION['receipt'] = [
-                    'items' => [['name' => $name, 'change_quantity' => $quantity, 'price' => $price, 'timestamp' => $timestamp]],
+                    'items' => $receiptItems,
                     'action' => 'added'
                 ];
-                $_SESSION['notification'] = 'Product added successfully';
+                $_SESSION['notification'] = 'Products added successfully';
                 header("Location: /viewStock?showReceipt=true");
                 exit;
             } catch (Exception $e) {
-                $_SESSION['notification'] = 'Error adding product: ' . $e->getMessage();
+                error_log("Error in add(): " . $e->getMessage());
+                $_SESSION['notification'] = 'Error adding products: ' . $e->getMessage();
                 header("Location: /viewStock");
                 exit;
             }
@@ -87,6 +116,7 @@ class ViewStockController {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
+        error_log("Invalid request method for /add-product");
         $_SESSION['notification'] = 'Invalid request method';
         header("Location: /viewStock");
         exit;
@@ -98,6 +128,9 @@ class ViewStockController {
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
                 }
+
+                error_log("Received POST request to /update-stock");
+                error_log("POST data: " . json_encode($_POST));
 
                 $productIds = $_POST["product_id"] ?? [];
                 $newPrices = $_POST["price"] ?? [];
@@ -115,7 +148,9 @@ class ViewStockController {
                     $newPrice = $newPrices[$index];
                     $newQuantity = $newQuantities[$index];
 
-                    if (empty($productId) || empty($newPrice) || empty($newQuantity)) {
+                    error_log("Processing update for product ID $productId: price=$newPrice, quantity=$newQuantity");
+
+                    if (empty($productId) || $newPrice === '' || $newQuantity === '') {
                         throw new Exception("All fields are required for product entry #" . ($index + 1));
                     }
 
@@ -127,7 +162,7 @@ class ViewStockController {
                         throw new Exception("Price must be a positive number for product entry #" . ($index + 1));
                     }
 
-                    if (!is_numeric($newQuantity) || floor($newQuantity) != $newQuantity) {
+                    if (!is_numeric($newQuantity)) {
                         throw new Exception("Quantity must be an integer for product entry #" . ($index + 1));
                     }
 
@@ -148,7 +183,6 @@ class ViewStockController {
                         throw new Exception("Failed to update product '{$product['name']}' in database");
                     }
 
-                    // Store receipt details
                     $changeQuantity = $newQuantity > 0 ? "+$newQuantity" : $newQuantity;
                     $receiptItems[] = [
                         'name' => $product['name'],
@@ -164,7 +198,6 @@ class ViewStockController {
                     }
                 }
 
-                // Store receipt details in session
                 $_SESSION['receipt'] = [
                     'items' => $receiptItems,
                     'action' => 'updated'
@@ -182,6 +215,7 @@ class ViewStockController {
                 header("Location: /viewStock?showReceipt=true");
                 exit;
             } catch (Exception $e) {
+                error_log("Error in updateStock(): " . $e->getMessage());
                 $_SESSION['notification'] = 'Error updating products: ' . $e->getMessage();
                 header("Location: /viewStock");
                 exit;
@@ -191,6 +225,7 @@ class ViewStockController {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
+        error_log("Invalid request method for /update-stock");
         $_SESSION['notification'] = 'Invalid request method';
         header("Location: /viewStock");
         exit;

@@ -1,18 +1,25 @@
 <?php
- 
 require "views/layouts/header.php";
 require "views/layouts/navbar.php";
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
- 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Products</title>
+</head>
 <body>
   <div class="container">
     <?php
     if (isset($_SESSION['notification'])) {
-        echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">';
-        echo $_SESSION['notification'];
+        // Determine the alert type based on message content
+        $notification = $_SESSION['notification'];
+        $alertClass = (stripos($notification, 'successfully') !== false) ? 'alert-success' : 'alert-warning';
+        
+        echo '<div class="alert ' . $alertClass . ' alert-dismissible fade show" role="alert">';
+        echo $notification;
         echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
         echo '</div>';
         unset($_SESSION['notification']);
@@ -45,7 +52,10 @@ require "views/layouts/navbar.php";
       <h2 class="section-title">Products In Stock</h2>
       <div class="products-grid">
         <?php foreach ($products as $product) : ?>
-          <div class="product-card <?= $product['quantity'] == 0 ? 'out-of-stock' : '' ?>">
+          <div class="product-card <?= $product['quantity'] == 0 ? 'out-of-stock' : '' ?>" 
+               data-name="<?= htmlspecialchars(strtolower($product['name'])) ?>" 
+               data-price="<?= $product['price'] ?>" 
+               data-quantity="<?= $product['quantity'] ?>">
             <div class="dropdown">
               <button class="dropbtn">⋮</button>
               <div class="dropdown-content">
@@ -71,27 +81,34 @@ require "views/layouts/navbar.php";
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
+            <h5 class="modal-title" id="addProductModalLabel">Add New Product(s)</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form method="POST" action="/add-product" enctype="multipart/form-data">
-              <div class="mb-3">
-                <label for="addName" class="form-label">Product Name</label>
-                <input type="text" class="form-control" id="addName" name="name" required>
+            <form method="POST" action="/add-product" enctype="multipart/form-data" id="addProductForm">
+              <div id="add-product-entries">
+                <div class="product-entry mb-3">
+                  <h6>Product 1</h6>
+                  <div class="mb-3">
+                    <label for="addName-0" class="form-label">Product Name</label>
+                    <input type="text" class="form-control" id="addName-0" name="name[]" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="addPrice-0" class="form-label">Price</label>
+                    <input type="number" step="0.01" class="form-control" id="addPrice-0" name="price[]" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="addQuantity-0" class="form-label">Stock Quantity</label>
+                    <input type="number" class="form-control" id="addQuantity-0" name="quantity[]" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="addImage-0" class="form-label">Upload Image</label>
+                    <input type="file" class="form-control custom-file-input" id="addImage-0" name="image[]" accept="image/jpeg,image/png,image/gif" required>
+                  </div>
+                  <button type="button" class="btn btn-danger remove-entry" style="display: none;">Remove</button>
+                </div>
               </div>
-              <div class="mb-3">
-                <label for="addPrice" class="form-label">Price</label>
-                <input type="number" step="0.01" class="form-control" id="addPrice" name="price" required>
-              </div>
-              <div class="mb-3">
-                <label for="addQuantity" class="form-label">Stock Quantity</label>
-                <input type="number" class="form-control" id="addQuantity" name="quantity" required>
-              </div>
-              <div class="mb-3">
-                <label for="addImage" class="form-label">Upload Image</label>
-                <input type="file" class="form-control custom-file-input" id="addImage" name="image" accept="image/*" required>
-              </div>
+              <button type="button" class="btn btn-secondary mb-3" id="add-more-product">Add Another Product</button>
               <button type="submit" class="btn btn-primary">Complete</button>
             </form>
           </div>
@@ -108,7 +125,7 @@ require "views/layouts/navbar.php";
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form method="POST" action="/update-stock">
+            <form method="POST" action="/update-stock" id="updateProductForm">
               <div id="product-entries">
                 <div class="product-entry mb-3">
                   <div class="mb-3">
@@ -170,7 +187,13 @@ require "views/layouts/navbar.php";
                     </tr>
                   </thead>
                   <tbody>
-                    <?php foreach ($_SESSION['receipt']['items'] as $item): ?>
+                    <?php 
+                    $totalPrice = 0;
+                    foreach ($_SESSION['receipt']['items'] as $item): 
+                      $changeQuantity = (float)str_replace('+', '', $item['change_quantity']);
+                      $itemTotal = $changeQuantity * (float)$item['price'];
+                      $totalPrice += $itemTotal;
+                    ?>
                       <tr>
                         <td><?= htmlspecialchars($item['name']) ?></td>
                         <td><?= htmlspecialchars($item['change_quantity']) ?></td>
@@ -178,6 +201,10 @@ require "views/layouts/navbar.php";
                         <td><?= htmlspecialchars($item['timestamp']) ?></td>
                       </tr>
                     <?php endforeach; ?>
+                    <tr>
+                      <td colspan="2"><strong>Total Price</strong></td>
+                      <td colspan="2"><strong>$<?= number_format($totalPrice, 2) ?></strong></td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -186,7 +213,7 @@ require "views/layouts/navbar.php";
             <?php endif; ?>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-success" id="save-pdf">Confirm </button>
+            <button type="button" class="btn btn-success" id="save-pdf">Confirm</button>
             <button type="button" class="btn btn-secondary" id="clear-hide">Clear</button>
           </div>
         </div>
@@ -194,135 +221,16 @@ require "views/layouts/navbar.php";
     </div>
   </div>
 
+  <!-- Inline script to pass PHP data to JavaScript -->
   <script>
-    // Search functionality
-    document.querySelector('.search-input').addEventListener('input', function() {
-      const query = this.value.toLowerCase();
-      const productCards = document.querySelectorAll('.product-card');
-      productCards.forEach(card => {
-        const productName = card.querySelector('.origin').innerText.toLowerCase();
-        card.style.display = productName.includes(query) ? '' : 'none';
-      });
-    });
-
-    // Dynamic form handling for Update Existing Product modal
-    let entryCount = 0;
-
-    document.getElementById('add-more').addEventListener('click', function() {
-      entryCount++;
-      const productEntries = document.getElementById('product-entries');
-      const newEntry = document.createElement('div');
-      newEntry.classList.add('product-entry', 'mb-3');
-      newEntry.innerHTML = `
-        <div class="mb-3">
-          <label for="updateProduct-${entryCount}" class="form-label">Select Product</label>
-          <select class="form-control update-product" id="updateProduct-${entryCount}" name="product_id[]" required>
-            <option value="">Select a product...</option>
-            <?php foreach ($products as $product) : ?>
-              <option value="<?= $product['id'] ?>" data-price="<?= $product['price'] ?>">
-                <?= htmlspecialchars($product['name']) ?>
-              </option>
-            <?php endforeach; ?>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="updatePrice-${entryCount}" class="form-label">Price</label>
-          <input type="number" step="0.01" class="form-control update-price" id="updatePrice-${entryCount}" name="price[]" required>
-        </div>
-        <div class="mb-3">
-          <label for="updateQuantity-${entryCount}" class="form-label">Quantity to Add/Subtract</label>
-          <input type="number" class="form-control update-quantity" id="updateQuantity-${entryCount}" name="quantity[]" required>
-        </div>
-        <div class="mb-3">
-          <label for="totalPrice-${entryCount}" class="form-label">Total Price</label>
-          <div class="input-group">
-            <span class="input-group-text">$</span>
-            <input type="text" class="form-control total-price" id="totalPrice-${entryCount}" readonly>
-          </div>
-        </div>
-        <button type="button" class="btn btn-danger remove-entry">Remove</button>
-      `;
-      productEntries.appendChild(newEntry);
-      updateRemoveButtons();
-    });
-
-    document.addEventListener('click', function(e) {
-      if (e.target.classList.contains('remove-entry')) {
-        e.target.closest('.product-entry').remove();
-        updateRemoveButtons();
-      }
-    });
-
-    function updateRemoveButtons() {
-      const entries = document.querySelectorAll('.product-entry');
-      entries.forEach((entry, index) => {
-        const removeBtn = entry.querySelector('.remove-entry');
-        removeBtn.style.display = entries.length > 1 ? 'block' : 'none';
-      });
-    }
-
-    document.addEventListener('change', function(e) {
-      if (e.target.classList.contains('update-product')) {
-        const entry = e.target.closest('.product-entry');
-        const selectedOption = e.target.options[e.target.selectedIndex];
-        if (selectedOption.value) {
-          const price = parseFloat(selectedOption.dataset.price);
-          const priceInput = entry.querySelector('.update-price');
-          priceInput.value = price.toFixed(2);
-          calculateTotal(entry);
-        }
-      }
-    });
-
-    document.addEventListener('input', function(e) {
-      if (e.target.classList.contains('update-price') || e.target.classList.contains('update-quantity')) {
-        const entry = e.target.closest('.product-entry');
-        calculateTotal(entry);
-      }
-    });
-
-    function calculateTotal(entry) {
-      const price = parseFloat(entry.querySelector('.update-price').value) || 0;
-      const quantity = parseInt(entry.querySelector('.update-quantity').value) || 0;
-      const total = price * quantity;
-      entry.querySelector('.total-price').value = total.toFixed(2);
-    }
-
-    document.getElementById('updateProductModal').addEventListener('shown.bs.modal', updateRemoveButtons);
-
-    // Automatically show receipt modal if ?showReceipt=true and receipt exists
-    document.addEventListener('DOMContentLoaded', function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('showReceipt') === 'true' && document.getElementById('receiptModal') && <?php echo json_encode(isset($_SESSION['receipt'])); ?>) {
-        const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
-        receiptModal.show();
-        // Remove the query parameter from the URL without reloading
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
-    });
-
-    // Handle Save as PDF button
-    document.getElementById('save-pdf').addEventListener('click', function() {
-      const element = document.getElementById('receipt-content');
-      html2pdf().from(element).save('stock_receipt_' + new Date().toISOString().slice(0, 10) + '.pdf');
-    });
-
-    // Handle Clear and Hide button
-    document.getElementById('clear-hide').addEventListener('click', function() {
-      fetch('/clearReceipt', {
-        method: 'GET',
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest'
-        }
-      })
-      .then(response => response.text())
-      .then(() => {
-        const receiptModal = bootstrap.Modal.getInstance(document.getElementById('receiptModal'));
-        receiptModal.hide();
-      })
-      .catch(error => console.error('Error clearing receipt:', error));
-    });
+    // Pass PHP variables to JavaScript
+    const hasReceipt = <?php echo json_encode(isset($_SESSION['receipt'])); ?>;
+    const showReceipt = new URLSearchParams(window.location.search).get('showReceipt') === 'true';
   </script>
+
+  <!-- External JavaScript and library dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="/js/stock.js"></script>
 </body>
 </html>

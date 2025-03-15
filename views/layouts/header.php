@@ -22,7 +22,7 @@
    <link rel="stylesheet" href="/views/assets/css/general.css">
    <link rel="stylesheet" href="/views/assets/css/add-product.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/views/assets/css/bootstrap.css">
@@ -46,6 +46,12 @@
     <link rel="stylesheet" href="/views/assets/css/setting.css">
    <link rel="stylesheet" href="/views/assets/css/general.css">
    <link rel="stylesheet" href="/views/assets/css/view.css">
+
+   
+  <!-- External JavaScript and library dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="/views/assets/js/stock.js"></script>
 </head>
 
 <body>
