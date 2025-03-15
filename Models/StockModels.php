@@ -42,21 +42,31 @@ class ProductModel {
         }
     }
     
-    public function updateProduct($id, $name, $price, $quantity) {
-        try {
-            $query = "UPDATE " . $this->table . " SET name = :name, price = :price, quantity = :quantity WHERE id = :id";
-            $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(":id", $id, PDO::PARAM_INT);
-            $stmt->bindParam(":name", $name, PDO::PARAM_STR);
-            $stmt->bindParam(":price", $price, PDO::PARAM_STR);
-            $stmt->bindParam(":quantity", $quantity, PDO::PARAM_INT);
-            if (!$stmt->execute()) {
-                throw new Exception('Database error: ' . implode(', ', $stmt->errorInfo()));
-            }
-            return true;
-        } catch (Exception $e) {
-            throw new Exception('Failed to update product: ' . $e->getMessage());
-        }
+    // public function updateProduct($id, $name, $price, $quantity) {
+    //     try {
+    //         $query = "UPDATE " . $this->table . " SET name = :name, price = :price, quantity = :quantity WHERE id = :id";
+    //         $stmt = $this->conn->prepare($query);
+    //         $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+    //         $stmt->bindParam(":name", $name, PDO::PARAM_STR);
+    //         $stmt->bindParam(":price", $price, PDO::PARAM_STR);
+    //         $stmt->bindParam(":quantity", $quantity, PDO::PARAM_INT);
+    //         if (!$stmt->execute()) {
+    //             throw new Exception('Database error: ' . implode(', ', $stmt->errorInfo()));
+    //         }
+    //         return true;
+    //     } catch (Exception $e) {
+    //         throw new Exception('Failed to update product: ' . $e->getMessage());
+    //     }
+    // }
+
+    public function updateProduct($id, $data) {
+        $stmt = $this->conn->prepare("UPDATE stocks SET name = :name, price = :price, quantity = :quantity WHERE id = :id");
+        return $stmt->execute([
+            'id' => $id,
+            'name' => $data['name'],
+            'price' => $data['price'],
+            'quantity' => $data['quantity'],
+        ]);
     }
 
     public function getTopSellingProducts($start_date = null, $end_date = null) {
@@ -78,5 +88,6 @@ class ProductModel {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 }
 ?>
