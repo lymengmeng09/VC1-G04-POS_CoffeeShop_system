@@ -14,23 +14,22 @@ require_once "Controllers/NotificationController.php";
 
 $route = new Router();
 
-// Product management routes
-$route->get("/viewStock", [ViewStockController::class, 'index'])
-      ->middleware("/viewStock", AuthMiddleware::class, 'view_products');
-      $route->post("/add-product", [ViewStockController::class, 'add']);
-$route->post("/update-stock", [ViewStockController::class, 'updateStock']);
-
-// Login routes
-$route->get("/login", [LoginController::class, 'index']);
+// Public routes (no middleware)
+$route->post("/login", [LoginController::class, 'index']);
+$route->post("/login/register", [LoginController::class, 'register']);
 $route->get("/login/logout", [LoginController::class, 'logout']);
 
- 
+//Dashboard
 $route->get("/", [DashboardController::class, 'index'])
       ->middleware("/", AuthMiddleware::class, 'view_dashboard');
- 
+
+$route->get("/viewStock", [ViewStockController::class, 'index'])
+      ->middleware("/viewStock", AuthMiddleware::class, 'view_products');
+$route->post("/add-product", [ViewStockController::class, 'add']);
+$route->post("/update-stock", [ViewStockController::class, 'updateStock']);
 
 //setting
- 
+
 
 // User management routes (admin only for create)
 $route->get("/list-users", [ListUserController::class, 'index'])
@@ -41,6 +40,8 @@ $route->get("/users/create", [ListUserController::class, 'create'])
       ->middleware("/users/create", AuthMiddleware::class, 'create_users');
 $route->post("/users/store", [ListUserController::class, 'store'])
       ->middleware("/users/store", AuthMiddleware::class, 'create_users');
+$route->post("/users/delete", [ListUserController::class, 'destroy'])
+      ->middleware("/users/delete", AuthMiddleware::class, 'delete_users');
 
 // Settings routes (admin only)
 $route->get("/setting", [SettingController::class, 'index'])
