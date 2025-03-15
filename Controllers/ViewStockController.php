@@ -5,26 +5,13 @@ require_once "BaseController.php";
 
 class ProductController extends BaseController{
 
-class ViewStockController {
     private $productModel;
     private $uploadDir = "uploads/";
-    private const ALLOWED_FILE_TYPES = ['jpg', 'jpeg', 'png', 'gif'];
-    private const MAX_FILE_SIZE = 5000000; // 5MB
 
     public function __construct() {
-        try {
-            $this->startSession();
-            $this->productModel = new ProductModel();
-            // Ensure upload directory is relative to public directory
-            $this->uploadDir = __DIR__ . '/../../public/uploads/';
-            if (!file_exists($this->uploadDir)) {
-                if (!mkdir($this->uploadDir, 0755, true)) {
-                    throw new Exception("Failed to create upload directory");
-                }
-            }
-        } catch (Exception $e) {
-            error_log("Error in ViewStockController constructor: " . $e->getMessage());
-            throw $e;
+        $this->productModel = new ProductModel();
+        if (!file_exists($this->uploadDir)) {
+            mkdir($this->uploadDir, 0777, true);
         }
     }
 
