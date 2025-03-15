@@ -30,11 +30,8 @@ $route->get("/", [DashboardController::class, 'index'])
       $route->post("/add-product", [ProductController::class, 'add']);
 $route->post("/update-stock", [ProductController::class, 'updateStock']);
 
-
 //setting
-$route->get("/setting", [SettingController::class, 'index']);
-$route->get("/setting/UserRole", [UserRoleController::class, 'index']);
-$route->get("/setting/notification", [NotificationController::class, 'notification']);
+ 
 
 // User management routes (admin only for create)
 $route->get("/list-users", [ListUserController::class, 'index'])

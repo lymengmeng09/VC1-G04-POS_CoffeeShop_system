@@ -6,7 +6,7 @@ require "views/layouts/navbar.php";
 
  
 <body>
-  <div class="container">
+  <div class="container"> 
     <?php
     if (isset($_SESSION['notification'])) {
         echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">';
@@ -43,26 +43,9 @@ require "views/layouts/navbar.php";
       <h2 class="section-title">Products In Stock</h2>
       <div class="products-grid">
         <?php foreach ($products as $product) : ?>
-            <div class="product-card <?= $product['quantity'] == 0 ? 'out-of-stock' : '' ?>">
-                <div class="product-image">
-                    <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
-                </div>
-                <div class="product-info">
-                    <h3 class="origin"><?= htmlspecialchars($product['name']) ?></h3>
-                    <p class="price">Price: $<?= number_format($product['price'], 2) ?></p>
-                    <p class="quantity">Quantity: <?= $product['quantity'] ?> <?= $product['quantity'] == 0 ? '(Out of Stock)' : '' ?></p>
-                    
-                    <!-- More Vert Button -->
-                    <div class="dropdown">
-                        <button class="dropbtn">
-                            &#8942; <!-- Unicode for three-dot icon -->
-                        </button>
-                        <div class="dropdown-content">
-                            <a href="edit_product.php?id=<?= $product['id'] ?>">Edit</a>
-                            <a href="delete_product.php?id=<?= $product['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
-                        </div>
-                    </div>
-                </div>
+          <div class="product-card <?= $product['quantity'] == 0 ? 'out-of-stock' : '' ?>">
+            <div class="product-image">
+              <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
             </div>
             <div class="product-info">
               <h3 class="origin"><?= htmlspecialchars($product['name']) ?></h3>
@@ -249,15 +232,14 @@ require "views/layouts/navbar.php";
     });
 
     document.addEventListener('input', function(e) {
-  if (e.target.classList.contains('update-price') || e.target.classList.contains('update-quantity')) {
-    const entry = e.target.closest('.product-entry');
-    calculateTotal(entry);
-  }
-});
-
+      if (e.target.classList.contains('update-price') || e.target.classList.contains('update-quantity')) {
+        const entry = e.target.closest('.product-entry');
+        calculateTotal(entry);
+      }
+    });
 
     function calculateTotal(entry) {
-      const price = parseFloat(entry.querySelector('.update-price').value)  || 0;
+      const price = parseFloat(entry.querySelector('.update-price').value) || 0;
       const quantity = parseInt(entry.querySelector('.update-quantity').value) || 0;
       const total = price * quantity;
       entry.querySelector('.total-price').value = total.toFixed(2);
