@@ -4,9 +4,11 @@ require "views/layouts/header.php";
 require "views/layouts/navbar.php";
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
  
 <body>
-  <div class="container"> 
+  <div class="container">
     <?php
     if (isset($_SESSION['notification'])) {
         echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">';
@@ -14,7 +16,7 @@ require "views/layouts/navbar.php";
         echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
         echo '</div>';
         unset($_SESSION['notification']);
-    }
+    } 
     ?>
 
     <div class="header d-flex justify-content-between align-items-center my-4">
@@ -42,17 +44,15 @@ require "views/layouts/navbar.php";
     <div class="products-section">
       <h2 class="section-title">Products In Stock</h2>
       <div class="products-grid">
-        
         <?php foreach ($products as $product) : ?>
-          
           <div class="product-card <?= $product['quantity'] == 0 ? 'out-of-stock' : '' ?>">
-          <div class="dropdown">
-                <button class="dropbtn">⋮</button>
-                <div class="dropdown-content">
-                  <a href="edit_product.php?id=<?= $product['id'] ?>">Edit</a>
-                  <a href="delete_product.php?id=<?= $product['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
-                </div>
+            <div class="dropdown">
+              <button class="dropbtn">⋮</button>
+              <div class="dropdown-content">
+                <a href="edit_product.php?id=<?= $product['id'] ?>">Edit</a>
+                <a href="delete_product.php?id=<?= $product['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
               </div>
+            </div>
             <div class="product-image">
               <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
             </div>
@@ -60,12 +60,12 @@ require "views/layouts/navbar.php";
               <h3 class="origin"><?= htmlspecialchars($product['name']) ?></h3>
               <p class="price">Price: $<?= number_format($product['price'], 2) ?></p>
               <p class="quantity">Quantity: <?= $product['quantity'] ?> <?= $product['quantity'] == 0 ? '(Out of Stock)' : '' ?></p>
-             
             </div>
           </div>
         <?php endforeach; ?>
       </div>
     </div>
+
     <!-- Add New Product Modal -->
     <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -110,7 +110,6 @@ require "views/layouts/navbar.php";
           <div class="modal-body">
             <form method="POST" action="/update-stock">
               <div id="product-entries">
-                <!-- Initial product entry -->
                 <div class="product-entry mb-3">
                   <div class="mb-3">
                     <label for="updateProduct-0" class="form-label">Select Product</label>
@@ -144,6 +143,51 @@ require "views/layouts/navbar.php";
               <button type="button" class="btn btn-secondary mb-3" id="add-more">Add More</button>
               <button type="submit" class="btn btn-success">Update All</button>
             </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Receipt Modal -->
+    <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="receiptModalLabel">Recent Stock Receipt</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <?php if (isset($_SESSION['receipt'])): ?>
+              <p><strong>Action: </strong><?= ucfirst($_SESSION['receipt']['action']) ?></p>
+              <div id="receipt-content">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Product Name</th>
+                      <th>Change in Quantity</th>
+                      <th>Price ($)</th>
+                      <th>Timestamp</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php foreach ($_SESSION['receipt']['items'] as $item): ?>
+                      <tr>
+                        <td><?= htmlspecialchars($item['name']) ?></td>
+                        <td><?= htmlspecialchars($item['change_quantity']) ?></td>
+                        <td><?= number_format($item['price'], 2) ?></td>
+                        <td><?= htmlspecialchars($item['timestamp']) ?></td>
+                      </tr>
+                    <?php endforeach; ?>
+                  </tbody>
+                </table>
+              </div>
+            <?php else: ?>
+              <p>No receipt available.</p>
+            <?php endif; ?>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success" id="save-pdf">Confirm </button>
+            <button type="button" class="btn btn-secondary" id="clear-hide">Clear</button>
           </div>
         </div>
       </div>
@@ -199,12 +243,9 @@ require "views/layouts/navbar.php";
         <button type="button" class="btn btn-danger remove-entry">Remove</button>
       `;
       productEntries.appendChild(newEntry);
-
-      // Update visibility of Remove buttons
       updateRemoveButtons();
     });
 
-    // Handle removal of product entries
     document.addEventListener('click', function(e) {
       if (e.target.classList.contains('remove-entry')) {
         e.target.closest('.product-entry').remove();
@@ -212,7 +253,6 @@ require "views/layouts/navbar.php";
       }
     });
 
-    // Update visibility of Remove buttons (hide for the last entry if only one remains)
     function updateRemoveButtons() {
       const entries = document.querySelectorAll('.product-entry');
       entries.forEach((entry, index) => {
@@ -220,7 +260,7 @@ require "views/layouts/navbar.php";
         removeBtn.style.display = entries.length > 1 ? 'block' : 'none';
       });
     }
-    // Update total price when product, price, or quantity changes
+
     document.addEventListener('change', function(e) {
       if (e.target.classList.contains('update-product')) {
         const entry = e.target.closest('.product-entry');
@@ -248,8 +288,40 @@ require "views/layouts/navbar.php";
       entry.querySelector('.total-price').value = total.toFixed(2);
     }
 
-    // Initialize Remove buttons visibility on modal load
     document.getElementById('updateProductModal').addEventListener('shown.bs.modal', updateRemoveButtons);
+
+    // Automatically show receipt modal if ?showReceipt=true and receipt exists
+    document.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('showReceipt') === 'true' && document.getElementById('receiptModal') && <?php echo json_encode(isset($_SESSION['receipt'])); ?>) {
+        const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
+        receiptModal.show();
+        // Remove the query parameter from the URL without reloading
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    });
+
+    // Handle Save as PDF button
+    document.getElementById('save-pdf').addEventListener('click', function() {
+      const element = document.getElementById('receipt-content');
+      html2pdf().from(element).save('stock_receipt_' + new Date().toISOString().slice(0, 10) + '.pdf');
+    });
+
+    // Handle Clear and Hide button
+    document.getElementById('clear-hide').addEventListener('click', function() {
+      fetch('/clearReceipt', {
+        method: 'GET',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => response.text())
+      .then(() => {
+        const receiptModal = bootstrap.Modal.getInstance(document.getElementById('receiptModal'));
+        receiptModal.hide();
+      })
+      .catch(error => console.error('Error clearing receipt:', error));
+    });
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

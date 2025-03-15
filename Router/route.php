@@ -19,7 +19,7 @@ $route->get("/viewStock", [ViewStockController::class, 'index'])
       ->middleware("/viewStock", AuthMiddleware::class, 'view_products');
       $route->post("/add-product", [ViewStockController::class, 'add']);
 $route->post("/update-stock", [ViewStockController::class, 'updateStock']);
-
+$route->get("/clearReceipt", [ViewStockController::class, 'clearReceipt']);
 // Login routes
 $route->get("/login", [LoginController::class, 'index']);
 $route->get("/login/logout", [LoginController::class, 'logout']);

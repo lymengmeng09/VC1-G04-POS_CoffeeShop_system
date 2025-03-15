@@ -1,10 +1,7 @@
 <?php
 require "Models/StockModels.php";
 
-require_once "BaseController.php";
-
-class ViewStockController extends BaseController{
-
+class ViewStockController {
     private $productModel;
     private $uploadDir = "uploads/";
 
@@ -71,8 +68,14 @@ class ViewStockController extends BaseController{
                     throw new Exception('Failed to add product to database');
                 }
 
+                // Store receipt details with specific timestamp
+                $timestamp = date('Y-m-d H:i:s'); // Ensures specific time (e.g., 2025-03-15 14:30:45)
+                $_SESSION['receipt'] = [
+                    'items' => [['name' => $name, 'change_quantity' => $quantity, 'price' => $price, 'timestamp' => $timestamp]],
+                    'action' => 'added'
+                ];
                 $_SESSION['notification'] = 'Product added successfully';
-                header("Location: /viewStock");
+                header("Location: /viewStock?showReceipt=true");
                 exit;
             } catch (Exception $e) {
                 $_SESSION['notification'] = 'Error adding product: ' . $e->getMessage();
@@ -88,6 +91,7 @@ class ViewStockController extends BaseController{
         header("Location: /viewStock");
         exit;
     }
+
     public function updateStock() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             try {
@@ -95,26 +99,22 @@ class ViewStockController extends BaseController{
                     session_start();
                 }
 
-                // Expect arrays for product_id, price, and quantity
                 $productIds = $_POST["product_id"] ?? [];
                 $newPrices = $_POST["price"] ?? [];
                 $newQuantities = $_POST["quantity"] ?? [];
 
-
-                // Validate that arrays are not empty and have the same length
                 if (empty($productIds) || count($productIds) !== count($newPrices) || count($productIds) !== count($newQuantities)) {
                     throw new Exception('Invalid form data: All fields are required for each product');
                 }
 
                 $successMessages = [];
                 $outOfStockMessages = [];
+                $receiptItems = [];
 
-                // Process each product
                 foreach ($productIds as $index => $productId) {
                     $newPrice = $newPrices[$index];
                     $newQuantity = $newQuantities[$index];
 
-                    // Validate inputs for each product
                     if (empty($productId) || empty($newPrice) || empty($newQuantity)) {
                         throw new Exception("All fields are required for product entry #" . ($index + 1));
                     }
@@ -136,22 +136,27 @@ class ViewStockController extends BaseController{
                         throw new Exception("Product not found for product entry #" . ($index + 1));
                     }
 
-                    // Sum the existing quantity with the new quantity
                     $existingQuantity = (int)$product['quantity'];
                     $updatedQuantity = $existingQuantity + (int)$newQuantity;
 
-                    // Validate updated quantity
                     if ($updatedQuantity < 0) {
                         throw new Exception("Cannot reduce quantity below 0 for product '{$product['name']}'. Current quantity is $existingQuantity.");
                     }
 
-                    // Update the product with new price and summed quantity
                     $result = $this->productModel->updateProduct($productId, $product['name'], (float)$newPrice, $updatedQuantity);
                     if (!$result) {
                         throw new Exception("Failed to update product '{$product['name']}' in database");
                     }
 
-                    // Check for out of stock
+                    // Store receipt details
+                    $changeQuantity = $newQuantity > 0 ? "+$newQuantity" : $newQuantity;
+                    $receiptItems[] = [
+                        'name' => $product['name'],
+                        'change_quantity' => $changeQuantity,
+                        'price' => $newPrice,
+                        'timestamp' => date('Y-m-d H:i:s')
+                    ];
+
                     if ($updatedQuantity == 0) {
                         $outOfStockMessages[] = "Product '{$product['name']}' is now Out of Stock.";
                     } else {
@@ -159,7 +164,12 @@ class ViewStockController extends BaseController{
                     }
                 }
 
-                // Combine all messages into a single notification
+                // Store receipt details in session
+                $_SESSION['receipt'] = [
+                    'items' => $receiptItems,
+                    'action' => 'updated'
+                ];
+
                 $notification = [];
                 if (!empty($successMessages)) {
                     $notification[] = implode(' ', $successMessages);
@@ -169,7 +179,7 @@ class ViewStockController extends BaseController{
                 }
                 $_SESSION['notification'] = implode(' ', $notification);
 
-                header("Location: /viewStock");
+                header("Location: /viewStock?showReceipt=true");
                 exit;
             } catch (Exception $e) {
                 $_SESSION['notification'] = 'Error updating products: ' . $e->getMessage();
@@ -186,12 +196,20 @@ class ViewStockController extends BaseController{
         exit;
     }
 
-
     public function dashboard() {
         $startDate = isset($_POST['start_date']) ? $_POST['start_date'] : null;
         $endDate = isset($_POST['end_date']) ? $_POST['end_date'] : null;
         $topProducts = $this->productModel->getTopSellingProducts($startDate, $endDate);
         include "views/dashboard.php";
+    }
+
+    public function clearReceipt() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        unset($_SESSION['receipt']);
+        header("Location: /viewStock");
+        exit;
     }
 }
 ?>
