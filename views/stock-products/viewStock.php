@@ -42,8 +42,17 @@ require "views/layouts/navbar.php";
     <div class="products-section">
       <h2 class="section-title">Products In Stock</h2>
       <div class="products-grid">
+        
         <?php foreach ($products as $product) : ?>
+          
           <div class="product-card <?= $product['quantity'] == 0 ? 'out-of-stock' : '' ?>">
+          <div class="dropdown">
+                <button class="dropbtn">⋮</button>
+                <div class="dropdown-content">
+                  <a href="edit_product.php?id=<?= $product['id'] ?>">Edit</a>
+                  <a href="/viewStock/delete/<?= $product['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
+                </div>
+              </div>
             <div class="product-image">
               <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
             </div>
@@ -51,13 +60,7 @@ require "views/layouts/navbar.php";
               <h3 class="origin"><?= htmlspecialchars($product['name']) ?></h3>
               <p class="price">Price: $<?= number_format($product['price'], 2) ?></p>
               <p class="quantity">Quantity: <?= $product['quantity'] ?> <?= $product['quantity'] == 0 ? '(Out of Stock)' : '' ?></p>
-              <div class="dropdown">
-                <button class="dropbtn">⋮</button>
-                <div class="dropdown-content">
-                  <a href="edit_product.php?id=<?= $product['id'] ?>">Edit</a>
-                  <a href="delete_product.php?id=<?= $product['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
-                </div>
-              </div>
+             
             </div>
           </div>
         <?php endforeach; ?>

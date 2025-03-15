@@ -1,4 +1,4 @@
- <?php
+<?php
 require_once "Database/Database.php";
 
 class ProductModel {
@@ -77,6 +77,19 @@ class ProductModel {
         }
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+
+    public function deleteProduct($id) {
+        try {
+            $query = "DELETE FROM " . $this->table . " WHERE id = :id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo "Error deleting product: " . $e->getMessage();
+        }
     }
 }
 ?>

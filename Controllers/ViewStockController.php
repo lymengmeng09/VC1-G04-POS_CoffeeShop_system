@@ -3,7 +3,7 @@ require "Models/StockModels.php";
 
 require_once "BaseController.php";
 
-class ProductController extends BaseController{
+class ViewStockController extends BaseController{
 
     private $productModel;
     private $uploadDir = "uploads/";
@@ -100,6 +100,7 @@ class ProductController extends BaseController{
                 $newPrices = $_POST["price"] ?? [];
                 $newQuantities = $_POST["quantity"] ?? [];
 
+
                 // Validate that arrays are not empty and have the same length
                 if (empty($productIds) || count($productIds) !== count($newPrices) || count($productIds) !== count($newQuantities)) {
                     throw new Exception('Invalid form data: All fields are required for each product');
@@ -185,11 +186,18 @@ class ProductController extends BaseController{
         exit;
     }
 
+
     public function dashboard() {
         $startDate = isset($_POST['start_date']) ? $_POST['start_date'] : null;
         $endDate = isset($_POST['end_date']) ? $_POST['end_date'] : null;
         $topProducts = $this->productModel->getTopSellingProducts($startDate, $endDate);
         include "views/dashboard.php";
+    }
+
+
+    public function destroy($id) {
+        $this->productModel->deleteProduct($id);
+        $this->redirect('/viewStock');
     }
 }
 ?>

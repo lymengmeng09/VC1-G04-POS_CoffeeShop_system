@@ -23,10 +23,10 @@ $route->get("/login/logout", [LoginController::class, 'logout']);
 $route->get("/", [DashboardController::class, 'index'])
       ->middleware("/", AuthMiddleware::class, 'view_dashboard');
 
-$route->get("/viewStock", [ProductController::class, 'index'])
+$route->get("/viewStock", [ViewStockController::class, 'index'])
       ->middleware("/viewStock", AuthMiddleware::class, 'view_products');
-$route->post("/add-product", [ProductController::class, 'add']);
-$route->post("/update-stock", [ProductController::class, 'updateStock']);
+$route->post("/add-product", [ViewStockController::class, 'add']);
+$route->post("/update-stock", [ViewStockController::class, 'updateStock']);
 
 //setting
 
