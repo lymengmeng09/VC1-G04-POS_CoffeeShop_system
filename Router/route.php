@@ -15,13 +15,12 @@ require_once "Controllers/UserRoleController.php";
 $route = new Router();
 
 // Product management routes
+// Product management routes
 $route->get("/", [DashboardController::class, 'index']);
-$route->get("/viewStock", [ProductController::class, 'index']);
-$route->get("/add-product", [ProductController::class, 'add']); // GET: redirect back to viewStock
-$route->post("/add-product", [ProductController::class, 'add']); // POST: handle add submission
-$route->get("/update-stock", [ProductController::class, 'updateStock']); // GET: redirect back to viewStock
-$route->post("/update-stock", [ProductController::class, 'updateStock']); // POST: handle stock update
-
+$route->get("/viewStock", [ViewStockController::class, 'index']);
+$route->post("/add-product", [ViewStockController::class, 'add']);
+$route->post("/update-stock", [ViewStockController::class, 'updateStock']);
+$route->post("/delete-product", [ViewStockController::class, 'deleteProduct']);
 // Dashboard route
 $route->get("/dashboard", [ProductController::class, 'dashboard']);
 $route->post("/dashboard", [ProductController::class, 'dashboard']); // Add POST for form submission
