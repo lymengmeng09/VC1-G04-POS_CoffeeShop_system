@@ -9,6 +9,7 @@
     <script src="/views/assets/js/pages/dashboard.js"></script>
     <script src="/views/assets/js/search.js"></script>
     <script src="/views/assets/js/main.js"></script>
+    <script src="/views/assets/js/add-product.js" defer></script>
 </body>
 
 </html>

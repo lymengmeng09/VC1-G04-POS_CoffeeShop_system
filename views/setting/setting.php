@@ -1,5 +1,4 @@
-
-    <div class="settings-container">
+<div class="settings-container">
         <h2 class="mb-4">Settings</h2>
    
 
@@ -17,11 +16,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="#">Security</a>
             </li>
-        </ul>
-
-        <div class="container">   
-               
-                
+        </ul>   
                 <!-- Settings Form -->
                 <div class="settings-form">
                     <div class="form-group">
@@ -77,7 +72,4 @@
                     </div>
                 </div>
             </div>
-        </div>
     </div>
-</body>
-</html>

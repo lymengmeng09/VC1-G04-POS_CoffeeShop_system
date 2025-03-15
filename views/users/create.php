@@ -1,6 +1,5 @@
 <div class="card">
     <div class="card-body">
-        <div class="container">
             <form action="/users/store" method="POST" id="userForm">
                 <div class="mb-3">
                     <label for="name" class="form-label">Name</label>
@@ -35,8 +34,6 @@
                 </div>
                 <button type="submit" class="btn btn-success mt-3">Submit</button>
             </form>
-        </div>
-
     </div>
 </div>
 
