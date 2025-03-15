@@ -16,9 +16,9 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   overflow: hidden;
+  display:block;
  
 }
-
 .header {
   display: flex;
   justify-content: space-between;
@@ -192,22 +192,6 @@ body {
 
 
 /* Notification badge */
-.notification-icon::after {
-  content: '3'; /* Example notification count */
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background: red;
-  color: white;
-  font-size: 12px;
-  font-weight: bold;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  }
   
   .dropdown {
     position: relative; 
@@ -245,4 +229,3 @@ body {
   .dropdown:hover .dropdown-content {
     display: block;
   }
-  

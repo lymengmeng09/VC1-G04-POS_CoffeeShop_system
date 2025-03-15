@@ -3,7 +3,7 @@ require "Models/StockModels.php";
 
 require_once "BaseController.php";
 
-class ProductController extends BaseController{
+class ViewStockController extends BaseController{
 
     private $productModel;
     private $uploadDir = "uploads/";
@@ -88,7 +88,6 @@ class ProductController extends BaseController{
         header("Location: /viewStock");
         exit;
     }
-
     public function updateStock() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             try {
@@ -193,6 +192,12 @@ class ProductController extends BaseController{
         $endDate = isset($_POST['end_date']) ? $_POST['end_date'] : null;
         $topProducts = $this->productModel->getTopSellingProducts($startDate, $endDate);
         include "views/dashboard.php";
+    }
+
+
+    public function destroy($id) {
+        $this->productModel->deleteProduct($id);
+        $this->redirect('/viewStock');
     }
 }
 ?>

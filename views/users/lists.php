@@ -2,17 +2,17 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Member management</h2>
     </div>
-    <div class="d-flex justify-content-between mb-3">
-        <div class="input-group" style="max-width: 330px; height:40px;"> <input type="search" class="form-control" id="searchInput" placeholder="Search" aria-label="Search" oninput="searchTable()">
-        </div>
-        <div class="d-flex justify-content-between mb-3">
-            <div class="d-flex gap-2 me-2">
-                <?php if (AccessControl::hasPermission('create_users')): ?>
-                    <a href="/users/create" class="btn btn-primary add-user-btn">+ Add User</a>
-                <?php endif; ?>
+    <!-- Search and Buttons Row -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="search" class="form-control" id="searchInput" placeholder="Search" aria-label="Search" oninput="searchTable()">
             </div>
-            <div class="dropdown me-2">
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        </div>
+        <div class="col-md-6 text-end">
+            <!-- Role Filter Dropdown -->
+            <div class="btn-group me-2">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" style="background-color: blue;">
                     Role: <?= htmlspecialchars(ucfirst($_GET['role'] ?? 'all')) ?>
                 </button>
                 <ul class="dropdown-menu">
@@ -22,7 +22,12 @@
                     <li><a class="dropdown-item" href="?role=Customer&status=<?= $_GET['status'] ?? 'all' ?>">Customer</a></li>
                 </ul>
             </div>
-
+            <!-- Add User Button (only for admins) -->
+            <?php if (AccessControl::hasPermission('create_users')): ?>
+                <a href="/users/create" class="btn btn-primary">
+                    + Add User
+                </a>
+            <?php endif; ?>
         </div>
     </div>
     <div class="table-responsive">
@@ -33,7 +38,9 @@
                     <th>Customers Name</th>
                     <th>Email</th>
                     <th>Role</th>
-                    <th>Action</th>
+                    <?php if (AccessControl::isAdmin()): ?>
+                        <th>Action</th>
+                    <?php endif; ?>
                 </tr>
             </thead>
             <tbody>
@@ -43,15 +50,22 @@
                             <td><?= htmlspecialchars($user['name']) ?></td>
                             <td><?= htmlspecialchars($user['email']) ?></td>
                             <td><?= htmlspecialchars($user['role_name']) ?></td>
-                            <td>
-                                <a href="" class="btn text-dark btn-warning">Edit</a>
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#user<?= $user['id'] ?>">
-                                    delete
-                                </button>
+                            <?php if (AccessControl::isAdmin()): ?>
+                                <td>
+                                    <?php if (AccessControl::hasPermission('edit_users')): ?>
+                                        <a href="" class="btn text-dark btn-warning">Edit</a>
+                                    <?php endif; ?>
 
-                                <!-- Modal -->
-                                <?php require 'delete.php' ?>
-                            </td>
+                                    <?php if (AccessControl::hasPermission('delete_users')): ?>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#user<?= $user['id'] ?>">
+                                            delete
+                                        </button>
+                                        <!-- Modal -->
+                                        <?php require 'delete.php' ?>
+                                    <?php endif; ?>
+                                </td>
+                            <?php endif; ?>
+
                         </tr>
                         <?php endforeach; ?><?php else: ?>
                         <tr>

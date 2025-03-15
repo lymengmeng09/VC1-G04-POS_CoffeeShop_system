@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const role = url.searchParams.get('role');
             
             // Update the dropdown button text
-            const dropdownButton = document.querySelector('.dropdown .btn-outline-secondary');
+            const dropdownButton = document.querySelector('.btn-group .btn-secondary');
             dropdownButton.textContent = 'Role: ' + (role === 'all' ? 'All' : role);
             
             // Apply the filter
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const role = url.searchParams.get('role');
             
             // Update the dropdown button text
-            const dropdownButton = document.querySelector('.dropdown .btn-outline-secondary');
+            const dropdownButton = document.querySelector('.btn-group .btn-secondary');
             dropdownButton.textContent = 'Role: ' + (role === 'all' ? 'All' : role);
             
             // Apply the filter

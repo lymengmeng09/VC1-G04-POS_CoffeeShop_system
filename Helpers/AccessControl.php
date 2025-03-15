@@ -72,9 +72,11 @@ class AccessControl {
         $staffPermissions = [
             'view_dashboard' => true,
             'view_products' => true,
-            'manage_products' => true,
+            // 'manage_products' => true,
             'view_users' => true,
             'create_users' => false, // Staff cannot create users
+            'edit_users' => false,   // Staff cannot edit users
+            'delete_users' => false, // Staff cannot delete users
             'access_settings' => false, // Staff cannot access settings
         ];
         
