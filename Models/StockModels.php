@@ -59,6 +59,16 @@ class ProductModel {
         }
     }
 
+    public function updateProducts($id, $data) {
+        $stmt = $this->conn->prepare("UPDATE stocks SET name = :name, price = :price, quantity = :quantity WHERE id = :id");
+        return $stmt->execute([
+            'id' => $id,
+            'name' => $data['name'],
+            'price' => $data['price'],
+            'quantity' => $data['quantity'],
+        ]);
+    }
+
     public function getTopSellingProducts($start_date = null, $end_date = null) {
         $query = "
             SELECT s.name AS product_name, SUM(oi.quantity) AS total_sold
@@ -78,8 +88,6 @@ class ProductModel {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-
 
     public function deleteProduct($id) {
         try {

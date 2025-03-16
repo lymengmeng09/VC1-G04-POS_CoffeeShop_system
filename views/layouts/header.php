@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="/views/assets/css/view.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/views/assets/vendors/iconly/bold.css">
     <link rel="stylesheet" href="/views/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/views/assets/vendors/bootstrap-icons/bootstrap-icons.css">
@@ -39,7 +39,7 @@
     <link rel="stylesheet" href="/views/assets/css/setting.css">
    <link rel="stylesheet" href="/views/assets/css/general.css">
    <link rel="stylesheet" href="/views/assets/css/view.css">
- 
+    <link rel="stylesheet" href="/views/assets/css/edit-product.css">
 </head>
 
 <body>

@@ -7,14 +7,12 @@ class ViewStockController extends BaseController{
 
     private $productModel;
     private $uploadDir = "uploads/";
-
     public function __construct() {
         $this->productModel = new ProductModel();
         if (!file_exists($this->uploadDir)) {
             mkdir($this->uploadDir, 0777, true);
         }
     }
-
     public function index() {
         $products = $this->productModel->getAllProducts();
         include "views/stock-products/viewStock.php";
@@ -194,10 +192,32 @@ class ViewStockController extends BaseController{
         include "views/dashboard.php";
     }
 
-
-    public function destroy($id) {
-        $this->productModel->deleteProduct($id);
-        $this->redirect('/viewStock');
+    public function edit() {
+        $id = $_GET['id'];
+        $product = $this->productModel->getProductById($id);
+        if (!$product) {
+            die("Product not found.");
+        }
+        $this->view('stock-products/edit_product', ['product' => $product]);
+    }
+    
+    public function update() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = htmlspecialchars($_POST['id']);
+            $data = [
+                'name' => htmlspecialchars($_POST['name']),
+                'price' => floatval($_POST['price']),
+                'quantity' => intval($_POST['quantity'])
+            ];
+            
+            $product = $this->productModel->getProductById($id);
+            if (!$product) {
+                die("Product not found.");
+            }
+            
+            $this->productModel->updateProducts($id, $data);
+            $this->redirect('/viewStock');
+        }
     }
 }
 ?>

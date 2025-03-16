@@ -14,6 +14,16 @@ require_once "Controllers/NotificationController.php";
 
 $route = new Router();
 
+// Product management routes
+$route->get("/viewStock", [ViewStockController::class, 'index'])
+      ->middleware("/viewStock", AuthMiddleware::class, 'view_products');
+      $route->post("/add-product", [ViewStockController::class, 'add']);
+      $route->get("/edit_product", [ViewStockController::class, 'edit']);
+      $route->put("/update_product", [ViewStockController::class, 'update']);
+$route->post("/update-stock", [ViewStockController::class, 'updateStock']);
+
+
+
 // Public routes (no middleware)
 $route->post("/login", [LoginController::class, 'index']);
 $route->post("/login/register", [LoginController::class, 'register']);
