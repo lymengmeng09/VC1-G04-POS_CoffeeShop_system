@@ -11,8 +11,8 @@ class ViewStockController extends BaseController{
         }
     }
     public function index() {
-        $products = $this->productModel->getAllProducts();
-        include "views/stock-products/viewStock.php";
+        $this->view('stock-products/viewStock', ['products' => $this->productModel->getAllProducts()]);
+       
     }
 
     public function add() {
