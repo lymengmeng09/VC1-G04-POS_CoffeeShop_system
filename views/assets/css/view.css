@@ -229,3 +229,127 @@ body {
   .dropdown:hover .dropdown-content {
     display: block;
   }
+/* Existing styles remain the same, ensure these are included */
+ /* Existing styles remain the same, ensure these are included */
+
+/* Receipt Modal Styles */
+#receiptModal .modal-body {
+  padding: 20px;
+}
+
+#receiptModal .table {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+#receiptModal .table th,
+#receiptModal .table td {
+  text-align: left;
+  padding: 10px;
+  vertical-align: middle;
+}
+
+#receiptModal .table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+#receiptModal .modal-footer {
+  justify-content: space-between; /* Ensure buttons are spaced out */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+  #receiptModal .modal-body {
+    padding: 10px;
+  }
+
+  #receiptModal .table th,
+  #receiptModal .table td {
+    padding: 6px;
+    font-size: 12px;
+  }
+
+  #receiptModal .modal-footer .btn {
+    font-size: 12px;
+    padding: 6px 10px;
+    width: 48%; /* Adjust button width for small screens */
+  }
+}
+.btn-secondary{
+  margin-top:15px;
+  background-color: #4a90e2;
+}
+.user-icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.notification-icon,
+.user-icon {
+  position: relative;
+  cursor: pointer;
+  font-size: 26px;
+  color: #333;
+  transition: color 0.3s ease-in-out;
+}
+
+.notification-icon:hover,
+.user-icon:hover {
+  color: #007bff;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+}
+
+/* Existing styles remain the same, add the following */
+
+/* Add New Product Entry Styles */
+.add-product-entry {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  background-color: #f9f9f9;
+}
+
+.add-product-entry .remove-add-entry {
+  width: 100%;
+  padding: 5px;
+  font-size: 14px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+  .add-product-entry {
+    padding: 10px;
+  }
+
+  .add-product-entry .form-label {
+    font-size: 14px;
+  }
+
+  .add-product-entry .form-control {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  .add-product-entry .remove-add-entry {
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  #addProductModal .modal-body .btn-secondary,
+  #addProductModal .modal-body .btn-primary {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+}

@@ -32,12 +32,15 @@ class ProductModel {
             $stmt->bindParam(":name", $name, PDO::PARAM_STR);
             $stmt->bindParam(":price", $price, PDO::PARAM_STR);
             $stmt->bindParam(":quantity", $quantity, PDO::PARAM_INT);
-            $stmt->bindParam(":image", $image, PDO::PARAM_STR | PDO::PARAM_NULL);
+            $stmt->bindParam(":image", $image, PDO::PARAM_STR);
+            error_log("Executing query: $query with name=$name, price=$price, quantity=$quantity, image=$image");
             if (!$stmt->execute()) {
                 throw new Exception('Database error: ' . implode(', ', $stmt->errorInfo()));
             }
+            error_log("Product added successfully");
             return true;
         } catch (Exception $e) {
+            error_log("Error adding product: " . $e->getMessage());
             throw new Exception('Failed to add product: ' . $e->getMessage());
         }
     }
