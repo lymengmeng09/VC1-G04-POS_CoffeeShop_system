@@ -82,18 +82,4 @@
                  <i class="bi bi-justify fs-3"></i>
              </a>
          </header>
-         <script>
-             document.addEventListener("DOMContentLoaded", function() {
-                 const sidebarItems = document.querySelectorAll(".sidebar-item");
-
-                 sidebarItems.forEach((item) => {
-                     item.addEventListener("click", function() {
-                         // Remove "active" class from all sidebar items
-                         sidebarItems.forEach((el) => el.classList.remove("active"));
-
-                         // Add "active" class to the clicked item
-                         this.classList.add("active");
-                     });
-                 });
-             });
-         </script>
+       

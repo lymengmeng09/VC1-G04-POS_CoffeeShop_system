@@ -238,3 +238,4 @@ document.addEventListener('DOMContentLoaded', function() {
   
     console.log(`Found ${visibleCount} products matching "${query}"`);
   }
+  
