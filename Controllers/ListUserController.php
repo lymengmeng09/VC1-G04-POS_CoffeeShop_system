@@ -52,7 +52,7 @@ class ListUserController extends BaseController
     }
 
 
-    public function destroy()
+    public function destroyg()
     {
         // Check permission before allowing deletion
         if (!AccessControl::hasPermission('delete_users')) {
