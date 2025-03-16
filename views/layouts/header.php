@@ -39,6 +39,7 @@
     <link rel="stylesheet" href="/views/assets/css/setting.css">
    <link rel="stylesheet" href="/views/assets/css/general.css">
    <link rel="stylesheet" href="/views/assets/css/view.css">
+   <link rel="stylesheet" href="/views/assets/css/list-product.css">
 </head>
 
 <body>

@@ -32,6 +32,20 @@ class AddProductController extends BaseController
 
     function create()
     {
-        $this->view('products/create.php');
+        $this->view('products/create');
+    }
+    function store()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            $name =  $_POST['dpm_name'];
+            $description = $_POST['description'];
+            $data = [
+                'dpm_name' => $name,
+                'description' => $description,
+            ];
+            $this->model->createProduct($data);
+            $this->redirect('/departments');
+        }
     }
 }
