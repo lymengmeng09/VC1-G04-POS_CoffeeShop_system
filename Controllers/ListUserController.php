@@ -50,17 +50,9 @@ class ListUserController extends BaseController
             $this->redirect('/list-users');
         }
     }
-    public function edit($id)
-    {
-        // Check permission before allowing edit
-        if (!AccessControl::hasPermission('edit_users')) {
-            header('Location: /list-users?error=unauthorized');
-            exit();
-        }
 
-        // Continue with edit logic
-    }
-    public function destroy()
+
+    public function destroyg()
     {
         // Check permission before allowing deletion
         if (!AccessControl::hasPermission('delete_users')) {
@@ -76,5 +68,45 @@ class ListUserController extends BaseController
     
         $this->redirect('/list-users');
     }
+
+
+    public function edit()
+    {
+        // Get the ID from the URL
+        $id = $_GET['id'];
+        // Get the user from the model
+        $user = $this->model->getUserById($id);
+        // Get the roles from the model
+        $roles = $this->model->getRoles();
+        // Display the edit form
+        $this->view('users/edit', ['user' => $user, 'roles' => $roles]);
+    }
     
+    
+    public function update()
+    {
+        $id = $_GET['id'];
+        // Check if the request method is POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Get the ID from the URL
+            
+            // Get the data from the form
+            $data = [
+                'name' => $_POST['name'],
+                'email' => $_POST['email'],
+                'role_id' => $_POST['role_id']
+            ];
+            
+            // Update the user using the model
+            $this->model->updateUser($id, $data);
+            
+            // Redirect to the list of users
+            $this->redirect('/list-users');
+    }
+    
+    }
 }
+
+    
+ 
+

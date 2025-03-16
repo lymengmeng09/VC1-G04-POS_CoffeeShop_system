@@ -60,7 +60,7 @@ require "views/layouts/navbar.php";
               <button class="dropbtn">⋮</button>
               <div class="dropdown-content">
                 <a href="/edit_product?id=<?= $product['id'] ?>">Edit</a>
-                <a href="delete_product.php?id=<?= $product['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
+                <a href="/delete_product/<?= $product['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
               </div>
             </div>
             <div class="product-image">
