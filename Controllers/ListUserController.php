@@ -68,7 +68,6 @@ class ListUserController extends BaseController
     
         $this->redirect('/list-users');
     }
-<<<<<<< HEAD
 
 
     public function edit()
@@ -105,9 +104,6 @@ class ListUserController extends BaseController
             $this->redirect('/list-users');
     }
     }
-=======
-    
->>>>>>> main
 }
 
     
