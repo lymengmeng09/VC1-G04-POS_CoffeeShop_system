@@ -53,7 +53,7 @@
                             <?php if (AccessControl::isAdmin()): ?>
                                 <td>
                                     <?php if (AccessControl::hasPermission('edit_users')): ?>
-                                        <a href="" class="btn text-dark btn-warning">Edit</a>
+                                        <a href="/edit-user?id=<?= htmlspecialchars($user['id'])?>" class="btn text-dark btn-warning">Edit</a>
                                     <?php endif; ?>
 
                                     <?php if (AccessControl::hasPermission('delete_users')): ?>

@@ -229,3 +229,481 @@ body {
   .dropdown:hover .dropdown-content {
     display: block;
   }
+/* Existing styles remain the same, ensure these are included */
+ /* Existing styles remain the same, ensure these are included */
+
+/* Receipt Modal Styles */
+#receiptModal .modal-body {
+  padding: 20px;
+}
+
+#receiptModal .table {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+#receiptModal .table th,
+#receiptModal .table td {
+  text-align: left;
+  padding: 10px;
+  vertical-align: middle;
+}
+
+#receiptModal .table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+#receiptModal .modal-footer {
+  justify-content: space-between; /* Ensure buttons are spaced out */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+  #receiptModal .modal-body {
+    padding: 10px;
+  }
+
+  #receiptModal .table th,
+  #receiptModal .table td {
+    padding: 6px;
+    font-size: 12px;
+  }
+
+  #receiptModal .modal-footer .btn {
+    font-size: 12px;
+    padding: 6px 10px;
+    width: 48%; /* Adjust button width for small screens */
+  }
+}
+.btn-secondary{
+  margin-top:15px;
+  background-color: #4a90e2;
+}
+.user-icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.notification-icon,
+.user-icon {
+  position: relative;
+  cursor: pointer;
+  font-size: 26px;
+  color: #333;
+  transition: color 0.3s ease-in-out;
+}
+
+.notification-icon:hover,
+.user-icon:hover {
+  color: #007bff;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+}
+
+/* Existing styles remain the same, add the following */
+
+/* Add New Product Entry Styles */
+.add-product-entry {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  background-color: #f9f9f9;
+}
+
+.add-product-entry .remove-add-entry {
+  width: 100%;
+  padding: 5px;
+  font-size: 14px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+  .add-product-entry {
+    padding: 10px;
+  }
+
+  .add-product-entry .form-label {
+    font-size: 14px;
+  }
+
+  .add-product-entry .form-control {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  .add-product-entry .remove-add-entry {
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  #addProductModal .modal-body .btn-secondary,
+  #addProductModal .modal-body .btn-primary {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+}
+
+/* General Mobile-First Layout (For Small Screens) */
+@media (max-width: 768px) {
+  /* Header */
+  .header {
+    flex-direction: column;
+    padding: 10px 15px;
+  }
+  .header h1 {
+    font-size: 22px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  /* Search Section */
+  .search-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .search-bar {
+    width: 100%;
+  }
+  .search-input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .filter-dropdown {
+    width: 100%;
+    border-radius: 4px;
+    margin-top: 5px;
+  }
+
+  /* Products Section */
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 products per row */
+  }
+
+  .product-card {
+    padding: 10px;
+  }
+  .product-image {
+    height: 100px;
+  }
+
+  .price-quantity {
+    gap: 10px;
+  }
+
+  /* Action Buttons */
+  .action-buttons {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  /* User Icons */
+  .user-icons {
+    gap: 15px;
+    justify-content: center;
+    margin-top: 10px;
+  }
+}
+
+/* Tablet and Larger Screens */
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Header */
+  .header {
+    padding: 15px 20px;
+ 
+  }
+  .action-buttons{
+    width: 50%;
+  
+  }
+  /* Search Section */
+  .search-bar {
+    width: 70%;
+  }
+  .filter-dropdown {
+    width: 100px;
+  }
+
+  /* Products Grid */
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 products per row */
+  }
+
+  .product-card {
+    padding: 15px;
+  }
+  .product-image {
+    height: 120px;
+  }
+
+  /* Action Buttons */
+  .action-buttons {
+    gap: 10px;
+  }
+}
+
+/* Mobile Devices */
+@media (max-width: 480px) {
+  /* Header */
+  .header {
+     display: flex;
+    padding: 20px 15px;
+ 
+  }
+  .header h1 {
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 10px;
+ 
+  }
+  .container{
+    width: 120%;
+ 
+    position: relative;
+    right: 10%;
+  }
+  /* Search Section */
+  .search-section {
+    padding: 15px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-bar {
+    width: 100%;
+  }
+  .filter-dropdown {
+    width: 100%;
+    border-radius: 4px;
+  }
+
+  /* Products Grid */
+  .products-grid {
+    grid-template-columns: 1fr; /* 1 product per row */
+  }
+
+  .product-card {
+    padding: 10px;
+  }
+
+  .price-quantity {
+    gap: 5px;
+  }
+
+  .product-image {
+    height: 100px;
+  }
+
+  /* Action Buttons */
+  .action-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Modal */
+  #receiptModal .modal-body {
+    padding: 10px;
+  }
+
+  #receiptModal .table th,
+  #receiptModal .table td {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  /* Avatar Icons */
+  .avatar {
+    width: 35px;
+    height: 35px;
+  }
+
+  /* Add Product Entry */
+  .add-product-entry {
+    padding: 10px;
+  }
+
+  /* Buttons in Modals */
+  #addProductModal .modal-body .btn-secondary,
+  #addProductModal .modal-body .btn-primary {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+}
+/* General Mobile-First Layout (For Small Screens) */
+@media (max-width: 768px) {
+  /* Header */
+  .header {
+    flex-direction: column;
+    padding: 10px 15px;
+  }
+  .header h1 {
+    font-size: 22px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  /* Search Section */
+  .search-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .search-bar {
+    width: 100%;
+  }
+  .search-input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .filter-dropdown {
+    width: 100%;
+    border-radius: 4px;
+    margin-top: 5px;
+  }
+
+  /* Products Section */
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 products per row */
+  }
+
+  .product-card {
+    padding: 10px;
+  }
+  .product-image {
+    height: 100px;
+  }
+
+  .price-quantity {
+    gap: 10px;
+  }
+
+  /* Action Buttons */
+  .action-buttons {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  /* User Icons */
+  .user-icons {
+    gap: 15px;
+    justify-content: center;
+    margin-top: 10px;
+  }
+}
+
+/* Tablet and Larger Screens */
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Header */
+  .header {
+    padding: 15px 20px;
+  }
+
+  /* Search Section */
+  .search-bar {
+    width: 70%;
+  }
+  .filter-dropdown {
+    width: 100px;
+  }
+
+  /* Products Grid */
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 products per row */
+  }
+
+  .product-card {
+    padding: 15px;
+  }
+  .product-image {
+    height: 120px;
+  }
+
+  /* Action Buttons */
+  .action-buttons {
+    gap: 10px;
+  }
+}
+
+/* Mobile Devices */
+@media (max-width: 480px) {
+  /* Header */
+  .header {
+    flex-direction: column;
+    padding: 10px 15px;
+  }
+
+  /* Search Section */
+  .search-section {
+    padding: 15px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-bar {
+    width: 100%;
+  }
+  .filter-dropdown {
+    width: 100%;
+    border-radius: 4px;
+  }
+  /* Products Grid */
+  .products-grid {
+    grid-template-columns: 1fr; /* 1 product per row */
+  }
+  .product-card {
+    padding: 10px;
+  }
+  .price-quantity {
+    gap: 5px;
+  }
+
+  .product-image {
+    height: 100px;
+  }
+
+  /* Action Buttons */
+  .action-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Modal */
+  #receiptModal .modal-body {
+    padding: 10px;
+  }
+
+  #receiptModal .table th,
+  #receiptModal .table td {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  /* Avatar Icons */
+  .avatar {
+    width: 35px;
+    height: 35px;
+  }
+
+  /* Add Product Entry */
+  .add-product-entry {
+    padding: 10px;
+  }
+
+  /* Buttons in Modals */
+  #addProductModal .modal-body .btn-secondary,
+  #addProductModal .modal-body .btn-primary {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+}
