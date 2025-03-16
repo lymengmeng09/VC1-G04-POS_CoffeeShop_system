@@ -56,13 +56,19 @@ class ListUserController extends BaseController
     {
         // Check permission before allowing deletion
         if (!AccessControl::hasPermission('delete_users')) {
-            $id = $_GET['id']; // Get ID from URL
-            $this->model->deleteUser($id);
-            $this->redirect('/list-users');
+            header('Location: /list-users?error=unauthorized');
+            exit();
         }
-
-        // Continue with delete logic
+    
+        // Get ID from URL and delete the user
+        $id = $_GET['id'] ?? null; // Ensure ID exists
+        if ($id) {
+            $this->model->deleteUser($id);
+        }
+    
+        $this->redirect('/list-users');
     }
+<<<<<<< HEAD
 
 
     public function edit()
@@ -99,6 +105,9 @@ class ListUserController extends BaseController
             $this->redirect('/list-users');
     }
     }
+=======
+    
+>>>>>>> main
 }
 
     
