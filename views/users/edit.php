@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-body">
         <div class="container">
-            <form action="/users/update/<?= $user['id'] ?>" method="post">
+        <form method="POST" action="/update-user?id=<?= $user['id'] ?>">
                 <div class="mb-3">
                     <label for="name" class="form-label">Name</label>
                     <input type="text" class="form-control" id="name" name="name" value="<?= $user['name'] ?>" required>

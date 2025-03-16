@@ -46,12 +46,11 @@ $route->post("/users/store", [ListUserController::class, 'store'])
 $route->delete("/users/delete", [ListUserController::class, 'destroy'])
       ->middleware("/users/delete}", AuthMiddleware::class, 'delete_users');
       // Display the edit form
-      $route->get("/users/edit/{id}", [ListUserController::class, 'edit'])
+$route->get("/users/edit/{id}", [ListUserController::class, 'edit'])
       ->middleware("/users/edit/{id}", AuthMiddleware::class, 'edit_users');
       // Update the user
-      $route->post("/users/update/{id}", [ListUserController::class, 'update'])
-      ->middleware("/users/update/{id}", AuthMiddleware::class, 'edit_users');
-
+$route->post("/users/update/{id}", [ListUserController::class, 'update'])
+      ->middleware("/users/update/{id}", AuthMiddleware::class, 'update_users');
 // 
 
 

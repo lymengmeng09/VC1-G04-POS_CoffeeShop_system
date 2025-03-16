@@ -64,54 +64,41 @@ class ListUserController extends BaseController
         // Continue with delete logic
     }
 
-    
+
     public function edit()
-{
-    // Get ID from URL parameter
-    $id = $_GET['id'];
+    {
+        // Get the ID from the URL
+        $id = $_GET['id'];
+        // Get the user from the model
+        $user = $this->model->getUserById($id);
+        // Get the roles from the model
+        $roles = $this->model->getRoles();
+        // Display the edit form
+        $this->view('users/edit', ['user' => $user, 'roles' => $roles]);
+    }
     
-    // Fetch user data using your model
-    $user = $this->model->getUserById($id);
-    $roles = $this->model->getRoles();
-
-    if (!$user) {
-        // Handle the case where the user is not found
-        // You might want to add a flash message system
-        $this->redirect('/list-users');
-        exit();
-    }
-
-    // Pass the data to the view
-    $this->view('users/edit', ['user' => $user, 'roles' => $roles]);
-}
-
-public function update()
-{
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $id = $_POST['id']; // Make sure you have a hidden input with the user ID
-        $name = trim($_POST['name']);
-        $email = trim($_POST['email']);
-        $role_id = (int)$_POST['role_id'];
-
-        // Basic validation
-        if (empty($name) || empty($email) || empty($role_id)) {
-            // Add error handling here
-            $this->redirect('/edit-user?id=' . $id);
-            exit();
-        }
-
-        // Update the user using your model
-        $result = $this->model->updateUser($id, $name, $email, $role_id);
-
-        if ($result) {
-            // Success - redirect to the users list
+    
+    public function update()
+    {
+        $id = $_GET['id'];
+        // Check if the request method is POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Get the ID from the URL
+            
+            // Get the data from the form
+            $data = [
+                'name' => $_POST['name'],
+                'email' => $_POST['email'],
+                'role_id' => $_POST['role_id']
+            ];
+            
+            // Update the user using the model
+            $this->model->updateUser($id, $data);
+            
+            // Redirect to the list of users
             $this->redirect('/list-users');
-        } else {
-            // Failed - redirect back to edit form
-            $this->redirect('/edit-user?id=' . $id);
-        }
     }
-}
+    }
 }
 
     
