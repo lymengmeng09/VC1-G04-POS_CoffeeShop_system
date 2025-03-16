@@ -103,6 +103,7 @@ class ListUserController extends BaseController
             // Redirect to the list of users
             $this->redirect('/list-users');
     }
+    
     }
 }
 

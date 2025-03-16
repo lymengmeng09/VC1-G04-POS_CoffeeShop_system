@@ -271,5 +271,13 @@ class ViewStockController extends BaseController{
         header("Location: /viewStock");
         exit;
     }
+
+    public function destroy($id) {
+        $this->productModel->deleteProduct($id);
+        $this->redirect('/viewStock');
+    }
 }
+
+    
+
 ?>
