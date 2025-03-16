@@ -3,8 +3,8 @@
 
 class AccessControl {
     // Define role names instead of IDs
-    const ADMIN_ROLE = 'Admin'; // Or whatever your admin role is named in the database
-    const STAFF_ROLE = 'Staff'; // Or whatever your staff role is named in the database
+    const ADMIN_ROLE = 'Admin'; 
+    const STAFF_ROLE = 'Staff'; 
     
     /**
      * Check if user is logged in
@@ -12,9 +12,7 @@ class AccessControl {
      * @return bool
      */
     public static function isLoggedIn() {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
+        self::startSession();
         return isset($_SESSION['user']);
     }
     
@@ -24,9 +22,7 @@ class AccessControl {
      * @return string|null
      */
     public static function getUserRole() {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
+        self::startSession();
         // Get the role_name from session
         return $_SESSION['user']['role_name'] ?? null;
     }
@@ -82,5 +78,14 @@ class AccessControl {
         
         // Return permission value or false if not defined
         return $staffPermissions[$permission] ?? false;
+    }
+    
+    /**
+     * Helper method to safely start a session
+     */
+    private static function startSession() {
+        if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
+            session_start();
+        }
     }
 }

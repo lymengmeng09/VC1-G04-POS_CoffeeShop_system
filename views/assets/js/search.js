@@ -70,7 +70,7 @@ function saveUser() {
 
 // Add event listener to the Save button in the modal
 document.addEventListener('DOMContentLoaded', function() {
-    const saveButton = document.querySelector('#addUserModal .modal-footer .btn-primary');
+    const saveButton = document.querySelector('.modal-footer .btn-primary');
     if (saveButton) {
         saveButton.addEventListener('click', saveUser);
     }
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const role = url.searchParams.get('role');
             
             // Update the dropdown button text
-            const dropdownButton = document.querySelector('.btn-group .btn-secondary');
+            const dropdownButton = document.querySelector('.btn-group #btnGroupDrop1');
             dropdownButton.textContent = 'Role: ' + (role === 'all' ? 'All' : role);
             
             // Apply the filter
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const role = url.searchParams.get('role');
             
             // Update the dropdown button text
-            const dropdownButton = document.querySelector('.btn-group .btn-secondary');
+            const dropdownButton = document.querySelector('.btn-group #btnGroupDrop1');
             dropdownButton.textContent = 'Role: ' + (role === 'all' ? 'All' : role);
             
             // Apply the filter

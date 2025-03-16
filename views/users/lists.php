@@ -12,10 +12,10 @@
         <div class="col-md-6 text-end">
             <!-- Role Filter Dropdown -->
             <div class="btn-group me-2">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" style="background-color: blue;">
+                <button id="btnGroupDrop1" type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     Role: <?= htmlspecialchars(ucfirst($_GET['role'] ?? 'all')) ?>
                 </button>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                     <li><a class="dropdown-item" href="?role=all&status=<?= $_GET['status'] ?? 'all' ?>">All Roles</a></li>
                     <li><a class="dropdown-item" href="?role=Admin&status=<?= $_GET['status'] ?? 'all' ?>">Admin</a></li>
                     <li><a class="dropdown-item" href="?role=Staff&status=<?= $_GET['status'] ?? 'all' ?>">Staff</a></li>
