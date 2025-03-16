@@ -18,6 +18,6 @@
         
         <input type="hidden" name="id" value="<?php echo htmlspecialchars($product['id']); ?>">
         <button type="submit" class="btn btn-primary">Update Product</button>
-        <a href="/viewStock" class="btn btn-secondary">Cancel</a>
+        <a href="/viewStock" class="btn btn-outline-secondary">Cancel</a>
     </form>
 </div>
