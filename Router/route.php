@@ -75,4 +75,5 @@ $route->get("/setting/UserRole", [UserRoleController::class, 'index'])
 // products
 $route->get("/products", [AddProductController::class, 'index']);
 $route->get("/products/create", [AddProductController::class, 'create']);
+$route->post("/products/store", [AddProductController::class, 'store']);
 $route->route();
