@@ -1,86 +1,87 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded');
-  
-    // Search functionality with researchProduct
-    const searchInput = document.querySelector('.search-input');
-    if (searchInput) {
-      searchInput.addEventListener('input', function() {
-        const query = this.value;
-        researchProduct(query);
-      });
-    } else {
-      console.error('Search input not found');
-    }
-  
-    // Dynamic form handling for Update Existing Product modal
-    let entryCount = 0;
-    const addMoreButton = document.getElementById('add-more');
-    if (addMoreButton) {
-      addMoreButton.addEventListener('click', function() {
-        console.log('Add More (Update) clicked');
-        entryCount++;
-        const productEntries = document.getElementById('product-entries');
-        const newEntry = document.createElement('div');
-        newEntry.classList.add('product-entry', 'mb-3');
-        newEntry.innerHTML = `
-          <div class="mb-3">
-            <label for="updateProduct-${entryCount}" class="form-label">Select Product</label>
-            <select class="form-control update-product" id="updateProduct-${entryCount}" name="product_id[]" required>
-              <option value="">Select a product...</option>
-              ${getProductOptions()}
-            </select>
+  console.log('DOM loaded');
+
+  // Search functionality with researchProduct
+  const searchInput = document.querySelector('.search-input');
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      const query = this.value;
+      researchProduct(query);
+    });
+  } else {
+    console.error('Search input not found');
+  }
+
+  // Dynamic form handling for Update Existing Product modal
+  let entryCount = 0;
+  const addMoreButton = document.getElementById('add-more');
+  if (addMoreButton) {
+    addMoreButton.addEventListener('click', function() {
+      console.log('Add More (Update) clicked');
+      entryCount++;
+      const productEntries = document.getElementById('product-entries');
+      const newEntry = document.createElement('div');
+      newEntry.classList.add('product-entry', 'mb-3');
+      newEntry.innerHTML = `
+        <div class="mb-3">
+          <label for="updateProduct-${entryCount}" class="form-label">Select Product</label>
+          <select class="form-control update-product" id="updateProduct-${entryCount}" name="product_id[]" required>
+            <option value="">Select a product...</option>
+            ${getProductOptions()}
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="updatePrice-${entryCount}" class="form-label">Price</label>
+          <input type="number" step="0.01" class="form-control update-price" id="updatePrice-${entryCount}" name="price[]" required>
+        </div>
+        <div class="mb-3">
+          <label for="updateQuantity-${entryCount}" class="form-label">Quantity to Add/Subtract</label>
+          <input type="number" class="form-control update-quantity" id="updateQuantity-${entryCount}" name="quantity[]" required>
+        </div>
+        <div class="mb-3">
+          <label for="totalPrice-${entryCount}" class="form-label">Total Price</label>
+          <div class="input-group">
+            <span class="input-group-text">$</span>
+            <input type="text" class="form-control total-price" id="totalPrice-${entryCount}" readonly>
           </div>
-          <div class="mb-3">
-            <label for="updatePrice-${entryCount}" class="form-label">Price</label>
-            <input type="number" step="0.01" class="form-control update-price" id="updatePrice-${entryCount}" name="price[]" required>
-          </div>
-          <div class="mb-3">
-            <label for="updateQuantity-${entryCount}" class="form-label">Quantity to Add/Subtract</label>
-            <input type="number" class="form-control update-quantity" id="updateQuantity-${entryCount}" name="quantity[]" required>
-          </div>
-          <div class="mb-3">
-            <label for="totalPrice-${entryCount}" class="form-label">Total Price</label>
-            <div class="input-group">
-              <span class="input-group-text">$</span>
-              <input type="text" class="form-control total-price" id="totalPrice-${entryCount}" readonly>
-            </div>
-          </div>
-          <button type="button" class="btn btn-danger remove-entry">Remove</button>
-        `;
-        productEntries.appendChild(newEntry);
-        updateRemoveButtons();
-      });
-    } else {
-      console.error('add-more button not found');
-    }
-  
-    // Dynamic form handling for Add New Product modal
-    let addEntryCount = 0;
-    const addMoreProductButton = document.getElementById('add-more-product');
-    if (addMoreProductButton) {
-      addMoreProductButton.addEventListener('click', function() {
-        console.log('Add More Product clicked');
-        addEntryCount++;
-        const addProductEntries = document.getElementById('add-product-entries');
-        const newEntry = document.createElement('div');
-        newEntry.classList.add('product-entry', 'mb-3');
-        newEntry.innerHTML = `
-          <h6>Product ${addEntryCount + 1}</h6>
-          <div class="mb-3">
-            <label for="addName-${addEntryCount}" class="form-label">Product Name</label>
-            <input type="text" class="form-control" id="addName-${addEntryCount}" name="name[]" required>
-          </div>
-          <div class="mb-3">
-            <label for="addPrice-${addEntryCount}" class="form-label">Price</label>
-            <input type="number" step="0.01" class="form-control" id="addPrice-${addEntryCount}" name="price[]" required>
-          </div>
-          <div class="mb-3">
-            <label for="addQuantity-${addEntryCount}" class="form-label">Stock Quantity</label>
-            <input type="number" class="form-control" id="addQuantity-${addEntryCount}" name="quantity[]" required>
-          </div>
-          <div class="mb-3">
-            <label for="addImage-${addEntryCount}" class="form-label">Upload Image</label>
-            <input type="file" class="form-control custom-file-input" id="addImage-${addEntryCount}" name="image[]" accept="image/jpeg,image/png,image/gif" required>
+        </div>
+        <button type="button" class="btn btn-danger remove-entry">Remove</button>
+      `;
+      productEntries.appendChild(newEntry);
+      updateRemoveButtons();
+    });
+  } else {
+    console.error('add-more button not found');
+  }
+
+  // Dynamic form handling for Add New Product modal
+  let addEntryCount = 0;
+  const addMoreProductButton = document.getElementById('add-more-product');
+  if (addMoreProductButton) {
+    addMoreProductButton.addEventListener('click', function() {
+      console.log('Add More Product clicked');
+      addEntryCount++;
+      const addProductEntries = document.getElementById('add-product-entries');
+      const newEntry = document.createElement('div');
+      newEntry.classList.add('product-entry', 'mb-3');
+      newEntry.innerHTML = `
+        <h6>Product ${addEntryCount + 1}</h6>
+        <div class="mb-3">
+          <label for="addName-${addEntryCount}" class="form-label">Product Name</label>
+          <input type="text" class="form-control" id="addName-${addEntryCount}" name="name[]" required>
+        </div>
+        <div class="mb-3">
+          <label for="addPrice-${addEntryCount}" class="form-label">Price</label>
+          <input type="number" step="0.01" class="form-control" id="addPrice-${addEntryCount}" name="price[]" required>
+        </div>
+        <div class="mb-3">
+          <label for="addQuantity-${addEntryCount}" class="form-label">Stock Quantity</label>
+          <input type="number" class="form-control" id="addQuantity-${addEntryCount}" name="quantity[]" required>
+        </div>
+        <div class="mb-3">
+          <label for="addImage-${addEntryCount}" class="form-label">Upload Image</label>
+
+          <input type="file" class="form-control custom-file-input" id="addImage-${addEntryCount}" name="image[]" accept="image/jpeg,image/png,image/gif" required>
           </div>
           <button type="button" class="btn btn-danger remove-entry">Remove</button>
         `;
@@ -180,6 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const receiptModal = bootstrap.Modal.getInstance(document.getElementById('receiptModal'));
         receiptModal.hide();
       })
+
       .catch(error => console.error('Error clearing receipt:', error));
     });
   
@@ -238,4 +240,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
     console.log(`Found ${visibleCount} products matching "${query}"`);
   }
+
+
+
   
