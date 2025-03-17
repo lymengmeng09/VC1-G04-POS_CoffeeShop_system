@@ -12,7 +12,7 @@
         <div class="col-md-6 text-end">
             <!-- Role Filter Dropdown -->
             <div class="btn-group me-2">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" style="background-color: blue;">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" style="background-color: blue;">
                     Role: <?= htmlspecialchars(ucfirst($_GET['role'] ?? 'all')) ?>
                 </button>
                 <ul class="dropdown-menu">

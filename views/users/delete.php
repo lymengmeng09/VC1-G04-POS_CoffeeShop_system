@@ -11,7 +11,7 @@
             <div class="modal-footer">
                 <form action="/users/delete?id=<?= $user['id'] ?>" method="POST">
                     <button type="submit" class="btn btn-danger">Delete</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Discard</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Discard</button>
                 </form>
             </div>
         </div>

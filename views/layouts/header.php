@@ -48,6 +48,7 @@
    <link rel="stylesheet" href="/views/assets/css/general.css">
    <link rel="stylesheet" href="/views/assets/css/view.css">
     <link rel="stylesheet" href="/views/assets/css/edit-product.css">
+    <link rel="stylesheet" href="/views/assets/css/list-product.css">
 
    
   <!-- External JavaScript and library dependencies -->
