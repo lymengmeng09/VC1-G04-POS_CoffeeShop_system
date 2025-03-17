@@ -26,27 +26,27 @@ require "views/layouts/navbar.php";
     } 
     ?>
 
-  <div class="header d-flex justify-content-between align-items-center my-4">
-    <h1>Stock Products</h1>
-    <div class="user-icons">
-      <div class="notification-icon">
-        <i class="fa fa-bell"></i>
-      </div>
-      <div class="user-icon avatar">
-        <i class="fa fa-user-circle"></i>
+    <div class="header d-flex justify-content-between align-items-center my-4">
+      <h1>Stock Products</h1>
+      <div class="user-icons">
+        <div class="notification-icon">
+          <i class="fa fa-bell"></i>
+        </div>
+        <div class="user-icon avatar">
+          <i class="fa fa-user-circle"></i>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="search-section mb-4">
-    <div class="search-bar">
-      <input type="text" class="form-control search-input" placeholder="Search products...">
+    <div class="search-section mb-4">
+      <div class="search-bar">
+        <input type="text" class="form-control search-input" placeholder="Search products...">
+      </div>
+      <div class="action-buttons mt-2">
+        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#updateProductModal">+ Existing Product</button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">+ New Product</button>
+      </div>
     </div>
-    <div class="action-buttons mt-2">
-      <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#updateProductModal">+ Existing Product</button>
-      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">+ New Product</button>
-    </div>
-  </div>
 
     <div class="products-section">
       <h2 class="section-title">Products In Stock</h2>
@@ -113,6 +113,7 @@ require "views/layouts/navbar.php";
             </form>
           </div>
         </div>
+      </div>
     </div>
 
     <!-- Update Existing Product Modal -->
