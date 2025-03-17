@@ -27,23 +27,11 @@ class AddProductModel
 
     // Function to create a new product
     function createProduct($data)
-    {
-        // Prepare the SQL query for inserting a new product
-        $query = "INSERT INTO users (name, image) VALUES (:name, :image)";
-        
-        // Prepare the statement
-        $stmt = $this->conn->prepare($query);
-        
-        // Bind the parameters to prevent SQL injection
-        $stmt->bindParam(':name', $data['name']);
-        $stmt->bindParam(':image', $data['image']);
-        
-        // Execute the query
-        if ($stmt->execute()) {
-            return true; // Return true if the insert was successful
-        } else {
-            return false; // Return false if the insert failed
-        }
-    }
+{
+    // Prepare the statement to insert both 'name' and 'description'
+    $stmt = $this->conn->prepare("INSERT INTO departments (dpm_name, description) VALUES (:dpm_name, :description)",[
+        'dpm_name' => $data['dpm_name'],
+        'description' => $data['description']]);
 }
-?>
+}
+
