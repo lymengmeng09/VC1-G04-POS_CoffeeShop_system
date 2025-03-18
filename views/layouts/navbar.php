@@ -44,7 +44,7 @@
                      <li class="sidebar-item">
                          <a href="#" class='sidebar-link'>
                              <i class="bi bi-file-earmark-medical-fill"></i>
-                             <span>Analytics</span>
+                             <span>Report</span>
                          </a>
                      </li>
                      <li class="sidebar-item  ">
@@ -53,17 +53,6 @@
                              <span>Users</span>
                          </a>
                      </li>
-
-                     <li class="sidebar-item">
-                         <?php if (AccessControl::hasPermission('access_settings')): ?>
-                             <a href="/setting" class='sidebar-link'>
-                                 <i class="bi bi-gear-fill"></i>
-                                 <span>Setting</span>
-                             </a>
-                         <?php endif; ?>
-
-                     </li>
-
                      <li class="sidebar-item">
                          <a href="/login/logout" class='sidebar-link'>
                              <i class="bi bi-box-arrow-in-left"></i>
@@ -82,4 +71,6 @@
                  <i class="bi bi-justify fs-3"></i>
              </a>
          </header>
-       
+<style>
+    
+</style>
