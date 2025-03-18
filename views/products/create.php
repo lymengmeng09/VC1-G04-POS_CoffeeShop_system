@@ -1,7 +1,6 @@
-
 <h2>Add New Product</h2>
 <div class="container mt-3">
-    <form id="productForm" action="submit_product.php" method="post" enctype="multipart/form-data">
+    <form action="/products/store" id="productForm" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="productImage">Product Image</label>
             <input type="file" class="form-control-file" id="productImage" name="productImage">
@@ -14,8 +13,8 @@
             <label for="category">Category</label>
             <select class="form-control" id="category" name="category">
                 <option value="electronics">Electronics</option>
-                <option value="clothing">Clothing</option>
-                <option value="home">Home</option>
+                <option value="clothing">Coffee</option>
+                <option value="home">Matcha</option>
             </select>
         </div>
         <div class="form-group">

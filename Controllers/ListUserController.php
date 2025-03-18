@@ -52,7 +52,7 @@ class ListUserController extends BaseController
     }
 
 
-    public function destroyg()
+    public function destroy()
     {
         // Check permission before allowing deletion
         if (!AccessControl::hasPermission('delete_users')) {
@@ -99,6 +99,26 @@ class ListUserController extends BaseController
             
             // Update the user using the model
             $this->model->updateUser($id, $data);
+            
+            // Redirect to the list of users
+            $this->redirect('/list-users');
+    }
+    
+    }
+    public function reset()
+    {
+        $id = $_GET['id'];
+        // Check if the request method is POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Get the ID from the URL
+            
+            // Get the data from the form
+            $data = [
+                'password' => $_POST['password']
+            ];
+            
+            // Update the user using the model
+            $this->model->resetPassword($id, $data);
             
             // Redirect to the list of users
             $this->redirect('/list-users');

@@ -55,6 +55,14 @@ class UserModel {
             'role_id' => $data['role_id']
         ]);
     }
+    public function resetPassword($id, $data) {
+        $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
+        $stmt = $this->db->prepare("UPDATE users SET password = :password WHERE id = :id");
+        $result = $stmt->execute([
+            'id' => $id,
+            'password' => $hashedPassword,
+        ]);
+    }
 
     public function getUserByEmail($email) {
         $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email");

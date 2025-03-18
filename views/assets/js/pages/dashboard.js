@@ -18,7 +18,7 @@ var optionsProfileVisit = {
 		name: 'sales',
 		data: [9,20,30,20,10,20,30,20,10,20,30,20]
 	}],
-	colors: '#435ebe',
+	colors: 'rgba(101, 67, 33, 0.9)',
 	xaxis: {
 		categories: ["Jan","Feb","Mar","Apr","May","Jun","Jul", "Aug","Sep","Oct","Nov","Dec"],
 	},
