@@ -49,7 +49,7 @@ require "views/layouts/navbar.php";
     </div>
 
     <div class="products-section">
-      <h2 class="section-title">Products In Stock</h2>
+      <h2 class="section-title"></h2>
       <div class="products-grid">
         <?php foreach ($products as $product) : ?>
           <div class="product-card <?= $product['quantity'] == 0 ? 'out-of-stock' : '' ?>" 
