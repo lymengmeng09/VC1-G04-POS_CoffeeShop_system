@@ -11,6 +11,11 @@
     <script src="/views/assets/js/main.js"></script>
     <script src="/views/assets/js/add-product.js" defer></script>
     <script src="/views/assets/js/edit-product.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Bootstrap JS and Popper.js (for Bootstrap components) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="/views/assets/js/sales.js"></script>
 </body>
 
 </html>
