@@ -707,3 +707,261 @@ body {
     padding: 6px 10px;
   }
 }
+
+
+ /* Limit the height of the modal body to show only one row */
+.modal-body {
+  max-height: 400px; /* Adjust as needed */
+  overflow-y: auto;
+}
+
+/* Style for each product entry */
+.product-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+/* Hide additional product entries, only showing the first one */
+.product-entry:not(:first-child) {
+  display: none;
+}
+ 
+.remove-entry {
+  transition: color 0.2s;
+}
+
+.remove-entry:hover {
+  color: #ff0000;
+}
+.modal-lg {
+  max-width: 900px; /* Adjust width as needed */
+}
+
+.product-entry .row {
+  align-items: end; /* Align items at the bottom */
+}
+
+.product-entry .form-label {
+  margin-bottom: 0.25rem; /* Reduce label spacing */
+}
+
+.product-entry .form-control,
+.product-entry .input-group {
+  min-width: 0; /* Prevent overflow */
+}
+
+.remove-entry {
+  margin-top: 1.5rem; /* Align with input fields */
+}
+
+
+
+
+/* exiting and add new  */
+
+/* Modal Content Styling */
+.modal-content {
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Labels */
+.form-label {
+  font-weight: 600;
+  color: #333;
+}
+
+/* Input Fields */
+.form-control {
+  border-radius: 5px;
+  padding: 8px;
+  font-size: 14px;
+}
+
+/* Styled File Input */
+.custom-file-input {
+  border: 2px dashed #bbb;
+  padding: 10px;
+  cursor: pointer;
+  background: #f8f9fa;
+}
+
+.custom-file-input:hover {
+  border-color: #007bff;
+}
+.image-preview .btn{
+  background: #d41f1f;
+  padding: 5px 10px;
+  position: relative;
+  top: 16%;
+  left: 10%;
+   
+   
+}
+
+
+/* 
+Recept style
+  */
+ /* Modal Styling */
+#receiptModal .modal-content {
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#receiptModal .modal-header {
+  background-color: #007bff;
+  color: white;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+#receiptModal .modal-title {
+  font-weight: bold;
+}
+
+#receiptModal .btn-close {
+  filter: invert(1); /* Makes the close button white for better visibility */
+}
+
+/* Receipt Content Styling */
+#receipt-content {
+  text-align: center;
+  padding: 10px;
+}
+
+#receipt-content img {
+  width: 80px; /* Adjust the logo size */
+  margin-bottom: 15px;
+  border-radius: 50%;
+}
+
+/* Table Styling */
+#receiptModal .table {
+  width: 100%;
+  margin-top:8%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+#receiptModal .table thead {
+  background: #f8f9fa;
+}
+
+#receiptModal .table thead th {
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+
+#receiptModal .table tbody td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #dee2e6;
+}
+
+/* Total Price Row */
+#receiptModal .table tbody tr:last-child {
+  background: #007bff;
+  color: white;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+/* Button Styling */
+#receiptModal .modal-footer {
+  display: flex;
+  justify-content: center;
+}
+
+#receiptModal #save-pdf {
+  background-color: #28a745;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+#receiptModal #save-pdf:hover {
+  background-color: #218838;
+}
+.header-recept{
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header-recept h2{
+  font-size: 25px;
+  font-weight: 600;
+  position: relative;
+  right:38% ;
+}
+ 
+/* Image Preview */
+.image-preview {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  border: 1px solid #ddd;
+   
+  border-radius: 5px;
+  height: 10vh;
+   
+}
+
+.image-preview img {
+  max-height: 10%;
+  transition: transform 0.2s ease-in-out;
+}
+
+.image-preview img:hover {
+  transform: scale(1.1);
+}
+
+ 
+ 
+/* Add More Product Button */
+#add-more-product {
+  background: #6c757d;
+  border: none;
+  padding: 8px 15px;
+  font-size: 14px;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+#add-more-product:hover {
+  background: #5a6268;
+}
+
+/* Submit Button */
+.btn-primary {
+  background: #007bff;
+  border: none;
+  padding: 8px 15px;
+  font-size: 14px;
+  border-radius: 5px;
+}
+
+.btn-primary:hover {
+  background: #0056b3;
+}
+
+
+.image-preview img {
+  width: 80px; /* Adjust the width */
+  height: 60px; /* Adjust the height */
+  object-fit: cover; /* Ensures the image fills the box */
+  border-radius: 5px; /* Optional: makes the corners slightly rounded */
+  border: 1px solid #ccc;
+  margin-top: 4%; /* Optional: adds a subtle border */
+}
