@@ -177,72 +177,118 @@ require "views/layouts/navbar.php";
   </div>
 </div>
     <!-- Receipt Modal -->
-    <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
+ <!-- Receipt Modal -->
+<div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="receiptModalLabel">Recent Stock Receipt</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <?php if (isset($_SESSION['receipt'])): ?>
-              <p><strong>Action: </strong><?= ucfirst($_SESSION['receipt']['action']) ?></p>
-              <div id="receipt-content">
-                <div class="header-recept">
-                  <img src="/views/assets/images/logo.png" alt="Logo">
-                  <h2>Stock Receipt</h2>
-                </div>
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>  Quantity</th>
-                      <th>Price($)</th>
-                      <th>Timestamp</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php 
-                    $totalPrice = 0;
-                    foreach ($_SESSION['receipt']['items'] as $item): 
-                      $changeQuantity = (float)str_replace('+', '', $item['change_quantity']);
-                      $itemTotal = $changeQuantity * (float)$item['price'];
-                      $totalPrice += $itemTotal;
-                    ?>
-                     <tr>
-    <td><?= htmlspecialchars($item['name']) ?></td>
-    <td><?= htmlspecialchars($item['change_quantity']) ?></td>
-    <td><?= number_format($item['price'], 2) ?></td>
-    <td>
-        <?php 
-        // Set Cambodia timezone
-        date_default_timezone_set('Asia/Phnom_Penh'); 
-        
-        // Convert timestamp to "Day, Date" format (e.g., "Tuesday, 2025-03-18")
-        echo date('l, Y-m-d', strtotime($item['timestamp'])); 
-        ?>
-    </td>
-</tr>
-
-                    <?php endforeach; ?>
-                    <tr>
-                      <td colspan="2"><strong>Total Price</strong></td>
-                      <td colspan="2"><strong>$<?= number_format($totalPrice, 2) ?></strong></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            <?php else: ?>
-              <p>No receipt available.</p>
-            <?php endif; ?>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-success" id="save-pdf">Confirm</button>
-          </div>
+            <div class="modal-header">
+                <h5 class="modal-title" id="receiptModalLabel">Recent Stock Receipt</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <?php if (isset($_SESSION['receipt'])): ?>
+                    <p><strong>Action: </strong><?= ucfirst($_SESSION['receipt']['action']) ?></p>
+                    <div id="receipt-content">
+                        <div class="header-recept">
+                            <img src="/views/assets/images/logo.png" alt="Logo">
+                            <h2>Stock Receipt</h2>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Quantity</th>
+                                    <th>Price($)</th>
+                                    <th>Total($)</th>
+                                    <th>Timestamp</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php 
+                                // Set Cambodia timezone
+                                date_default_timezone_set('Asia/Phnom_Penh');
+                                
+                                $totalPrice = 0;
+                                foreach ($_SESSION['receipt']['items'] as $item): 
+                                    $changeQuantity = (float)str_replace('+', '', $item['change_quantity']);
+                                    $itemTotal = $changeQuantity * (float)$item['price'];
+                                    $totalPrice += $itemTotal;
+                                ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($item['name']) ?></td>
+                                    <td><?= htmlspecialchars($item['change_quantity']) ?></td>
+                                    <td><?= number_format($item['price'], 2) ?></td>
+                                    <td class="total-cell"><?= number_format($itemTotal, 2) ?></td>
+                                    <td>
+                                        <?= date('Y-m-d', strtotime($item['timestamp'])) ?> <!-- Show only Date -->
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                                <tr>
+                                    <td colspan="2"><strong>Total Price</strong></td>
+                                    <td colspan="2"><strong>$<?= number_format($totalPrice, 2) ?></strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else: ?>
+                    <p>No receipt available.</p>
+                <?php endif; ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="save-pdf">Confirm</button>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+</div>
+
+<!-- JavaScript for Dynamic Updates -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        updateTotals(); // Update totals dynamically
+        showCurrentDateTime(); // Display current Cambodia date and time
+    });
+
+    // Function to calculate totals dynamically
+    function updateTotals() {
+        let totalSum = 0;
+
+        // Select all total cells in the table
+        document.querySelectorAll(".total-cell").forEach(cell => {
+            let rowTotal = parseFloat(cell.textContent.replace(',', ''));
+            if (!isNaN(rowTotal)) {
+                totalSum += rowTotal;
+            }
+        });
+
+        // Update Grand Total
+        document.getElementById("grand-total").textContent = `$${totalSum.toFixed(2)}`;
+    }
+
+    // Function to show current Cambodia date and time
+    function showCurrentDateTime() {
+        function updateDateTime() {
+            let now = new Date();
+            let options = { 
+                weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+                timeZone: 'Asia/Phnom_Penh' // Cambodia Timezone
+            };
+            let formattedDateTime = new Intl.DateTimeFormat('en-US', options).format(now);
+            
+            // Display the date-time (You need to add an element with ID 'current-datetime' in your HTML)
+            let dateTimeElement = document.getElementById("current-datetime");
+            if (dateTimeElement) {
+                dateTimeElement.textContent = formattedDateTime;
+            }
+        }
+
+        updateDateTime(); // Call initially
+        setInterval(updateDateTime, 1000); // Update every second
+    }
+</script>
+
+ 
 
   <!-- Inline script to pass PHP data to JavaScript -->
   <script>

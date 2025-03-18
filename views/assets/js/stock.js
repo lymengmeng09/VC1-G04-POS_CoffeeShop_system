@@ -334,3 +334,6 @@ function researchProduct(query) {
 
   console.log(`Found ${visibleCount} products matching "${query}"`);
 }
+
+
+//Add total recept 
