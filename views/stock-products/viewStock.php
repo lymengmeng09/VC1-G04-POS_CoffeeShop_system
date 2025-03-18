@@ -1,16 +1,3 @@
-<?php
-require "views/layouts/header.php";
-require "views/layouts/navbar.php";
-?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Products</title>
-</head>
-<body>
   <div class="container">
     <?php
     if (isset($_SESSION['notification'])) {
@@ -51,7 +38,13 @@ require "views/layouts/navbar.php";
     <div class="products-section">
       <h2 class="section-title"></h2>
       <div class="products-grid">
-        <?php foreach ($products as $product) : ?>
+        <?php 
+        // Sort products by quantity in ascending order (lowest to highest)
+        usort($products, function($a, $b) {
+            return $a['quantity'] - $b['quantity'];
+        });
+        
+        foreach ($products as $product) : ?>
           <div class="product-card <?= $product['quantity'] == 0 ? 'out-of-stock' : '' ?>" 
                data-name="<?= htmlspecialchars(strtolower($product['name'])) ?>" 
                data-price="<?= $product['price'] ?>" 
@@ -116,7 +109,7 @@ require "views/layouts/navbar.php";
               </div>
             </div>
           </div>
-          <button type="button" class="btn btn-secondary mb-3" id="add-more-product">Add Another Product</button>
+          <button type="button" class="btn btn-secondary mb-3 " id="add-more-product">Add Another Product</button>
           <button type="submit" class="btn btn-primary">Complete</button>
         </form>
       </div>
