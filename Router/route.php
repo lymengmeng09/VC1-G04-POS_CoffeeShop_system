@@ -46,6 +46,7 @@ $route->get("/list-users", [ListUserController::class, 'index'])
       ->middleware("/list-users", AuthMiddleware::class, 'view_users');
       $route->get('/edit-user', [ListUserController::class, 'edit']);
       $route->post('/update-user', [ListUserController::class, 'update']);
+      $route->post('/resetpassword', [ListUserController::class, 'reset']);
 
 // Only admins can create users
 $route->get("/users/create", [ListUserController::class, 'create'])
@@ -75,4 +76,5 @@ $route->get("/setting/UserRole", [UserRoleController::class, 'index'])
 // products
 $route->get("/products", [AddProductController::class, 'index']);
 $route->get("/products/create", [AddProductController::class, 'create']);
+$route->post("/products/store", [AddProductController::class, 'store']);
 $route->route();

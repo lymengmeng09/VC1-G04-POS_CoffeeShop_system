@@ -5,6 +5,34 @@ $user = $_SESSION['user'];
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- Include Chart.js Data Labels Plugin for displaying percentages -->
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
+
+<style>
+    /* Styles for dashboard */   
+    .card-header{
+        background-color: rgba(101, 67, 33, 0.9);
+        color: white;
+    }
+    #chart-profile-visit{
+        color: rgba(101, 67, 33, 0.9);
+
+    }
+    .bar-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .bar {
+            height: 30px;
+            margin-right: 3px;
+        }
+        .legend span {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            margin-right: 5px;
+        }
+</style>
+
 <div class="page-heading">
 <h3>Target Coffee Dashboard</h3>
     </div>
@@ -79,7 +107,7 @@ $user = $_SESSION['user'];
                 <div class="row">
                     <div class="col-12 col-lg-6">
                         <div class="card">
-                            <div class="card-header">
+                            <div class="card-header ">
                                 <h4>Top Selling Products</h4>
                             </div>
                             <div class="card-body">
@@ -89,48 +117,12 @@ $user = $_SESSION['user'];
                     </div>
                     <div class="col-12 col-lg-6">
                         <div class="card">
-                            <div class="card-header">
-                                
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-lg">
-                                        <thead>
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Comment</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="col-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="avatar avatar-md">
-                                                            <img src="/views/assets/images/faces/5.jpg">
-                                                        </div>
-                                                        <p class="font-bold ms-3 mb-0">Si Cantik</p>
-                                                    </div>
-                                                </td>
-                                                <td class="col-auto">
-                                                    <p class="mb-0">Congratulations on your graduation!</p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="col-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="avatar avatar-md">
-                                                            <img src="/views/assets/images/faces/3.jpg">
-                                                        </div>
-                                                        <p class="font-bold ms-3 mb-0">Si Ganteng</p>
-                                                    </div>
-                                                </td>
-                                                <td class="col-auto">
-                                                    <p class="mb-0">Wow amazing design! Can you make another tutorial for this design?</p>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                            <div class="card-body sales">
+                                    <div class="chart-container">
+                                        <h3 class="text-center mb-4">Sales Analytics</h3>
+                                        
+                                        <canvas id="salesChart"></canvas>
+                                    </div>
                             </div>
                         </div>
                     </div>
@@ -152,7 +144,7 @@ $user = $_SESSION['user'];
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        <h4>Recent Messages</h4>
+                        <h4></h4>
                     </div>
                     <div class="card-content pb-4">
                         <div class="recent-message d-flex px-4 py-3">
@@ -183,6 +175,10 @@ $user = $_SESSION['user'];
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="card">
+                <div class="legend text-center mb-3">
+                
                 </div>
             </div>
         </section>
