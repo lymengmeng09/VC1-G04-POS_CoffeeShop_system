@@ -45,7 +45,7 @@ class AddProductController extends BaseController
                 'description' => $description,
             ];
             $this->model->createProduct($data);
-            $this->redirect('/departments');
+            $this->redirect('/products');
         }
     }
 }

@@ -32,6 +32,7 @@
                          <a href="#" class='sidebar-link'>
                              <i class="bi bi-collection-fill"></i>
                              <span>Order</span>
+                        </a> 
                      </li>
                      <li class="sidebar-item">
                          <a href="/viewStock" class='sidebar-link'>
@@ -40,8 +41,8 @@
                          </a>
                      </li>
 
-                     <li class="sidebar-item  ">
-                         <a href="f " class='sidebar-link'>
+                     <li class="sidebar-item">
+                         <a href="#" class='sidebar-link'>
                              <i class="bi bi-file-earmark-medical-fill"></i>
                              <span>Analytics</span>
                          </a>
@@ -53,7 +54,7 @@
                          </a>
                      </li>
 
-                     <li class="sidebar-item  ">
+                     <li class="sidebar-item">
                          <?php if (AccessControl::hasPermission('access_settings')): ?>
                              <a href="/setting" class='sidebar-link'>
                                  <i class="bi bi-gear-fill"></i>
@@ -63,7 +64,7 @@
 
                      </li>
 
-                     <li class="sidebar-item  ">
+                     <li class="sidebar-item">
                          <a href="/login/logout" class='sidebar-link'>
                              <i class="bi bi-box-arrow-in-left"></i>
                              <span>Logout</span>
