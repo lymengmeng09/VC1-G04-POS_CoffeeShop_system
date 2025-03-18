@@ -4,16 +4,11 @@ require_once 'Database/Database.php';
 class AddProductModel
 {
     private $conn;
-
-    // Constructor that initializes the Database connection
     function __construct()
     {
-        // Get the database connection from the Database class
         $database = new Database();
         $this->conn = $database->getConnection();
     }
-
-    // Function to get all products
     function getProducts()
     {
         // Prepare the SQL query to get products
@@ -29,7 +24,7 @@ class AddProductModel
     function createProduct($data)
 {
     // Prepare the statement to insert both 'name' and 'description'
-    $stmt = $this->conn->prepare("INSERT INTO departments (dpm_name, description) VALUES (:dpm_name, :description)",[
+    $stmt = $this->conn->prepare("INSERT INTO products(product_name, descriptio,p rice, category,	stock_status, image_url	,created_at	,updated_at	,category_id) VALUES (:dpm_name, :description)",[
         'dpm_name' => $data['dpm_name'],
         'description' => $data['description']]);
 }
