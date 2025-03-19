@@ -1,0 +1,77 @@
+.card-header {
+    background-color: rgba(101, 67, 33, 0.9);
+    color: white;
+}
+.circle-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    gap: 1rem;
+}
+.circle {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+    width: 100px;
+    height: 100px;
+}
+    #circleContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+    }
+    .circle {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        position: relative;
+    }
+    .beige-circle {
+        background-color: #D3C1A9; /* Light beige for Arabica */
+    }
+    .brown-circle {
+        background-color: #4A2C2A; /* Dark brown for Amazon */
+    }
+    .dark-brown-circle {
+        background-color: #6B4E31; /* Medium brown for Starbucks */
+    }
+    .circle .percent {
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: -5px; /* Adjust to bring name closer */
+    }
+    .circle .name {
+        font-size: 16px;
+        text-transform: uppercase;
+    }
+#chart-profile-visit {
+    color: rgba(101, 67, 33, 0.9);
+}
+.bar-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.bar {
+    height: 30px;
+    margin-right: 3px;
+}
+.legend span {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+}
