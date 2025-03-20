@@ -13,6 +13,10 @@
     <script src="/views/assets/js/edit-product.js" defer></script>
     <script src="/views/assets/js/stock.js"></script>
     <script src="/views/assets/js/form.js"></script>
+    <script src="/views/assets/js/sales.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/venn.js@0.2.20/venn.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
 </body>
 
 </html>
