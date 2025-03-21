@@ -159,5 +159,26 @@ class AddProductController extends BaseController
         }
     }
 
+    public function destroy($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                if ($this->model->deleteProduct($id)) {
+                    $_SESSION['success'] = 'Product deleted successfully!';
+                } else {
+                    $_SESSION['error'] = 'There was an issue deleting the product.';
+                }
+            } catch (PDOException $e) {
+                $_SESSION['error'] = 'Cannot delete product. It may be referenced in other records.';
+            }
+            $this->redirect('/products');
+        } else {
+            $_SESSION['error'] = 'Invalid request method.';
+            $this->redirect('/products');
+        }
+    }
+
+
+
     
 }

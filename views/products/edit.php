@@ -67,4 +67,5 @@
             <button type="button" class="btn btn-secondary" onclick="window.location.href='/products'">Cancel</button>
         </div>
     </form>
+    
 </div>

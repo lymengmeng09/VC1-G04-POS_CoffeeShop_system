@@ -80,5 +80,13 @@ function updateProduct($data) {
     return $stmt->execute();
 }
 
+// Delete a product
+function deleteProduct($id) {
+    $query = "DELETE FROM products WHERE product_id = :id";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(':id', $id);
+    return $stmt->execute();
+}
+
 
 }

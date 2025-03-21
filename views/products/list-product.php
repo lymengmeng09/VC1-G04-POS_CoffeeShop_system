@@ -2,7 +2,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Product Management</h2>
         <button class="btn btn-primary text-light">
-            <a href="/products/create"><i class="fas fa-plus me-2 text-light"></i> Add New Product</a>
+             <a href="/products/create"><i class="fas fa-plus me-2 text-light"></i> Add New Product</a>
         </button>
     </div>
 
