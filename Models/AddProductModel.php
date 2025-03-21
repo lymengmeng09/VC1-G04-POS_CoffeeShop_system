@@ -32,5 +32,53 @@ class AddProductModel {
         // Execute the statement
         return $stmt->execute();
     }
+
+    // Get a product by ID
+function getProductById($id) {
+    $query = "SELECT * FROM products WHERE product_id = :id";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
+// Update a product
+function updateProduct($data) {
+    // Check if we need to update the image
+    if (!empty($data['image_url'])) {
+        $query = "UPDATE products 
+                  SET product_name = :product_name, 
+                      price = :price, 
+                      image_url = :image_url, 
+                      category = :category, 
+                      category_id = :category_id 
+                  WHERE product_id = :product_id";
+    } else {
+        $query = "UPDATE products 
+                  SET product_name = :product_name, 
+                      price = :price, 
+                      category = :category, 
+                      category_id = :category_id 
+                  WHERE product_id = :product_id";
+    }
+    
+    $stmt = $this->conn->prepare($query);
+    
+    // Bind parameters
+    $stmt->bindParam(':product_name', $data['product_name']);
+    $stmt->bindParam(':price', $data['price']);
+    $stmt->bindParam(':category', $data['category']);
+    $stmt->bindParam(':category_id', $data['category_id']);
+    $stmt->bindParam(':product_id', $data['product_id']);
+    
+    // Bind image_url only if it's included in the query
+    if (!empty($data['image_url'])) {
+        $stmt->bindParam(':image_url', $data['image_url']);
+    }
+    
+    // Execute the statement
+    return $stmt->execute();
+}
+
+
+}
