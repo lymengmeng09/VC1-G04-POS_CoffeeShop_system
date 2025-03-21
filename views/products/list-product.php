@@ -72,9 +72,9 @@
                 <h3>Bills</h3>
                 <table class="table table-bordered">
                     <div id="cart-table-body">
-
                     </div>
                 </table>
+                <button id="clear-all" class="btn btn-danger">Clear</button>
 
                 <div class="d-flex justify-content-between" id="btn">
                     <div class="cart-total">Total: $<span id="cart-total">0.00</span></div>
@@ -86,6 +86,24 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
+
+<!-- Inline JavaScript for Dropdown Functionality -->
+<script>
+    document.querySelectorAll('.dropbtn').forEach(button => {
+        button.addEventListener('click', function() {
+            const dropdownContent = this.nextElementSibling;
+            dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+        });
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                dropdown.style.display = 'none';
+            });
+        }
+    });
+</script>
