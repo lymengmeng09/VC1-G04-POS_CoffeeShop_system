@@ -19,15 +19,17 @@
                     </div>
                 </div>
                 <div class="col-md-2 category">
-                    <select class="form-select" name="category" id="categoryFilter">
-                        <option value="">All Categories</option>
-                        <?php foreach ($categories as $category): ?>
-                            <option value="<?php echo htmlspecialchars($category); ?>" <?php echo (isset($_GET['categories']) && $_GET['categories'] == $category) ? 'selected' : ''; ?>>
-                                <option value=""><?= htmlspecialchars($user['category_name']) ?></option>
-                                <?php echo htmlspecialchars($category); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                    <div class="btn-group me-2">
+                        <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            categories: <?= htmlspecialchars(ucfirst($_GET['category_name'] ?? 'all')) ?>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="">All category</a></li>
+                            <li><a class="dropdown-item" href="">Coffee</a></li>
+                            <li><a class="dropdown-item" href="">Tea</a></li>
+                            <li><a class="dropdown-item" href="">Smoothies</a></li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="col-md shop" style="position: relative;">
                     <a href="javascript:void(0)" id="cart-icon">
@@ -37,7 +39,6 @@
                 </div>
             </form>
         </div>
-        <hr>
 
         <div class="row g-4 coffee-grid">
             <!-- Product Section -->
@@ -47,6 +48,16 @@
                         <div class="card border-0 h-100">
                             <div class="text-center p-2">
                                 <div class="product-entry">
+                                    <div class="dropdown">
+                                        <button class="dropbtn">⋮</button>
+                                        <div class="dropdown-content">
+                                        <a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>">Edit</a>
+                                        <form action="/products/delete/<?= htmlspecialchars($product['product_id']) ?>" method="POST" style="display:inline;">
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <button type="submit" onclick="return confirm('Are you sure?')" style="background:none;border:none;color:#000;padding:0;">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
                                     <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>" class="img-fluid mb-2">
                                     <div class="mt-2">
                                         <h6 class="card-title fw-normal text-center mb-1" style="font-size: 0.9rem;">
@@ -72,9 +83,9 @@
                 <h3>Bills</h3>
                 <table class="table table-bordered">
                     <div id="cart-table-body">
-
                     </div>
                 </table>
+                <button id="clear-all" class="btn btn-danger">Clear</button>
 
                 <div class="d-flex justify-content-between" id="btn">
                     <div class="cart-total">Total: $<span id="cart-total">0.00</span></div>
@@ -86,6 +97,24 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
+
+<!-- Inline JavaScript for Dropdown Functionality -->
+<script>
+    document.querySelectorAll('.dropbtn').forEach(button => {
+        button.addEventListener('click', function() {
+            const dropdownContent = this.nextElementSibling;
+            dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+        });
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                dropdown.style.display = 'none';
+            });
+        }
+    });
+</script>
