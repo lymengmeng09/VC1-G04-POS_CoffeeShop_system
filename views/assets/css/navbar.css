@@ -1,0 +1,30 @@
+.navbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 1rem;
+  margin-bottom: 50px;
+}
+
+.navbar .bi-bell-fill {
+  color: #6c757d; /* Muted color for the bell icon */
+}
+
+.navbar .bi-bell-fill:hover {
+  color: #343a40; /* Darker shade on hover */
+}
+
+.navbar .rounded-circle {
+  border: 2px solid #e9ecef; /* Light border around the avatar */
+}
+
+.navbar .dropdown-menu {
+  margin-top: 0.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+.img{
+  margin-right: 800px;
+}

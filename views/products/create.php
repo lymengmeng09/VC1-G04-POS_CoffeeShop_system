@@ -26,8 +26,8 @@
             <input type="number" class="form-control" id="categoryId" name="category_id" placeholder="Enter category ID" required>
         </div>
          <div class="btu-save-cancel">
-             <button type="submit" class="btn btn-primary">Save Product</button>
-             <button type="button" class="btn btn-secondary" onclick="resetForm()"><a href="/products">Cancel</a></button>
+             <button type="submit" class="btn btn-primary m-2">Save Product</button>
+             <button type="button" class="btn btn-secondary m-2" onclick="resetForm()"><a href="/products">Cancel</a></button>
          </div>
     </form>
 </div>

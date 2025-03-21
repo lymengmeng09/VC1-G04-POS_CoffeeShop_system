@@ -33,4 +33,3 @@ class AddProductModel {
         return $stmt->execute();
     }
 }
-

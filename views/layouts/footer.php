@@ -17,6 +17,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/venn.js@0.2.20/venn.min.js"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="/views/assets/js/navbar.js"></script>
+    
 </body>
 
 </html>
