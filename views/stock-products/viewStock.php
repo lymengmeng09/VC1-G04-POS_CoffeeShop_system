@@ -1,5 +1,5 @@
   <div class="container">
-    <?php
+  <?php
     if (isset($_SESSION['notification'])) {
         // Determine the alert type based on message content
         $notification = $_SESSION['notification'];
@@ -16,13 +16,18 @@
     <div class="header d-flex justify-content-between align-items-center my-4">
       <h1>Stock Products</h1>
       <div class="user-icons">
-        <div class="notification-icon">
+        <div class="notification-icon" id="notificationIcon">
           <i class="fa fa-bell"></i>
+          <span class="notification-count" id="notificationCount" style="display: none;">0</span>
         </div>
         <div class="user-icon avatar">
           <i class="fa fa-user-circle"></i>
         </div>
       </div>
+    </div>
+
+    <div class="notification-dropdown" id="notificationDropdown" style="display: none;">
+        <div class="notification-content" id="notificationContent"></div>
     </div>
 
     <div class="search-section mb-4">
@@ -169,7 +174,7 @@
     </div>
   </div>
 </div>
-    <!-- Receipt Modal -->
+    
  <!-- Receipt Modal -->
 <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -290,9 +295,6 @@
     const showReceipt = new URLSearchParams(window.location.search).get('showReceipt') === 'true';
   </script>
  
-  <!-- External JavaScript and library dependencies -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script src="/js/stock.js"></script>
+   
 </body>
 </html>
