@@ -2,7 +2,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Product Management</h2>
         <button class="btn btn-primary text-light">
-            <a href="/products/create"><i class="fas fa-plus me-2 text-light"></i> Add New Product</a>
+            <a href="/products/create"><i class="fas fa-plus me-2 text-light"></i> Add Product</a>
         </button>
     </div>
 
@@ -85,15 +85,12 @@
                     <div id="cart-table-body">
                     </div>
                 </table>
-                <button id="clear-all" class="btn btn-danger">Clear</button>
-
-                <div class="d-flex justify-content-between" id="btn">
+                <div class="d-flex justify-content-between total" id="btn">
                     <div class="cart-total">Total: $<span id="cart-total">0.00</span></div>
                     <div class="btn_cart">
                         <button id="clear-all" class="btn btn-secondary">Cancel</button>
                         <button id="PayMent" class="btn btn-primary">Pay New</button>
                     </div>
-
                 </div>
             </div>
         </div>
