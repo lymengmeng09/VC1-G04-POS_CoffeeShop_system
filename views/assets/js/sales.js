@@ -1,45 +1,54 @@
-
-        // Get the canvas element
-        const ctx = document.getElementById('salesChart').getContext('2d');
-
-        // Create the chart
-        new Chart(ctx, {
-            type: 'line', // Line chart with filled area
-            data: {
-                labels: ['M', 'T', 'W', 'T', 'F'], // Days of the week
-                datasets: [{
-                    label: 'Sales',
-                    data: [30, 70, 40, 80, 60], // Sample data points (you can adjust these)
-                    fill: true, // Fills the area under the line
-                    backgroundColor: 'rgba(39, 167, 252, 0.2)', // Light blue fill
-                    borderColor: 'rgba(54, 162, 235, 1)', // Blue line
-                    borderWidth: 2,
-                    tension: 0.4, // Smooth curve
-                    pointRadius: 5, // Size of the points
-                    pointBackgroundColor: 'rgba(101, 67, 33, 0.9)', // Point color
-                    pointBorderColor: '#fff', // Point border color
-                    pointBorderWidth: 2
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100, // Adjust based on your data
-                        ticks: {
-                            stepSize: 20 // Adjust the step size for y-axis
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false // Hide vertical grid lines
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false // Hide the legend
-                    }
-                }
+// Sales Report Chart (Placeholder)
+const ctx1 = document.getElementById('chart-profile-visit').getContext('2d');
+new Chart(ctx1, {
+    type: 'bar',
+    data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [{
+            label: 'Sales',
+            data: [12000, 19000, 30000, 25000, 27000, 22000, 20000, 26000, 25000, 27000, 29000, 32000], // Now 12 values
+            backgroundColor: 'rgba(101, 67, 33, 0.9)'
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
             }
-        });
+        },
+        plugins: {
+            datalabels: {
+                color: 'white',
+                anchor: 'end',
+                align: 'top'
+            }
+        }
+    }
+});
+
+
+// Top Selling Products Chart (Placeholder)
+const ctx2 = document.getElementById('top-products-chart').getContext('2d');
+new Chart(ctx2, {
+    type: 'pie',
+    data: {
+        labels: ['Espresso', 'Latte', 'Cappuccino', 'Americano'],
+        datasets: [{
+            data: [30, 25, 20, 25],
+            backgroundColor: ['#8E5D42', '#844A24', '#8E5D43', '#B98C6A']
+        }]
+    },
+    options: {
+        plugins: { datalabels: { color: 'white', font: { weight: 'bold' } } }
+    }
+});
+new Chart(document.getElementById('donutChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['External', 'Internal'],
+        datasets: [{
+            data: [25.2, 74.8],
+            backgroundColor: ['#d3d3d3', '#844A24']
+        }]
+    }
+});

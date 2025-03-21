@@ -25,7 +25,7 @@
   <link rel="shortcut icon" href="/views/assets/images/favicon.svg" type="image/x-icon">
   <link rel="stylesheet" href="/views/assets/css/edit-product.css">
   <link rel="stylesheet" href="/views/assets/css/list-product.css">
-
+  <link rel="stylesheet" href="/views/assets/css/Dashboard.css">
 </head>
 
 <body>
