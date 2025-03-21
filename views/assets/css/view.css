@@ -97,16 +97,6 @@ body {
   font-size: 14px;
 }
 
-.btn-outline {
-  background-color: white;
-  border: 1px solid #4a90e2;
-  color: #4a90e2;
-}
-
-.btn-primary {
-  background-color: #4a90e2;
-  color: white;
-}
 
 .products-section {
   padding: 20px;
@@ -275,10 +265,6 @@ body {
     padding: 6px 10px;
     width: 48%; /* Adjust button width for small screens */
   }
-}
-.btn-secondary{
-  margin-top:15px;
-  background-color: #4a90e2;
 }
 .user-icons {
   display: flex;
