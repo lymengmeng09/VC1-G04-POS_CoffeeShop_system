@@ -1,32 +1,36 @@
 <?php
 require_once 'Database/Database.php';
-
-class AddProductModel
-{
+class AddProductModel {
     private $conn;
-    function __construct()
-    {
+
+    function __construct() {
         $database = new Database();
         $this->conn = $database->getConnection();
     }
-    function getProducts()
-    {
-        // Prepare the SQL query to get products
-        $query = "SELECT * FROM users ORDER BY id DESC";
-        
-        // Execute the query and return the results
+
+   
+    function getProducts() {
+        $query = "SELECT * FROM products ORDER BY product_id DESC";
         $stmt = $this->conn->prepare($query);
-         // Execute the statement
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);  // Fetch all the results as an associative array
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // Function to create a new product
-    function createProduct($data)
-{
-    // Prepare the statement to insert both 'name' and 'description'
-    $stmt = $this->conn->prepare("INSERT INTO products(product_name, descriptio,p rice, category,	stock_status, image_url	,created_at	,updated_at	,category_id) VALUES (:dpm_name, :description)",[
-        'dpm_name' => $data['dpm_name'],
-        'description' => $data['description']]);
-}
+    function createProduct($data) {
+        $query = "INSERT INTO products (product_name, price, image_url, category, category_id)
+                  VALUES (:product_name, :price, :image_url, :category, :category_id)";
+        $stmt = $this->conn->prepare($query);
+
+        // Bind parameters
+        $stmt->bindParam(':product_name', $data['product_name']);
+        $stmt->bindParam(':price', $data['price']);
+        $stmt->bindParam(':image_url', $data['image_url']);
+        $stmt->bindParam(':category', $data['category']);
+        $stmt->bindParam(':category_id', $data['category_id']);
+
+        // Execute the statement
+        return $stmt->execute();
+    }
 }
 

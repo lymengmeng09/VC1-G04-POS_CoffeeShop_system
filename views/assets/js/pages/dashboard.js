@@ -46,7 +46,7 @@ let optionsVisitorsProfile  = {
 
 var optionsEurope = {
 	series: [{
-		name: 'series1',
+		name: 'sales',
 		data: [310, 800, 600, 430, 540, 340, 605, 805,430, 540, 340, 605]
 	}],
 	chart: {
@@ -56,7 +56,7 @@ var optionsEurope = {
 			show:false,
 		},
 	},
-	colors: ['#5350e9'],
+	colors: ['#00A34C'],
 	stroke: {
 		width: 2,
 	},
@@ -94,11 +94,11 @@ var optionsEurope = {
 
 let optionsAmerica = {
 	...optionsEurope,
-	colors: ['#008b75'],
+	colors: ['#8E5D43'],
 }
 let optionsIndonesia = {
 	...optionsEurope,
-	colors: ['#dc3545'],
+	colors: ['#FFC107'],
 }
 
 

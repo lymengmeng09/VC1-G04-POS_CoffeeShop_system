@@ -22,7 +22,8 @@
                     <select class="form-select" name="category" id="categoryFilter">
                         <option value="">All Categories</option>
                         <?php foreach ($categories as $category): ?>
-                            <option value="<?php echo htmlspecialchars($category); ?>" <?php echo (isset($_GET['category']) && $_GET['category'] == $category) ? 'selected' : ''; ?>>
+                            <option value="<?php echo htmlspecialchars($category); ?>" <?php echo (isset($_GET['categories']) && $_GET['categories'] == $category) ? 'selected' : ''; ?>>
+                                <option value=""><?= htmlspecialchars($user['category_name']) ?></option>
                                 <?php echo htmlspecialchars($category); ?>
                             </option>
                         <?php endforeach; ?>
@@ -37,99 +38,72 @@
             </form>
         </div>
         <hr>
+
         <div class="row g-4 coffee-grid">
-
+            <!-- Product Section -->
             <div class="row g-4 coffee-grid">
-                <!-- Product Section -->
-                <div class="col-6 col-md-2-4 product-item" data-category="Coffee">
-                    <div class="card border-0 h-100">
-                        <div class="text-center p-2">
-                            <img src="/views/assets/images/coffee.jpg" alt="Matcha" class="img-fluid mb-2">
-                            <div class="mt-2">
-                                <h6 class="card-title fw-normal text-center mb-1" style="font-size: 0.9rem;">
-                                    Matcha
-                                </h6>
-                                <p class="text-success fw-bold mb-0">$7.99</p>
-                                <button class="btn-Order" data-name="Matcha" data-price="7.99" data-img="/views/assets/images/coffee.jpg">
-                                    Order New
-                                </button>
+                <?php foreach ($products as $index => $product): ?>
+                    <div class="col-6 col-md-3 product-item" data-category="Coffee">
+                        <div class="card border-0 h-100">
+                            <div class="text-center p-2">
+                                <div class="product-entry">
+                                    <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>" class="img-fluid mb-2">
+                                    <div class="mt-2">
+                                        <h6 class="card-title fw-normal text-center mb-1" style="font-size: 0.9rem;">
+                                            <?= htmlspecialchars($product['product_name']) ?>
+                                        </h6>
+                                        <p class="text-success fw-bold mb-0">
+                                            $<?= number_format($product['price'], 2) ?>
+                                        </p>
+                                        <button class="btn-Order" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-price="<?= number_format($product['price'], 2) ?>" data-img="<?= htmlspecialchars($product['image_url']) ?>">
+                                            Order New
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="col-6 col-md-2-4 product-item" data-category="Coffee">
-                    <div class="card border-0 h-100">
-                        <div class="text-center p-2">
-                            <img src="/views/assets/images/coffee.jpg" alt="Coffee" class="img-fluid mb-2">
-                            <div class="mt-2">
-                                <h6 class="card-title fw-normal text-center mb-1" style="font-size: 0.9rem;">
-                                    Coffee
-                                </h6>
-                                <p class="text-success fw-bold mb-0">$7.99</p>
-                                <button class="btn-Order" data-name="Coffee" data-price="7.99" data-img="/views/assets/images/coffee.jpg">
-                                    Order New
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-6 col-md-2-4 product-item" data-category="Coffee">
-                    <div class="card border-0 h-100">
-                        <div class="text-center p-2">
-                            <img src="/views/assets/images/coffee.jpg" alt="Matcha Latte" class="img-fluid mb-2">
-                            <div class="mt-2">
-                                <h6 class="card-title fw-normal text-center mb-1" style="font-size: 0.9rem;">
-                                    Matcha Latte
-                                </h6>
-                                <p class="text-success fw-bold mb-0">$7.99</p>
-                                <button class="btn-Order" data-name="Matcha Latte" data-price="7.99" data-img="/views/assets/images/coffee.jpg">
-                                    Order New
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-2-4 product-item" data-category="Coffee">
-                    <div class="card border-0 h-100">
-                        <div class="text-center p-2">
-                            <img src="/views/assets/images/coffee.jpg" alt="Matcha Latte" class="img-fluid mb-2">
-                            <div class="mt-2">
-                                <h6 class="card-title fw-normal text-center mb-1" style="font-size: 0.9rem;">
-                                    Latte
-                                </h6>
-                                <p class="text-success fw-bold mb-0">$7.99</p>
-                                <button class="btn-Order" data-name="Latte" data-price="7.99" data-img="/views/assets/images/coffee.jpg">
-                                    Order New
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Add more product items here -->
+                <?php endforeach; ?>
             </div>
-            <tbody id="cart-table-body">
-                <!-- Cart items will be dynamically inserted here -->
-            </tbody>
+
 
             <!-- Cart Table -->
             <div id="cart-table" style="display: none;" class="card-order">
                 <h3>Bills</h3>
                 <table class="table table-bordered">
                     <div id="cart-table-body">
-
                     </div>
                 </table>
-                <button id="clear-all" class="btn btn-danger">Clear Cart</button>
+                <button id="clear-all" class="btn btn-danger">Clear</button>
 
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between" id="btn">
                     <div class="cart-total">Total: $<span id="cart-total">0.00</span></div>
-                    <button id="PayMent" class="btn btn-primary">Pay New</button>
+                    <div class="btn_cart">
+                        <button id="clear-all" class="btn btn-secondary">Cancel</button>
+                        <button id="PayMent" class="btn btn-primary">Pay New</button>
+                    </div>
+
                 </div>
             </div>
         </div>
-
     </div>
 </div>
+
+<!-- Inline JavaScript for Dropdown Functionality -->
+<script>
+    document.querySelectorAll('.dropbtn').forEach(button => {
+        button.addEventListener('click', function() {
+            const dropdownContent = this.nextElementSibling;
+            dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+        });
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                dropdown.style.display = 'none';
+            });
+        }
+    });
+</script>
