@@ -38,12 +38,19 @@
         </div>
         <hr>
         <div class="row g-4 coffee-grid">
-
             <div class="row g-4 coffee-grid">
                 <!-- Product Section -->
                 <div class="col-6 col-md-2-4 product-item" data-category="Coffee">
                     <div class="card border-0 h-100">
-                        <div class="text-center p-2">
+                        <div class="text-center p-2 position-relative">
+                            <!-- Dropdown Menu -->
+                            <div class="dropdown" style="position: absolute; top: 10px; right: 10px;">
+                                <button class="dropbtn" style="background: none; border: none; font-size: 1.2rem; cursor: pointer;">⋮</button>
+                                <div class="dropdown-content" style="display: none; position: absolute; right: 0; background-color: #f9f9f9; min-width: 100px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1;">
+                                    <a href="/products/edit?name=Matcha" style="color: #000; padding: 8px 16px; text-decoration: none; display: block;">Edit</a>
+                                    <a href="/products/delete?name=Matcha" style="color: #000; padding: 8px 16px; text-decoration: none; display: block;" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+                                </div>
+                            </div>
                             <img src="/views/assets/images/coffee.jpg" alt="Matcha" class="img-fluid mb-2">
                             <div class="mt-2">
                                 <h6 class="card-title fw-normal text-center mb-1" style="font-size: 0.9rem;">
@@ -60,7 +67,15 @@
 
                 <div class="col-6 col-md-2-4 product-item" data-category="Coffee">
                     <div class="card border-0 h-100">
-                        <div class="text-center p-2">
+                        <div class="text-center p-2 position-relative">
+                            <!-- Dropdown Menu -->
+                            <div class="dropdown" style="position: absolute; top: 10px; right: 10px;">
+                                <button class="dropbtn" style="background: none; border: none; font-size: 1.2rem; cursor: pointer;">⋮</button>
+                                <div class="dropdown-content" style="display: none; position: absolute; right: 0; background-color: #f9f9f9; min-width: 100px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1;">
+                                    <a href="/products/edit?name=Coffee" style="color: #000; padding: 8px 16px; text-decoration: none; display: block;">Edit</a>
+                                    <a href="/products/delete?name=Coffee" style="color: #000; padding: 8px 16px; text-decoration: none; display: block;" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+                                </div>
+                            </div>
                             <img src="/views/assets/images/coffee.jpg" alt="Coffee" class="img-fluid mb-2">
                             <div class="mt-2">
                                 <h6 class="card-title fw-normal text-center mb-1" style="font-size: 0.9rem;">
@@ -77,7 +92,15 @@
 
                 <div class="col-6 col-md-2-4 product-item" data-category="Coffee">
                     <div class="card border-0 h-100">
-                        <div class="text-center p-2">
+                        <div class="text-center p-2 position-relative">
+                            <!-- Dropdown Menu -->
+                            <div class="dropdown" style="position: absolute; top: 10px; right: 10px;">
+                                <button class="dropbtn" style="background: none; border: none; font-size: 1.2rem; cursor: pointer;">⋮</button>
+                                <div class="dropdown-content" style="display: none; position: absolute; right: 0; background-color: #f9f9f9; min-width: 100px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1;">
+                                    <a href="/products/edit?name=Matcha Latte" style="color: #000; padding: 8px 16px; text-decoration: none; display: block;">Edit</a>
+                                    <a href="/products/delete?name=Matcha Latte" style="color: #000; padding: 8px 16px; text-decoration: none; display: block;" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+                                </div>
+                            </div>
                             <img src="/views/assets/images/coffee.jpg" alt="Matcha Latte" class="img-fluid mb-2">
                             <div class="mt-2">
                                 <h6 class="card-title fw-normal text-center mb-1" style="font-size: 0.9rem;">
@@ -91,10 +114,19 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col-6 col-md-2-4 product-item" data-category="Coffee">
                     <div class="card border-0 h-100">
-                        <div class="text-center p-2">
-                            <img src="/views/assets/images/coffee.jpg" alt="Matcha Latte" class="img-fluid mb-2">
+                        <div class="text-center p-2 position-relative">
+                            <!-- Dropdown Menu -->
+                            <div class="dropdown" style="position: absolute; top: 10px; right: 10px;">
+                                <button class="dropbtn" style="background: none; border: none; font-size: 1.2rem; cursor: pointer;">⋮</button>
+                                <div class="dropdown-content" style="display: none; position: absolute; right: 0; background-color: #f9f9f9; min-width: 100px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1;">
+                                    <a href="/products/edit?name=Latte" style="color: #000; padding: 8px 16px; text-decoration: none; display: block;">Edit</a>
+                                    <a href="/products/delete?name=Latte" style="color: #000; padding: 8px 16px; text-decoration: none; display: block;" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+                                </div>
+                            </div>
+                            <img src="/views/assets/images/coffee.jpg" alt="Latte" class="img-fluid mb-2">
                             <div class="mt-2">
                                 <h6 class="card-title fw-normal text-center mb-1" style="font-size: 0.9rem;">
                                     Latte
@@ -119,10 +151,9 @@
                 <h3>Bills</h3>
                 <table class="table table-bordered">
                     <div id="cart-table-body">
-
                     </div>
                 </table>
-                <button id="clear-all" class="btn btn-danger">Clear Cart</button>
+                <button id="clear-all" class="btn btn-danger">Clear</button>
 
                 <div class="d-flex justify-content-between">
                     <div class="cart-total">Total: $<span id="cart-total">0.00</span></div>
@@ -130,6 +161,24 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
+
+<!-- Inline JavaScript for Dropdown Functionality -->
+<script>
+    document.querySelectorAll('.dropbtn').forEach(button => {
+        button.addEventListener('click', function() {
+            const dropdownContent = this.nextElementSibling;
+            dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+        });
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                dropdown.style.display = 'none';
+            });
+        }
+    });
+</script>
