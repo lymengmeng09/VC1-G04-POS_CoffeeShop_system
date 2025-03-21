@@ -15,25 +15,23 @@
                     Please provide a valid email address.
                 </div>
             </div>
-            <div class="form-outline mb-3">
+            <div class="form-outline mb-3 position-relative">
                 <label class="form-label" for="password">Password</label>
+                <i class="fa fa-eye position-absolute toggle-password" id="togglePassword" style="cursor: pointer; right: 10px; transform: translateY(-50%);"></i>
                 <input type="password" name="password" id="password" class="form-control password-field"
                     placeholder="Create a password" required minlength="8" />
                 <div class="invalid-feedback">
                     Password must be at least 8 characters long.
                 </div>
             </div>
-            <div class="form-outline mb-3">
+            <div class="form-outline mb-3 position-relative">
                 <label class="form-label" for="confirm_password">Confirm Password</label>
+                <i class="fa fa-eye position-absolute toggle-password" id="toggleConfirmPassword" style="cursor: pointer; right: 10px; transform: translateY(-50%);"></i>
                 <input type="password" name="confirm_password" id="confirm_password" class="form-control confirm-password-field"
                     placeholder="Confirm your password" required />
                 <div class="invalid-feedback">
                     Passwords do not match.
                 </div>
-            </div>
-            <div class="form-check mb-3 d-flex align-items-center gap-2">
-                <input type="checkbox" id="show_password" class="show-password-checkbox">
-                <label class="form-check-label" for="show_password">Show Password</label>
             </div>
             <div class="mb-3">
                 <label for="role_id" class="form-label">Role:</label>
@@ -51,3 +49,15 @@
         </form>
     </div>
 </div>
+<style>
+/* Eye icon styles */
+.toggle-password {
+    color: rgba(0, 0, 0, 0.647);
+    top: 71%;
+    right: 10px;
+    transform: translateY(-50%);
+    z-index: 1; /* Ensure it's above the input */
+
+}
+
+</style>

@@ -75,4 +75,94 @@ class AddProductController extends BaseController
         }
     }
 }
+
+
+    public function edit($id){
+        $product = $this->model->getProductById($id);
+        if (!$product) {
+            $_SESSION['error'] = 'Product not found!';
+            $this->redirect('/products');
+            return;
+        }
+        $this->view('products/edit', ['product' => $product]);
+    }
+
+    public function update($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $uploadDir = 'uploads/products/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            $image_url = null;
+            if (!empty($_FILES['image_url']['name'])) {
+                $imageName = basename($_FILES['image_url']['name']);
+                $uploadFile = $uploadDir . $imageName;
+                $imageFileType = strtolower(pathinfo($uploadFile, PATHINFO_EXTENSION));
+                $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+
+                if (in_array($imageFileType, $allowedTypes)) {
+                    if (move_uploaded_file($_FILES['image_url']['tmp_name'], $uploadFile)) {
+                        $image_url = $uploadFile;
+                    } else {
+                        $_SESSION['error'] = 'Sorry, there was an error uploading your file.';
+                        $this->view('products/edit', ['error' => $_SESSION['error']]);
+                        return;
+                    }
+                } else {
+                    $_SESSION['error'] = 'Only image files are allowed (JPG, JPEG, PNG, GIF).';
+                    $this->view('products/edit', ['error' => $_SESSION['error']]);
+                    return;
+                }
+            }
+
+            $data = [
+                'product_name' => isset($_POST['product_name']) ? $_POST['product_name'] : null,
+                'price' => isset($_POST['price']) ? $_POST['price'] : null,
+                'category' => isset($_POST['category']) ? $_POST['category'] : null,
+                'image_url' => $image_url,
+                'category_id' => isset($_POST['category_id']) ? $_POST['category_id'] : null,
+                'product_id' => $id
+            ];
+
+            if (empty($data['product_name']) || empty($data['price']) || empty($data['category']) || empty($data['category_id'])) {
+                $_SESSION['error'] = 'All fields except the image are required!';
+                $this->view('products/edit', ['error' => $_SESSION['error']]);
+                return;
+            }
+
+            if ($this->model->updateProduct($data)) {
+                $_SESSION['success'] = 'Product updated successfully!';
+                $this->redirect('/products');
+            } else {
+                $_SESSION['error'] = 'There was an issue updating the product.';
+                $this->view('products/edit', ['error' => $_SESSION['error']]);
+            }
+        }
+    }
+
+
+    public function destroy($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                if ($this->model->deleteProduct($id)) {
+                    $_SESSION['success'] = 'Product deleted successfully!';
+                } else {
+                    $_SESSION['error'] = 'There was an issue deleting the product.';
+                }
+            } catch (PDOException $e) {
+                $_SESSION['error'] = 'Cannot delete product. It may be referenced in other records.';
+            }
+            $this->redirect('/products');
+        } else {
+            $_SESSION['error'] = 'Invalid request method.';
+            $this->redirect('/products');
+        }
+    }
+
+
+    
 }
+
