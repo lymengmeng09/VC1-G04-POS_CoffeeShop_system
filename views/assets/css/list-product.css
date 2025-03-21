@@ -2,10 +2,10 @@ body {
     background-color: #f8f9fa;
     font-family: Arial, sans-serif;
 }
-.col-md-14{
+/* .col-md-14{
     margin-top: -40px;
 
-}
+} */
 a{
     color: #f8f9fa;
 }
@@ -58,9 +58,9 @@ hr{
     height: 270px;
   }
 .text-center img{
-    width: 100px;
-    height: 150px;
-    /* object-fit: contain; */
+    height: 100px;
+    object-fit: cover;
+    margin: 10px 40px;
 }
 .btn-Order {
     background-color: #6F4F37; /* Brown color */
