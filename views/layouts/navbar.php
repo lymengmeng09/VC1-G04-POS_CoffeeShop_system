@@ -75,9 +75,9 @@
                 <!-- Right side of the navbar -->
                 <div class="ms-auto d-flex align-items-center">
                     <!-- Notification Bell -->
-                    <!-- <a href="#" class="nav-link m-3">
+                    <a href="#" class="nav-link m-3">
                         <i class="bi bi-bell-fill fs-4 text-muted"></i>
-                    </a> -->
+                    </a>
                     <!-- User Avatar -->
                     <div class="dropdown">
                         <a href="#" class="d-flex align-items-center img" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
