@@ -1,25 +1,22 @@
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("searchInput");
-  const categorySelect = document.getElementById("categoryFilter");
+  const categoryDropdown = document.getElementById("categoryDropdown");
   const productItems = document.querySelectorAll(".product-item");
+  const categoryFilterBtn = document.getElementById("categoryFilterBtn");
+
+  let selectedCategory = 'all'; // Default to 'all' category
 
   // Function to filter products based on search input and category selection
   function filterProducts() {
     const searchTerm = searchInput.value.toLowerCase(); // Get the search term in lowercase
-    const selectedCategory = categorySelect.value.toLowerCase(); // Get selected category
 
     productItems.forEach(function (product) {
-      const productName = product
-        .querySelector(".card-title")
-        .textContent.toLowerCase(); 
-      const productCategory = product
-        .getAttribute("data-category")
-        .toLowerCase(); 
+      const productName = product.querySelector(".card-title").textContent.toLowerCase(); 
+      const productCategory = product.getAttribute("data-category").toLowerCase(); 
 
       // Check if the product matches the search term and category filter
       const matchesSearch = productName.includes(searchTerm);
-      const matchesCategory =
-        selectedCategory === "" || productCategory.includes(selectedCategory);
+      const matchesCategory = selectedCategory === 'all' || productCategory.includes(selectedCategory);
 
       // Show or hide the product based on the matches
       if (matchesSearch && matchesCategory) {
@@ -30,10 +27,19 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Event listeners for input changes
+  // Event listener for search input
   searchInput.addEventListener("input", filterProducts);
-  categorySelect.addEventListener("change", filterProducts);
+
+  // Event listeners for category selection
+  categoryDropdown.addEventListener("click", function (e) {
+    if (e.target && e.target.matches("a.dropdown-item")) {
+      selectedCategory = e.target.getAttribute("data-category"); // Get selected category
+      categoryFilterBtn.textContent = "categories: " + (selectedCategory === 'all' ? 'All' : selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)); // Update button text
+      filterProducts(); // Apply filtering
+    }
+  });
 });
+
 
 // Function to add product to the shopping cart
 function addToCart(productName, productPrice, productImg) {
