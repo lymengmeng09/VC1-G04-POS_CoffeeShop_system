@@ -1,32 +1,94 @@
 <?php
 require_once 'Database/Database.php';
-
-class AddProductModel
-{
+class AddProductModel {
     private $conn;
-    function __construct()
-    {
+
+    function __construct() {
         $database = new Database();
         $this->conn = $database->getConnection();
     }
-    function getProducts()
-    {
-        // Prepare the SQL query to get products
-        $query = "SELECT * FROM users ORDER BY id DESC";
-        
-        // Execute the query and return the results
+
+   
+    function getCategories() {
+        $query = "SELECT * FROM categories";
         $stmt = $this->conn->prepare($query);
-         // Execute the statement
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);  // Fetch all the results as an associative array
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    function getProducts() {
+        $query = "SELECT * FROM products ORDER BY product_id DESC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // Function to create a new product
-    function createProduct($data)
-{
-    // Prepare the statement to insert both 'name' and 'description'
-    $stmt = $this->conn->prepare("INSERT INTO products(product_name, descriptio,p rice, category,	stock_status, image_url	,created_at	,updated_at	,category_id) VALUES (:dpm_name, :description)",[
-        'dpm_name' => $data['dpm_name'],
-        'description' => $data['description']]);
-}
+    function createProduct($data) {
+        $stmt = $this->conn->prepare("INSERT INTO products (product_name, price, image_url, category_id)
+                  VALUES (:product_name, :price, :image_url, :category_id)");
+        return $stmt->execute([
+            'product_name' => $data['product_name'],
+            'price' => $data['price'],
+            'image_url' => $data['image_url'],
+            'category_id' => $data['category_id']
+        ]);
+    }
+
+    // Get a product by ID
+function getProductById($id) {
+    $query = "SELECT * FROM products WHERE product_id = :id";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
+// Update a product
+function updateProduct($data) {
+    // Check if we need to update the image
+    if (!empty($data['image_url'])) {
+        $query = "UPDATE products 
+                  SET product_name = :product_name, 
+                      price = :price, 
+                      image_url = :image_url, 
+                      category = :category, 
+                      category_id = :category_id 
+                  WHERE product_id = :product_id";
+    } else {
+        $query = "UPDATE products 
+                  SET product_name = :product_name, 
+                      price = :price, 
+                      category = :category, 
+                      category_id = :category_id 
+                  WHERE product_id = :product_id";
+    }
+    
+    $stmt = $this->conn->prepare($query);
+    
+    // Bind parameters
+    $stmt->bindParam(':product_name', $data['product_name']);
+    $stmt->bindParam(':price', $data['price']);
+    $stmt->bindParam(':category', $data['category']);
+    $stmt->bindParam(':category_id', $data['category_id']);
+    $stmt->bindParam(':product_id', $data['product_id']);
+    
+    // Bind image_url only if it's included in the query
+    if (!empty($data['image_url'])) {
+        $stmt->bindParam(':image_url', $data['image_url']);
+    }
+    
+    // Execute the statement
+    return $stmt->execute();
+}
+
+// Delete a product
+function deleteProduct($id) {
+    $query = "DELETE FROM products WHERE product_id = :id";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(':id', $id);
+    return $stmt->execute();
+}
+
+
+
+}

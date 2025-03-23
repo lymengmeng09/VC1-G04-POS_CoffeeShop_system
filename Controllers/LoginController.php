@@ -18,13 +18,22 @@ class LoginController extends BaseController {
             exit();
         }
         
+        $data = [
+            'errors' => []
+        ];
+
         // Handle the POST request for login
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
 
             if (empty($email) || empty($password)) {
-                echo "<script>alert('Email and password are required!');</script>";
+                if (empty($email)) {
+                    $data['errors']['email'] = 'Email is required.';
+                }
+                if (empty($password)) {
+                    $data['errors']['password'] = 'Password is required.';
+                }
             } else {
                 // Get user from model
                 $user = $this->loginModel->getUserByEmail($email);
@@ -35,12 +44,16 @@ class LoginController extends BaseController {
                     header("Location: /");
                     exit;
                 } else {
-                    echo "<script>alert('Invalid Email or Password!');</script>";
+                    if (!$user) {
+                        $data['errors']['email'] = 'This email is not registered.';
+                    } else {
+                        $data['errors']['password'] = 'Incorrect password.';
+                    }
                 }
             }
         }
 
-        $this->view('login/login', [], 'auth_layout');
+        $this->view('login/login', $data, 'auth_layout');
     }
 
     public function logout() {
@@ -62,6 +75,7 @@ class LoginController extends BaseController {
         header('Location: /login');
         exit();
     }
+
 
     public function register() {
         // Redirect if user is already logged in

@@ -1,0 +1,38 @@
+.toggle-password {
+    color: rgba(0, 0, 0, 0.647);
+    top: 72%;
+    transform: translateY(-50%);
+    z-index: 1;
+    /* Ensure it's above the input */
+}
+.btn-delete{
+    border: none; background:none; color: #f03e50;
+}
+.bi-pencil-square{
+    color: #FFC107;
+}
+.btn-reset{
+    border: none; background:none; color: rgb(21, 185, 21);
+}
+.table thead tr th{
+    color: #8E5D43;
+}
+
+/* Add border to the top of the table */
+.table {
+    border-top: 1px solid rgba(116, 116, 116, 0.319); /* Adjust the color and thickness as needed */
+}
+
+/* Optional: Make table header text bold */
+.searchbar{
+    background-color: rgba(183, 183, 183, 0.118);
+}
+.table tbody td:nth-child(even) {
+    color: rgb(0, 119, 255);
+}
+.table tbody td{
+    font-size: medium;
+}
+h5{
+    color: #673E20;
+}

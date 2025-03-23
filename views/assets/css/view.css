@@ -125,7 +125,8 @@ body {
 .product-card:hover {
   transform: translateY(-5px);
   box-shadow: rgba(0, 0, 0, 0.082) 0px 8px 20px;
-  background: #562b0076;
+  /* background: #af59033c; */
+  
 }
 
 .product-image {
@@ -202,9 +203,16 @@ body {
 
 .quantity {
   font-size: 14px;
-  color: #555;
+  color: #fff;
   font-weight: 600;
+  background-color: #704000; 
+  padding: 4px 10px; 
+  border-radius: 16px;
+  display: inline-block; 
+  min-width: 50px; 
+  text-align: center; 
 }
+
 
 .quantity-input {
   width: 70px;
@@ -274,7 +282,31 @@ body {
 }
 
 #receiptModal .modal-footer {
-  justify-content: space-between;
+  justify-content: space-between; /* Ensure buttons are spaced out */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+  #receiptModal .modal-body {
+    padding: 10px;
+  }
+
+  #receiptModal .table th,
+  #receiptModal .table td {
+    padding: 6px;
+    font-size: 12px;
+  }
+
+  #receiptModal .modal-footer .btn {
+    font-size: 12px;
+    padding: 6px 10px;
+    width: 48%; /* Adjust button width for small screens */
+  }
+}
+.user-icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 .notification-icon,

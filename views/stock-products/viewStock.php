@@ -1,12 +1,5 @@
-<div class="container">
-    <?php
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
-    $products = $data['products'] ?? [];
-    ?>
-
-    <?php
+  <div class="container">
+  <?php
     if (isset($_SESSION['notification'])) {
         $notification = $_SESSION['notification'];
         $alertClass = (stripos($notification, 'successfully') !== false) ? 'alert-success' : 'alert-warning';
@@ -19,16 +12,16 @@
     ?>
 
     <div class="header d-flex justify-content-between align-items-center my-4">
-        <h1>Stock Products</h1>
-        <div class="user-icons">
-            <div class="notification-icon" id="notificationIcon">
-                <i class="fa fa-bell"></i>
-                <span class="notification-count" id="notificationCount" style="display: none;">0</span>
-            </div>
-            <div class="user-icon avatar">
-                <i class="fa fa-user-circle"></i>
-            </div>
+      <h1>Stock Products</h1>
+      <div class="user-icons">
+        <div class="notification-icon" id="notificationIcon">
+          <i class="fa fa-bell"></i>
+          <span class="notification-count" id="notificationCount" style="display: none;">0</span>
         </div>
+    </div>
+
+    <div class="notification-dropdown" id="notificationDropdown" style="display: none;">
+        <div class="notification-content" id="notificationContent"></div>
     </div>
 
     <div class="notification-dropdown" id="notificationDropdown" style="display: none;">
@@ -46,22 +39,155 @@
     </div>
 
     <div class="products-section">
-        <h2 class="section-title"></h2>
-        <div class="products-grid">
-            <?php 
-            usort($products, function($a, $b) {
-                return $a['quantity'] - $b['quantity'];
-            });
-            foreach ($products as $product) : ?>
-                <div class="product-card <?= $product['quantity'] == 0 ? 'out-of-stock' : '' ?>" 
-                     data-name="<?= htmlspecialchars(strtolower($product['name'])) ?>" 
-                     data-price="<?= $product['price'] ?>" 
-                     data-quantity="<?= $product['quantity'] ?>">
-                    <div class="dropdown">
-                        <button class="dropbtn">⋮</button>
-                        <div class="dropdown-content">
-                            <a href="/edit_product?id=<?= $product['id'] ?>">Edit</a>
-                            <a href="/delete_product/<?= $product['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
+      <h2 class="section-title"></h2>
+      <div class="products-grid">
+        <?php 
+        // Sort products by quantity in ascending order (lowest to highest)
+        usort($products, function($a, $b) {
+            return $a['quantity'] - $b['quantity'];
+        });
+        
+        foreach ($products as $product) : ?>
+          <div class="product-card <?= $product['quantity'] == 0 ? 'out-of-stock' : '' ?>" 
+               data-name="<?= htmlspecialchars(strtolower($product['name'])) ?>" 
+               data-price="<?= $product['price'] ?>" 
+               data-quantity="<?= $product['quantity'] ?>">
+            <div class="dropdown">
+              <button class="dropbtn">⋮</button>
+              <div class="dropdown-content">
+                <a href="/edit_product?id=<?= $product['id'] ?>">Edit</a>
+                <a href="/delete_product/<?= $product['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
+              </div>
+            </div>
+            <div class="product-image">
+              <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
+            </div>
+            <div class="product-info">
+              <h3 class="origin"><?= htmlspecialchars($product['name']) ?></h3>
+              <p class="price">Price: $<?= number_format($product['price'], 2) ?></p>
+              <p class="quantity">Quantity: <?= $product['quantity'] ?> <?= $product['quantity'] == 0 ? '(Out of Stock)' : '' ?></p>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      </div>
+    </div>
+
+  <!-- Add New Product Modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addProductModalLabel">Add New Product(s)</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="/add-product" enctype="multipart/form-data" id="addProductForm">
+          <div id="add-product-entries">
+            <div class="product-entry mb-3">
+              <h6>Product 1</h6>
+              <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                  <label for="addName-0" class="form-label">Product Name</label>
+                  <input type="text" class="form-control" id="addName-0" name="name[]" required>
+                </div>
+                <div class="col-md-2">
+                  <label for="addPrice-0" class="form-label">Price</label>
+                  <input type="number" step="0.01" class="form-control" id="addPrice-0" name="price[]" required>
+                </div>
+                <div class="col-md-2">
+                  <label for="addQuantity-0" class="form-label">Stock Quantity</label>
+                  <input type="number" class="form-control" id="addQuantity-0" name="quantity[]" required>
+                </div>
+                <div class="col-md-3">
+    <label for="addImage-0" class="form-label">Upload Image</label>
+    <input type="file" class="form-control custom-file-input" id="addImage-0" name="image[]" accept="image/jpeg,image/png,image/gif" required>
+    <div class="image-preview mt-2" id="preview-addImage-0" style="display: none;">
+      <img src="" alt="Image Preview" style="max-width: 100px; max-height: 100px;">
+      <button type="button" class="btn btn-sm btn-danger cancel-upload mt-1" data-input-id="addImage-0">
+     </i>  cancel </button></div>
+  </div>
+                <div class="col-md-2 text-center">
+                  <i class="bi bi-trash remove-entry" style="cursor: pointer; font-size: 1.5rem; color: #dc3545; display: none;" title="Remove"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-secondary mb-3 " id="add-more-product">Add Another Product</button>
+          <button type="submit" class="btn btn-primary">Complete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update Existing Product Modal -->
+<div class="modal fade" id="updateProductModal" tabindex="-1" aria-labelledby="updateProductModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateProductModalLabel">Update Existing Product</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="/update-stock" id="updateProductForm">
+          <div id="product-entries">
+            <div class="product-entry mb-3">
+              <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                  <label for="updateProduct-0" class="form-label">Select Product</label>
+                  <select class="form-control update-product" id="updateProduct-0" name="product_id[]" required>
+                    <option value="">Select a product...</option>
+                    <?php foreach ($products as $product) : ?>
+                      <option value="<?= $product['id'] ?>" data-price="<?= $product['price'] ?>">
+                        <?= htmlspecialchars($product['name']) ?>
+                      </option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
+                <div class="col-md-2">
+                  <label for="updatePrice-0" class="form-label">Price</label>
+                  <input type="number" step="0.01" class="form-control update-price" id="updatePrice-0" name="price[]" required>
+                </div>
+                <div class="col-md-2">
+                  <label for="updateQuantity-0" class="form-label">Quantity</label>
+                  <input type="number" class="form-control update-quantity" id="updateQuantity-0" name="quantity[]" required>
+                </div>
+                <div class="col-md-2">
+                  <label for="totalPrice-0" class="form-label">Total Price</label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="text" class="form-control total-price" id="totalPrice-0" readonly>
+                  </div>
+                </div>
+                <div class="col-md-2 text-center">
+                  <i class="bi bi-trash remove-entry" style="cursor: pointer; font-size: 1.5rem; color: #dc3545; display: none;" title="Remove"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-secondary mb-3" id="add-more">Add More</button>
+          <button type="submit" class="btn btn-success">Update All</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+    
+ <!-- Receipt Modal -->
+<div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="receiptModalLabel">Recent Stock Receipt</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <?php if (isset($_SESSION['receipt'])): ?>
+                    <p><strong>Action: </strong><?= ucfirst($_SESSION['receipt']['action']) ?></p>
+                    <div id="receipt-content">
+                        <div class="header-recept">
+                            <img src="/views/assets/images/logo.png" alt="Logo">
+                            <h2>Stock Receipt</h2>
                         </div>
                     </div>
                     <div class="product-image">
@@ -73,7 +199,7 @@
                         <p class="quantity">Quantity: <?= $product['quantity'] ?> <?= $product['quantity'] == 0 ? '(Out of Stock)' : '' ?></p>
                     </div>
                 </div>
-            <?php endforeach; ?>
+   
         </div>
     </div>
 
@@ -677,10 +803,15 @@ function showCurrentDateTime() {
 }
 </script>
 
-<!-- External Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
-</div>
+ 
+
+  <!-- Inline script to pass PHP data to JavaScript -->
+  <script>
+    // Pass PHP variables to JavaScript
+    const hasReceipt = <?php echo json_encode(isset($_SESSION['receipt'])); ?>;
+    const showReceipt = new URLSearchParams(window.location.search).get('showReceipt') === 'true';
+  </script>
+ 
+   
 </body>
 </html>

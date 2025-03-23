@@ -11,3 +11,7 @@
 form{
   margin: 20px 10px ;
 }
+.btu-save-cancel{
+  display: flex;
+  align-items: center;
+}
