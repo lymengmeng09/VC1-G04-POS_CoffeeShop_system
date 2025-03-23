@@ -277,7 +277,6 @@ class ViewStockController extends BaseController{
         $this->redirect('/viewStock');
     }
 }
+?>
 
     
-
-?>
