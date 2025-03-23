@@ -15,26 +15,14 @@
 
     <div class="header d-flex justify-content-between align-items-center my-4">
       <h1>Stock Products</h1>
-      <div class="user-icons">
-        <div class="notification-icon" id="notificationIcon">
-          <i class="fa fa-bell"></i>
-          <span class="notification-count" id="notificationCount" style="display: none;">0</span>
-        </div>
-        <div class="user-icon avatar">
-          <i class="fa fa-user-circle"></i>
-        </div>
-      </div>
+
     </div>
 
     <div class="notification-dropdown" id="notificationDropdown" style="display: none;">
         <div class="notification-content" id="notificationContent"></div>
     </div>
 
-    <div class="search-section mb-4">
-      <div class="search-bar">
-        <input type="text" class="form-control search-input" placeholder="Search products...">
-      </div>
-      <div class="search-section mt-2">
+<div class="search-section mt-2">
             <div class="search-bar">
                 <input type="text" class="form-control search-input" style='background:rgba(190, 190, 190, 0.11);' placeholder="Search products...">
             </div>
@@ -49,8 +37,6 @@
                 </button>
             </div>
         </div>
-    </div>
-
     <div class="products-section">
       <h2 class="section-title"></h2>
       <div class="products-grid">
