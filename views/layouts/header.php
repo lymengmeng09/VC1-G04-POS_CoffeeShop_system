@@ -26,7 +26,7 @@
   <link rel="stylesheet" href="/views/assets/css/edit-product.css">
   <link rel="stylesheet" href="/views/assets/css/list-product.css">
   <link rel="stylesheet" href="/views/assets/css/Dashboard.css">
-  <link rel="stylesheet" href="/views/assets/css">
+  <link rel="stylesheet" href="/views/assets/css/navbar.css">
 </head>
 
 <body>

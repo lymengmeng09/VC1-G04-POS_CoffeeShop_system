@@ -38,7 +38,6 @@
             <button type="submit" class="btn btn-primary me-3">Save Product</button>
             <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/products'">Cancel</button>
         </div>
-    </form>
 </div>
 
 <style>

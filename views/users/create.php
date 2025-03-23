@@ -9,8 +9,8 @@
         <form action="/users/store" method="POST" id="userForm" class="needs-validation" novalidate>
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control <?php echo isset($errors['name']) ? 'is-invalid' : ''; ?>" 
-                       id="name" name="name" placeholder="Enter your name" value="<?php echo htmlspecialchars($formData['name'] ?? ''); ?>" required>
+                <input type="text" placeholder="Enter your name" class="form-control <?php echo isset($errors['name']) ? 'is-invalid' : ''; ?>" 
+                       id="name" name="name" value="<?php echo htmlspecialchars($formData['name'] ?? ''); ?>" required>
                 <div class="invalid-feedback">
                     <?php echo $errors['name'] ?? 'Name is required.'; ?>
                 </div>
