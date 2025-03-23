@@ -15,7 +15,7 @@
                  <ul class="menu">
                      <li class="sidebar-title"></li>
 
-                     <li class="sidebar-item active ">
+                     <li class="sidebar-item">
                          <a href="/" class='sidebar-link'>
                              <i class="bi bi-grid-fill"></i>
                              <span>Dashboard</span>
@@ -29,10 +29,10 @@
                          </a>
                      </li>
                      <li class="sidebar-item">
-                         <a href="#" class='sidebar-link'>
+                         <!-- <a href="#" class='sidebar-link'>
                              <i class="bi bi-collection-fill"></i>
                              <span>Order</span>
-                        </a> 
+                        </a>  -->
                      </li>
                      <li class="sidebar-item">
                          <a href="/viewStock" class='sidebar-link'>
@@ -71,6 +71,4 @@
                  <i class="bi bi-justify fs-3"></i>
              </a>
          </header>
-<style>
     
-</style>

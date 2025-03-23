@@ -9,6 +9,12 @@ class AddProductModel {
     }
 
    
+    function getCategories() {
+        $query = "SELECT * FROM categories";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
     function getProducts() {
         $query = "SELECT * FROM products ORDER BY product_id DESC";
         $stmt = $this->conn->prepare($query);
@@ -18,19 +24,14 @@ class AddProductModel {
 
     // Function to create a new product
     function createProduct($data) {
-        $query = "INSERT INTO products (product_name, price, image_url, category, category_id)
-                  VALUES (:product_name, :price, :image_url, :category, :category_id)";
-        $stmt = $this->conn->prepare($query);
-
-        // Bind parameters
-        $stmt->bindParam(':product_name', $data['product_name']);
-        $stmt->bindParam(':price', $data['price']);
-        $stmt->bindParam(':image_url', $data['image_url']);
-        $stmt->bindParam(':category', $data['category']);
-        $stmt->bindParam(':category_id', $data['category_id']);
-
-        // Execute the statement
-        return $stmt->execute();
+        $stmt = $this->conn->prepare("INSERT INTO products (product_name, price, image_url, category_id)
+                  VALUES (:product_name, :price, :image_url, :category_id)");
+        return $stmt->execute([
+            'product_name' => $data['product_name'],
+            'price' => $data['price'],
+            'image_url' => $data['image_url'],
+            'category_id' => $data['category_id']
+        ]);
     }
 
     // Get a product by ID

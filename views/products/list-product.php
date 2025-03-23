@@ -19,15 +19,17 @@
                     </div>
                 </div>
                 <div class="col-md-2 category">
-                    <select class="form-select" name="category" id="categoryFilter">
-                        <option value="">All Categories</option>
-                        <?php foreach ($categories as $category): ?>
-                            <option value="<?php echo htmlspecialchars($category); ?>" <?php echo (isset($_GET['categories']) && $_GET['categories'] == $category) ? 'selected' : ''; ?>>
-                                <option value=""><?= htmlspecialchars($user['category_name']) ?></option>
-                                <?php echo htmlspecialchars($category); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                    <div class="btn-group me-2">
+                        <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            categories: <?= htmlspecialchars(ucfirst($_GET['category_name'] ?? 'all')) ?>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="">All category</a></li>
+                            <li><a class="dropdown-item" href="">Coffee</a></li>
+                            <li><a class="dropdown-item" href="">Tea</a></li>
+                            <li><a class="dropdown-item" href="">Smoothies</a></li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="col-md shop" style="position: relative;">
                     <a href="javascript:void(0)" id="cart-icon">
@@ -37,7 +39,6 @@
                 </div>
             </form>
         </div>
-        <hr>
 
         <div class="row g-4 coffee-grid">
             <!-- Product Section -->

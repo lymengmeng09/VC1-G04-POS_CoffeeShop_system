@@ -85,5 +85,4 @@ $route->post("/products/delete/{id}", [AddProductController::class, 'destroy']);
 
 
 
-
 $route->route();
