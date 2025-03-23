@@ -85,6 +85,34 @@ class ListUserController extends BaseController
             // Initialize errors array
             $errors = [];
             
+            // Validate form data
+            if (empty($data['name'])) {
+                $errors['name'] = 'Name is required.';
+            }
+            
+            if (empty($data['email'])) {
+                $errors['email'] = 'Email is required.';
+            } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+                $errors['email'] = 'Please provide a valid email address.';
+            }
+            
+            if (empty($data['password'])) {
+                $errors['password'] = 'Password is required.';
+            } elseif (strlen($data['password']) < 8) {
+                $errors['password'] = 'Password must be at least 8 characters long.';
+            }
+            
+            if (empty($data['role_id'])) {
+                $errors['role_id'] = 'Please select a role.';
+            }
+            
+            // If there are validation errors, redisplay the form
+            if (!empty($errors)) {
+                $_SESSION['form_errors'] = $errors;
+                $this->redirect('/users/create');
+                return;
+            }
+            
             // Try to create the user
             $result = $this->model->createUser($data);
             
