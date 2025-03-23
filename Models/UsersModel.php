@@ -30,6 +30,13 @@ class UserModel {
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    
+    /**
+     * Check if an email already exists in the database
+     * 
+     * @param string $email The email to check
+     * @return bool True if the email exists, false otherwise
+     */
     public function emailExists($email) {
         try {
             $stmt = $this->db->prepare("SELECT COUNT(*) FROM users WHERE email = :email");
@@ -40,7 +47,13 @@ class UserModel {
             return false;
         }
     }
-
+    
+    /**
+     * Create a new user with error handling for duplicate emails
+     * 
+     * @param array $data User data
+     * @return array Result with status and error message if applicable
+     */
     function createUser($data) {
         try {
             // First check if email exists to avoid the exception
@@ -96,7 +109,7 @@ class UserModel {
         $stmt = $this->db->prepare("DELETE FROM users WHERE id = :id");
         return $stmt->execute(['id' => $id]);
     }
- 
+    
     public function updateUser($id, $data) {
         $stmt = $this->db->prepare("UPDATE users SET name = :name, email = :email, role_id = :role_id WHERE id = :id");
         $result = $stmt->execute([

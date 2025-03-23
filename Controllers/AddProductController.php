@@ -142,7 +142,6 @@ class AddProductController extends BaseController
         }
     }
 
-
     public function destroy($id)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -161,6 +160,11 @@ class AddProductController extends BaseController
             $this->redirect('/products');
         }
     }
+
+
+
+
+    
 
 
     

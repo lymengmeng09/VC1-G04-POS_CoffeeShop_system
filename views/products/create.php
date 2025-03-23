@@ -38,51 +38,10 @@
             <button type="submit" class="btn btn-primary me-3">Save Product</button>
             <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/products'">Cancel</button>
         </div>
-    </form>
 </div>
 
 <style>
-    .image-upload-container {
-        margin-bottom: 20px;
-    }
     
-    .image-preview-box {
-        width: 200px;
-        height: 200px;
-        border: 2px dashed #ccc;
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        background-color: #f8f9fa;
-        margin-bottom: 10px;
-        cursor: pointer;
-    }
-    
-    .upload-placeholder {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        color: #999;
-    }
-    
-    .upload-placeholder p {
-        margin-top: 10px;
-        margin-bottom: 0;
-        font-size: 14px;
-    }
-    
-    #imagePreview {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-    }
-    
-    .file-input {
-        display: none;
-    }
 </style>
 
 <script>

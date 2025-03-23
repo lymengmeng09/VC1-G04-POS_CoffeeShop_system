@@ -16,7 +16,6 @@ a:hover {
   flex: 2;
   display: flex;
   flex-wrap: wrap;
-  /* justify-content: center; */
 }
 hr {
   margin-top: -25px;
@@ -51,7 +50,7 @@ hr {
 }
 
 .col-md-2-4 {
-  width: 30%;
+  width: 3%;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   border-radius: 10px;
@@ -59,7 +58,7 @@ hr {
   height: 270px;
 }
 .text-center img {
-  height: 100px;
+  height: 120px;
   object-fit: cover;
   margin: 10px 40px;
 }
@@ -160,6 +159,7 @@ td:nth-child(3) {
 #clear-all{
     margin-top: -2px;
 }
+
 @media (max-width: 767.98px) {
   .coffee-grid .col-6 {
     width: 50%;

@@ -143,23 +143,55 @@ document.getElementById('cart-table-body').addEventListener('click', function (e
   }
 });
 
-// Clear all products from cart
-document.getElementById('clear-all').addEventListener('click', function () {
-  localStorage.removeItem('cart');
-  updateCartDisplay();
-});
-
-// Payment button action
-document.getElementById('PayMent').addEventListener('click', function () {
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+// Cart Management Functions
+function addToCart(productName, productPrice, productImg) {
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
   
-  if (cart.length === 0) {
-    alert("Your cart is empty!");
+  // Check if product already exists in cart
+  const existingProduct = cart.find(item => item.name === productName);
+  
+  if (existingProduct) {
+      // If product exists, increment its quantity
+      existingProduct.quantity += 1;
   } else {
-    localStorage.removeItem('cart');
-    updateCartDisplay();
+      // If product doesn't exist, add new product
+      const product = {
+          id: Date.now(),
+          name: productName,
+          price: parseFloat(productPrice),
+          quantity: 1,
+          img: productImg
+      };
+      cart.push(product);
+  }
+  
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartDisplay();
+}
+
+// Event Listeners for Cart Actions
+document.addEventListener('DOMContentLoaded', function() {
+  // Clear all products from cart
+  const clearButton = document.getElementById('clear-all');
+  if (clearButton) {
+      clearButton.addEventListener('click', function() {
+          localStorage.removeItem('cart');
+          updateCartDisplay();
+      });
+  }
+
+  // Payment button action
+  const paymentButton = document.getElementById('PayMent');
+  if (paymentButton) {
+      paymentButton.addEventListener('click', function() {
+          const cart = JSON.parse(localStorage.getItem('cart')) || [];
+          
+          if (cart.length === 0) {
+              alert("Your cart is empty!");
+          } else {
+              localStorage.removeItem('cart');
+              updateCartDisplay();
+          }
+      });
   }
 });
-
-// Initial display update
-updateCartDisplay();
