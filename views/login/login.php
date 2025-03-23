@@ -12,7 +12,7 @@
                 <form method="POST" id="loginForm" class="needs-validation" novalidate>
                   <p class="text-center">Please login to your account</p>
                   <div class="form-outline mb-2"> 
-                    <label class="form-label" for="form2Example11">Email</label> 
+                    <label class="form-label" for="form2Example11">Email <span style="color: red;">*</span></label> 
                     <input 
                       type="email" 
                       id="form2Example11" 
@@ -27,7 +27,7 @@
                     </div>
                   </div>
                   <div class="form-outline mb-2 position-relative"> 
-                    <label class="form-label" for="form2Example22">Password</label> 
+                    <label class="form-label" for="form2Example22">Password <span style="color: red;">*</span></label> 
                     <input 
                       type="password" 
                       name="password" 
@@ -46,7 +46,7 @@
                     <button class="btn text-light fa-lg gradient-custom-2 mb-2" type="submit">Log in</button><br> 
                     <a class="text-muted" href="#!">Forgot password?</a> 
                   </div>
-                  <p class="text-center"><a href="/login/register">Don't have an account? Register</a></p>
+                  <!-- <p class="text-center"><a href="/login/register">Don't have an account? Register</a></p> -->
                 </form>
               </div>
             </div>
