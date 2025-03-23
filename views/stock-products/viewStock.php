@@ -812,6 +812,5 @@ function showCurrentDateTime() {
     const showReceipt = new URLSearchParams(window.location.search).get('showReceipt') === 'true';
   </script>
  
-   
 </body>
-</html>
+</html>         
