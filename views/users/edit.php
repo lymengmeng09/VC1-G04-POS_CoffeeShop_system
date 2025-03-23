@@ -21,7 +21,7 @@
                         <?php endforeach ?>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-success mt-2">Submit</button>
+                <button type="submit" class="btn btn-primary mt-2">Save</button>
                 <a href="/list-users" class="btn btn-secondary mt-2">Cancel</a>
             </form>
         </div>
