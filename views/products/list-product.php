@@ -39,7 +39,7 @@
                 </div>
             </form>
         </div>
-
+        
         <div class="row g-4 coffee-grid">
             <!-- Product Section -->
             <div class="row g-4 coffee-grid">
@@ -67,7 +67,7 @@
                                             $<?= number_format($product['price'], 2) ?>
                                         </p>
                                         <button class="btn-Order" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-price="<?= number_format($product['price'], 2) ?>" data-img="<?= htmlspecialchars($product['image_url']) ?>">
-                                            Order New
+                                            Order Now
                                         </button>
                                     </div>
                                 </div>
