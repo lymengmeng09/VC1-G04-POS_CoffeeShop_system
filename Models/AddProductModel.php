@@ -90,5 +90,4 @@ function deleteProduct($id) {
 }
 
 
-
 }
