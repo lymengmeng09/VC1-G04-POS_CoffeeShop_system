@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="/views/assets/vendors/bootstrap-icons/bootstrap-icons.css">
   <link rel="stylesheet" href="/views/assets/css/app.css">
   <link rel="stylesheet" href="/views/assets/css/setting.css">
-  <link rel="stylesheet" href="/views/assets/css/general.css">
+  <link rel="stylesheet" href="/views/assets/css/user.css">
   <link rel="stylesheet" href="/views/assets/css/add-product.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="/views/assets/css/edit-product.css">
   <link rel="stylesheet" href="/views/assets/css/list-product.css">
   <link rel="stylesheet" href="/views/assets/css/Dashboard.css">
+  <link rel="stylesheet" href="/views/assets/css">
 </head>
 
 <body>

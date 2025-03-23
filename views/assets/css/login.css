@@ -1,11 +1,31 @@
 .gradient-custom-2 {
     background: #432115;
+    padding: 20px;
 }
 
 .gradient-custom-2:hover {
     background: #432115ce;
 }
+.form-control.is-valid {
+    border-color: #ced4da !important; /* Default border color */
+    background-image: none !important; /* Remove checkmark */
+}
 
+/* Ensure invalid inputs still show red */
+.form-control.is-invalid {
+    border-color: #dc3545 !important;
+}
+.fa-eye {
+    color: rgba(0, 0, 0, 0.647);
+    top: 75%;
+    transform: translateY(-50%);
+}
+
+/* Position when there is an error message */
+.is-invalid ~ .fa-eye{
+    top: 55% !important;
+    transform: translateY(-50%);
+}
 @media (min-width: 768px) {
     .gradient-form {
         height: 100vh !important;
