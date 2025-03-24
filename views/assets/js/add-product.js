@@ -132,13 +132,23 @@ document.getElementById('cart-table-body').addEventListener('input', function (e
 
 // Remove product from cart
 document.getElementById('cart-table-body').addEventListener('click', function (e) {
-  if (e.target && e.target.classList.contains('remove-item')) {
-    const productId = parseInt(e.target.getAttribute('data-id'));
-    
+  // Check if the clicked element is the remove icon
+  let removeIcon = e.target;
+  
+  // If the clicked element is an icon (or adjust based on your icon's tag)
+  if (removeIcon && removeIcon.classList.contains('remove-item')) {
+    // Get the productId from the data-id attribute
+    const productId = parseInt(removeIcon.getAttribute('data-id')); // Fixed: Use 'data-id' instead of hardcoding '123'
+
+    // Get the cart from localStorage
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    // Filter out the item with the matching productId
     const updatedCart = cart.filter(item => item.id !== productId);
-    
+
+    // Update localStorage with the new cart
     localStorage.setItem('cart', JSON.stringify(updatedCart));
+
+    // Update the cart display
     updateCartDisplay();
   }
 });
@@ -194,4 +204,71 @@ document.addEventListener('DOMContentLoaded', function() {
           }
       });
   }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Get all dropdowns
+  const dropdowns = document.querySelectorAll('.dropdown');
+
+  dropdowns.forEach(dropdown => {
+      const dropbtn = dropdown.querySelector('.dropbtn');
+      const dropdownContent = dropdown.querySelector('.dropdown-content');
+
+      // Toggle dropdown on click
+      dropbtn.addEventListener('click', function (e) {
+          e.stopPropagation(); // Prevent the click from bubbling up
+          // Close all other dropdowns
+          document.querySelectorAll('.dropdown-content').forEach(content => {
+              if (content !== dropdownContent) {
+                  content.style.display = 'none';
+              }
+          });
+          // Toggle the current dropdown
+          dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+      });
+
+      // Close dropdown when clicking an option
+      dropdownContent.addEventListener('click', function () {
+          dropdownContent.style.display = 'none';
+      });
+  });
+
+  // Close dropdowns when clicking outside
+  document.addEventListener('click', function (e) {
+      if (!e.target.closest('.dropdown')) {
+          document.querySelectorAll('.dropdown-content').forEach(content => {
+              content.style.display = 'none';
+          });
+      }
+  });
+});
+document.addEventListener('DOMContentLoaded', function () {
+  const dropdowns = document.querySelectorAll('.dropdown');
+
+  dropdowns.forEach(dropdown => {
+      const dropbtn = dropdown.querySelector('.dropbtn');
+      const dropdownContent = dropdown.querySelector('.dropdown-content');
+
+      dropbtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          document.querySelectorAll('.dropdown-content').forEach(content => {
+              if (content !== dropdownContent) {
+                  content.style.display = 'none';
+              }
+          });
+          dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+      });
+
+      dropdownContent.addEventListener('click', function () {
+          dropdownContent.style.display = 'none';
+      });
+  });
+
+  document.addEventListener('click', function (e) {
+      if (!e.target.closest('.dropdown')) {
+          document.querySelectorAll('.dropdown-content').forEach(content => {
+              content.style.display = 'none';
+          });
+      }
+  });
 });
