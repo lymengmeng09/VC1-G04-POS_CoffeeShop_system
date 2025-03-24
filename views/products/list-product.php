@@ -39,7 +39,8 @@
                 </div>
             </form>
         </div>
-        
+
+
         <div class="row g-4 coffee-grid">
             <!-- Product Section -->
             <div class="row g-4 coffee-grid">
@@ -51,8 +52,8 @@
                                     <div class="dropdown">
                                         <button class="dropbtn">⋮</button>
                                         <div class="dropdown-content">
-                                        <a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>">Edit</a>
-                                        <form action="/products/delete/<?= htmlspecialchars($product['product_id']) ?>" method="POST" style="display:inline;">
+                                            <a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>">Edit</a>
+                                            <form action="/products/delete/<?= htmlspecialchars($product['product_id']) ?>" method="POST" style="display:inline;">
                                                 <input type="hidden" name="_method" value="DELETE">
                                                 <button type="submit" onclick="return confirm('Are you sure?')" style="background:none;border:none;color:#000;padding:0;">Delete</button>
                                             </form>
@@ -67,7 +68,7 @@
                                             $<?= number_format($product['price'], 2) ?>
                                         </p>
                                         <button class="btn-Order" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-price="<?= number_format($product['price'], 2) ?>" data-img="<?= htmlspecialchars($product['image_url']) ?>">
-                                            Order Now
+                                            Order New
                                         </button>
                                     </div>
                                 </div>
@@ -76,7 +77,6 @@
                     </div>
                 <?php endforeach; ?>
             </div>
-
 
             <!-- Cart Table -->
             <div id="cart-table" style="display: none;" class="card-order">
@@ -89,7 +89,7 @@
                     <div class="cart-total">Total: $<span id="cart-total">0.00</span></div>
                     <div class="btn_cart">
                         <button id="clear-all" class="btn btn-secondary">Cancel</button>
-                        <button id="PayMent" class="btn btn-primary">Pay New</button>
+                        <button id="PayMent" class="btn btn-primary">Pay Now</button>
                     </div>
                 </div>
             </div>
@@ -97,7 +97,29 @@
     </div>
 </div>
 
-<!-- Inline JavaScript for Dropdown Functionality -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<!-- Receipt Modal -->
+<div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="receiptModalLabel">Order Receipt</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="receipt-content">
+                <!-- Receipt details will be inserted here dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="confirm-receipt">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+ 
+ 
 <script>
     document.querySelectorAll('.dropbtn').forEach(button => {
         button.addEventListener('click', function() {
@@ -115,3 +137,4 @@
         }
     });
 </script>
+ 
