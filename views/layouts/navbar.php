@@ -25,7 +25,7 @@
                      <li class="sidebar-item">
                          <a href="/products" class='sidebar-link '>
                              <i class="bi bi-shop"></i>
-                             <span>Products</span>
+                             <span>Order</span>
                          </a>
                      </li>
                      <li class="sidebar-item">
