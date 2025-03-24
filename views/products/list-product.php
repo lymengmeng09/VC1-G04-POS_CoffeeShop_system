@@ -39,7 +39,8 @@
                 </div>
             </form>
         </div>
-        
+
+
         <div class="row g-4 coffee-grid">
             <!-- Product Section -->
             <div class="row g-4 coffee-grid">
@@ -51,8 +52,8 @@
                                     <div class="dropdown">
                                         <button class="dropbtn">⋮</button>
                                         <div class="dropdown-content">
-                                        <a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>">Edit</a>
-                                        <form action="/products/delete/<?= htmlspecialchars($product['product_id']) ?>" method="POST" style="display:inline;">
+                                            <a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>">Edit</a>
+                                            <form action="/products/delete/<?= htmlspecialchars($product['product_id']) ?>" method="POST" style="display:inline;">
                                                 <input type="hidden" name="_method" value="DELETE">
                                                 <button type="submit" onclick="return confirm('Are you sure?')" style="background:none;border:none;color:#000;padding:0;">Delete</button>
                                             </form>
@@ -67,7 +68,7 @@
                                             $<?= number_format($product['price'], 2) ?>
                                         </p>
                                         <button class="btn-Order" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-price="<?= number_format($product['price'], 2) ?>" data-img="<?= htmlspecialchars($product['image_url']) ?>">
-                                            Order Now
+                                            Order New
                                         </button>
                                     </div>
                                 </div>
@@ -76,7 +77,6 @@
                     </div>
                 <?php endforeach; ?>
             </div>
-
 
             <!-- Cart Table -->
             <div id="cart-table" style="display: none;" class="card-order">
@@ -89,7 +89,7 @@
                     <div class="cart-total">Total: $<span id="cart-total">0.00</span></div>
                     <div class="btn_cart">
                         <button id="clear-all" class="btn btn-secondary">Cancel</button>
-                        <button id="PayMent" class="btn btn-primary">Pay New</button>
+                        <button id="PayMent" class="btn btn-primary">Pay Now</button>
                     </div>
                 </div>
             </div>
@@ -97,7 +97,29 @@
     </div>
 </div>
 
-<!-- Inline JavaScript for Dropdown Functionality -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<!-- Receipt Modal -->
+<div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="receiptModalLabel">Order Receipt</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="receipt-content">
+                <!-- Receipt details will be inserted here dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="confirm-receipt">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+ 
+ 
 <script>
     document.querySelectorAll('.dropbtn').forEach(button => {
         button.addEventListener('click', function() {
@@ -106,12 +128,100 @@
         });
     });
 
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(event) {
-        if (!event.target.matches('.dropbtn')) {
-            document.querySelectorAll('.dropdown-content').forEach(dropdown => {
-                dropdown.style.display = 'none';
-            });
-        }
+
+<!-- Receipt Modal -->
+<div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="receiptModalLabel">Order Receipt</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="receipt-content">
+                <!-- Receipt details will be inserted here dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="confirm-receipt">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+ 
+ 
+<script>
+  // Adding a product to the cart
+document.querySelectorAll('.btn-Order').forEach(button => {
+    button.addEventListener('click', function() {
+        const productName = this.getAttribute('data-name');
+        const productPrice = this.getAttribute('data-price');
+        const productImg = this.getAttribute('data-img');
+
+        // Create a new row in the cart table
+        const cartTableBody = document.getElementById('cart-table-body');
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+            <td><img src="${productImg}" alt="${productName}" style="width: 50px;"></td>
+            <td>${productName}</td>
+            <td>$${productPrice}</td>
+            <td><button class="btn btn-danger remove-item">Remove</button></td>
+        `;
+        cartTableBody.appendChild(row);
+
+        // Update the cart total
+        const cartTotal = document.getElementById('cart-total');
+        const currentTotal = parseFloat(cartTotal.textContent.replace('$', ''));
+        const newTotal = currentTotal + parseFloat(productPrice);
+        cartTotal.textContent = `$${newTotal.toFixed(2)}`;
+
+        // Show the cart table
+        document.getElementById('cart-table').style.display = 'block';
     });
+});
+
+// Removing an item from the cart
+document.getElementById('cart-table-body').addEventListener('click', function(e) {
+    if (e.target && e.target.classList.contains('remove-item')) {
+        // Find the row that contains the "Remove" button
+        const row = e.target.closest('tr');
+        
+        // Get the price of the product being removed
+        const productPrice = parseFloat(row.children[2].textContent.replace('$', ''));
+
+        // Remove the row
+        row.remove();
+
+        // Update the cart total
+        const cartTotal = document.getElementById('cart-total');
+        const currentTotal = parseFloat(cartTotal.textContent.replace('$', ''));
+        const newTotal = currentTotal - productPrice;
+        cartTotal.textContent = `$${newTotal.toFixed(2)}`;
+
+        // If the cart is empty, hide the cart table
+        if (document.getElementById('cart-table-body').children.length === 0) {
+            document.getElementById('cart-table').style.display = 'none';
+        }
+    }
+});
+
+// Cancel button event listener
+document.getElementById('clear-all').addEventListener('click', function() {
+    // Clear cart items in the table
+    const cartTableBody = document.getElementById('cart-table-body');
+    cartTableBody.innerHTML = '';  // This removes all rows
+
+    // Reset the total
+    const cartTotal = document.getElementById('cart-total');
+    cartTotal.textContent = '0.00';
+
+    // Optionally hide the cart table after clearing
+    const cartTable = document.getElementById('cart-table');
+    cartTable.style.display = 'none';  // Hide the table
+});
+
+
+ 
+
 </script>
+ 

@@ -23,15 +23,7 @@ $route->delete("/delete_product/{id}", [ViewStockController::class, 'destroy']);
 
 $route->post("/update-stock", [ViewStockController::class, 'updateStock']);
 $route->get("/clearReceipt", [ViewStockController::class, 'clearReceipt']);
-$route->get("/viewStock", [ViewStockController::class, 'index']);
-$route->post("/add-product", [ViewStockController::class, 'add']);
-$route->post("/update-stock", [ViewStockController::class, 'updateStock']);
-$route->get("/edit", [ViewStockController::class, 'edit']);
-$route->post("/update", [ViewStockController::class, 'update']);
-$route->get("/destroy/{id}", [ViewStockController::class, 'destroy']);
-$route->get("/clearReceipt", [ViewStockController::class, 'clearReceipt']);
-$route->post("/handleNotification", [ViewStockController::class, 'handleNotification']);
-$route->get("/get-notifications", [ViewStockController::class, 'getNotificationsJson']);
+
 
 // Public routes (no middleware)
 $route->post("/login", [LoginController::class, 'index']);
@@ -63,6 +55,7 @@ $route->get("/users/edit/{id}", [ListUserController::class, 'edit'])
 $route->post("/users/update/{id}", [ListUserController::class, 'update'])
       ->middleware("/users/update/{id}", AuthMiddleware::class, 'update_users');
 
+// products
 // products
 $route->get("/products", [AddProductController::class, 'index']);
 $route->get("/products/create", [AddProductController::class, 'create']);

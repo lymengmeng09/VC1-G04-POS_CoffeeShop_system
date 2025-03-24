@@ -165,3 +165,27 @@ td:nth-child(3) {
     width: 50%;
   }
 }
+.modal {
+  display: none; /* Ensure it's visible when triggered */
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+.modal.show {
+  display: block;
+  opacity: 1;
+}
+
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #receiptContent, #receiptContent * {
+        visibility: visible;
+    }
+    #receiptContent {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+}
