@@ -174,3 +174,18 @@ td:nth-child(3) {
   display: block;
   opacity: 1;
 }
+
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #receiptContent, #receiptContent * {
+        visibility: visible;
+    }
+    #receiptContent {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+}

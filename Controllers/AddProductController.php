@@ -141,52 +141,9 @@ class AddProductController extends BaseController
                 $this->view('products/edit', ['error' => $_SESSION['error']]);
             }
         }
-    }
-// Generate receipt
-public function generateReceipt()
-{
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
+    } 
 
-    // Get the order data from the request
-    $input = file_get_contents('php://input');
-    $orderData = json_decode($input, true);
-    error_log('Generate receipt called - Order data: ' . json_encode($orderData));
 
-    if (!$orderData || !isset($orderData['items']) || empty($orderData['items'])) {
-        error_log('Invalid order data');
-        echo json_encode(['success' => false, 'message' => 'Invalid order data']);
-        return;
-    }
-
-    // Prepare receipt data
-    $receipt = [
-        'action' => 'order',
-        'items' => $orderData['items'],
-        'total' => $orderData['total']
-    ];
-
-    // Store receipt in session
-    $_SESSION['receipt'] = $receipt;
-    error_log('Receipt stored in session: ' . json_encode($receipt));
-
-    // Respond with success
-    echo json_encode(['success' => true]);
-}
-
-// Clear receipt
-public function clearReceipt()
-{
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
-
-    // Clear the receipt from session
-    unset($_SESSION['receipt']);
-    error_log('Session receipt cleared');
-    echo json_encode(['success' => true]);
-}
 
 //Destroy product
     public function destroy($id)
