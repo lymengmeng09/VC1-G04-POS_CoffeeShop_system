@@ -64,12 +64,17 @@ $route->post("/users/update/{id}", [ListUserController::class, 'update'])
       ->middleware("/users/update/{id}", AuthMiddleware::class, 'update_users');
 
 // products
+ 
 $route->get("/products", [AddProductController::class, 'index']);
 $route->get("/products/create", [AddProductController::class, 'create']);
 $route->post("/products/store", [AddProductController::class, 'store']);
 $route->get("/products/edit/{id}", [AddProductController::class, 'edit']);
 $route->post("/products/update/{id}", [AddProductController::class, 'update']);
 $route->post("/products/delete/{id}", [AddProductController::class, 'destroy']);
+ // Receipt Routes
+$route->post("/products/generate-receipt", [AddProductController::class, 'generateReceipt']);
+$route->get("/products/clear-receipt", [AddProductController::class, 'clearReceipt']);
 
-
+// Optional: If you want to fetch all receipts separately (not currently used but could be useful)
+$route->get("/products/all-receipts", [AddProductController::class, 'getAllReceipts']);
 $route->route();

@@ -179,19 +179,29 @@ document.addEventListener('DOMContentLoaded', function() {
           updateCartDisplay();
       });
   }
+ 
+});
 
-  // Payment button action
-  const paymentButton = document.getElementById('PayMent');
-  if (paymentButton) {
-      paymentButton.addEventListener('click', function() {
-          const cart = JSON.parse(localStorage.getItem('cart')) || [];
-          
-          if (cart.length === 0) {
-              alert("Your cart is empty!");
-          } else {
-              localStorage.removeItem('cart');
-              updateCartDisplay();
-          }
-      });
-  }
+document.addEventListener("DOMContentLoaded", function () {
+  const downloadPDFButton = document.getElementById("downloadPDF");
+
+  downloadPDFButton.addEventListener("click", function () {
+    const { jsPDF } = window.jspdf; // Get the jsPDF library
+    const doc = new jsPDF(); // Create a new PDF instance
+
+    // Get the content of the receipt modal
+    const receiptContent = document.querySelector("#orderReceiptModal .modal-body");
+
+    // Use the jsPDF library to convert HTML to PDF
+    doc.html(receiptContent, {
+      callback: function (doc) {
+        // Save the PDF with a custom filename
+        doc.save("Order_Receipt.pdf");
+      },
+      x: 10, // X coordinate
+      y: 10, // Y coordinate
+      width: 180, // Max width for content
+      windowWidth: receiptContent.scrollWidth, // Use the full width of the content
+    });
+  });
 });
