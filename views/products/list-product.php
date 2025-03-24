@@ -118,9 +118,6 @@
     </div>
 </div>
 
-<!-- Include html2pdf.js for PDF generation -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
  
  
 <script>
