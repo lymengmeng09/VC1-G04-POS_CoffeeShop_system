@@ -56,6 +56,7 @@ $route->post("/users/update/{id}", [ListUserController::class, 'update'])
       ->middleware("/users/update/{id}", AuthMiddleware::class, 'update_users');
 
 // products
+// products
 $route->get("/products", [AddProductController::class, 'index']);
 $route->get("/products/create", [AddProductController::class, 'create']);
 $route->post("/products/store", [AddProductController::class, 'store']);
