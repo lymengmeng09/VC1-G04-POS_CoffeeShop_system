@@ -303,27 +303,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- JavaScript for SweetAlert2 -->
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.25/dist/sweetalert2.all.min.js"></script>
-        <script>
-            function confirmDelete(productId) {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!',
-                    cancelButtonText: 'Cancel'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Proceed with the deletion by redirecting to the deletion URL
-                        window.location.href = "/delete_product/" + productId;
-                    }
-                });
-            }
-        </script>
+ 
     </div>
 </div>
