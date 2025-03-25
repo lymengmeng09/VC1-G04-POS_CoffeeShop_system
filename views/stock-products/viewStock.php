@@ -15,14 +15,14 @@
 
     <div class="header d-flex justify-content-between align-items-center my-4">
       <h1>Stock Products</h1>
-      
+
     </div>
 
     <div class="notification-dropdown" id="notificationDropdown" style="display: none;">
         <div class="notification-content" id="notificationContent"></div>
     </div>
 
-    <div class="search-section mt-2">
+<div class="search-section mt-2">
             <div class="search-bar">
                 <input type="text" class="form-control search-input" style='background:rgba(190, 190, 190, 0.11);' placeholder="Search products...">
             </div>
@@ -37,8 +37,6 @@
                 </button>
             </div>
         </div>
-    </div>
-
     <div class="products-section">
       <h2 class="section-title"></h2>
       <div class="products-grid">
@@ -294,9 +292,3 @@
     const showReceipt = new URLSearchParams(window.location.search).get('showReceipt') === 'true';
   </script>
  
-  <!-- External JavaScript and library dependencies -->
-  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script src="/js/stock.js"></script>
-</body>
-</html> -->
