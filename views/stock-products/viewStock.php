@@ -1,4 +1,4 @@
-  <div class="container">
+<div class="container">
   <?php
     if (isset($_SESSION['notification'])) {
         // Determine the alert type based on message content
@@ -71,8 +71,9 @@
       </div>
     </div>
 
+
   <!-- Add New Product Modal -->
-<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+  <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -118,6 +119,7 @@
     </div>
   </div>
 </div>
+
 
 <!-- Update Existing Product Modal -->
 <div class="modal fade" id="updateProductModal" tabindex="-1" aria-labelledby="updateProductModalLabel" aria-hidden="true">
@@ -195,6 +197,8 @@
                                     <th>Quantity</th>
                                     <th>Price($)</th>
                                     <th>Total($)</th>
+
+
                                     <th>Timestamp</th>
                                 </tr>
                             </thead>
@@ -236,54 +240,9 @@
         </div>
     </div>
 </div>
-
-<!-- JavaScript for Dynamic Updates -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        updateTotals(); // Update totals dynamically
-        showCurrentDateTime(); // Display current Cambodia date and time
-    });
-
-    // Function to calculate totals dynamically
-    function updateTotals() {
-        let totalSum = 0;
-
-        // Select all total cells in the table
-        document.querySelectorAll(".total-cell").forEach(cell => {
-            let rowTotal = parseFloat(cell.textContent.replace(',', ''));
-            if (!isNaN(rowTotal)) {
-                totalSum += rowTotal;
-            }
-        });
-
-        // Update Grand Total
-        document.getElementById("grand-total").textContent = `$${totalSum.toFixed(2)}`;
-    }
-
-    // Function to show current Cambodia date and time
-    function showCurrentDateTime() {
-        function updateDateTime() {
-            let now = new Date();
-            let options = { 
-                weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit',
-                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
-                timeZone: 'Asia/Phnom_Penh' // Cambodia Timezone
-            };
-            let formattedDateTime = new Intl.DateTimeFormat('en-US', options).format(now);
-            
-            // Display the date-time (You need to add an element with ID 'current-datetime' in your HTML)
-            let dateTimeElement = document.getElementById("current-datetime");
-            if (dateTimeElement) {
-                dateTimeElement.textContent = formattedDateTime;
-            }
-        }
-
-        updateDateTime(); // Call initially
-        setInterval(updateDateTime, 1000); // Update every second
-    }
-</script>
-
  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 
   <!-- Inline script to pass PHP data to JavaScript -->
   <script>
@@ -291,4 +250,3 @@
     const hasReceipt = <?php echo json_encode(isset($_SESSION['receipt'])); ?>;
     const showReceipt = new URLSearchParams(window.location.search).get('showReceipt') === 'true';
   </script>
- 
