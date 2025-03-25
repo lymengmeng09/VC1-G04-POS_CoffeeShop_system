@@ -1,10 +1,9 @@
+<?php
+$user = $_SESSION['user'];
+?>
 <nav class="navbar bg-light py-2 shadow-sm bg-white">
     <div class="container mx-auto px-4">
-        <div class="d-flex justify-content-between align-items-center w-100">
-            <!-- Logo -->
-            <a class="navbar-brand" href="#">
-            </a>
-
+        <div class="d-flex justify-content-end align-items-center w-100">
             <!-- Right Side: Notification and Avatar -->
             <div class="d-flex align-items-center">
                 <!-- Notification Bell -->
@@ -37,20 +36,20 @@
                         aria-expanded="false"
                     >
                     <img 
-                        src="/views/assets/images/faces/2.jpg" 
+                        src="<?php echo htmlspecialchars($user['profile']); ?>" 
                         alt="Profile picture of a user" 
                          class="rounded-circle border avatar-img"
                     />
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#">My profile</a></li>
-                        <li><a class="dropdown-item" href="/login/logout">Logout</a></li>
+                        <li><a href="/view-profile" class="drop"><i class="bi bi-person ms-3"></i> <span>My profile</span></a></li>
+                        <li><a href="/login/logout" class="drop"><i class="bi bi-box-arrow-in-left ms-3"></i> <span>Logout</span></a></li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
-</nav>  
+</nav>
 <div id="app">
     <div id="sidebar" class="active">
         <div class="sidebar-wrapper active">
@@ -103,15 +102,9 @@
                             <span>Users</span>
                         </a>
                     </li>
-                    <li class="sidebar-item">
-                        <a href="/login/logout" class='sidebar-link'>
-                            <i class="bi bi-box-arrow-in-left"></i>
-                            <span>Logout</span>
-                        </a>
-                    </li>
                 </ul>
             </div>
             <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
         </div>
     </div>
-<div id="main">
+    <div id="main">

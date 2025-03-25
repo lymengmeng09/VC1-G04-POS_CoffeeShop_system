@@ -55,6 +55,7 @@ $route->get("/users/edit/{id}", [ListUserController::class, 'edit'])
 // Update the user
 $route->post("/users/update/{id}", [ListUserController::class, 'update'])
       ->middleware("/users/update/{id}", AuthMiddleware::class, 'update_users');
+      $route->get("/view-profile", [ListUserController::class, 'viewProfile']);
 
 // products
 // products
