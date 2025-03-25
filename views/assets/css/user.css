@@ -27,9 +27,6 @@
 .searchbar{
     background-color: rgba(183, 183, 183, 0.118);
 }
-.table tbody td:nth-child(even) {
-    color: rgb(0, 119, 255);
-}
 .table tbody td{
     font-size: medium;
 }
@@ -38,4 +35,7 @@ h5{
 }
 .star{
     color: red;
+}
+.fw-medium{
+    color: #44312B;
 }

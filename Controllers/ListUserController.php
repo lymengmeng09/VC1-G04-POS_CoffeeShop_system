@@ -67,8 +67,24 @@ class ListUserController extends BaseController
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->checkPermission('create_users');
             
+            // Set default image path
+        $defaultImagePath = 'views/assets/images/profile.png'; // Adjust this path
+        
+        // Handle file upload - if no file uploaded, use default
+        $profileImagePath = $defaultImagePath;
+            if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] == UPLOAD_ERR_OK) {
+                $uploadDir = 'uploads/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+                $profileImageName = basename($_FILES['profile_image']['name']);
+                $profileImagePath = $uploadDir . $profileImageName;
+                move_uploaded_file($_FILES['profile_image']['tmp_name'], $profileImagePath);
+            }
+            
             // Get form data
             $data = [
+                'profile' => $profileImagePath,
                 'name' => $_POST['name'] ?? '',
                 'email' => $_POST['email'] ?? '',
                 'password' => $_POST['password'] ?? '',
@@ -84,27 +100,6 @@ class ListUserController extends BaseController
             
             // Initialize errors array
             $errors = [];
-            
-            // Validate form data
-            if (empty($data['name'])) {
-                $errors['name'] = 'Name is required.';
-            }
-            
-            if (empty($data['email'])) {
-                $errors['email'] = 'Email is required.';
-            } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-                $errors['email'] = 'Please provide a valid email address.';
-            }
-            
-            if (empty($data['password'])) {
-                $errors['password'] = 'Password is required.';
-            } elseif (strlen($data['password']) < 8) {
-                $errors['password'] = 'Password must be at least 8 characters long.';
-            }
-            
-            if (empty($data['role_id'])) {
-                $errors['role_id'] = 'Please select a role.';
-            }
             
             // If there are validation errors, redisplay the form
             if (!empty($errors)) {
@@ -167,28 +162,43 @@ class ListUserController extends BaseController
     }
     
     public function update()
-    {
-        $id = $_GET['id'];
-        // Check if the request method is POST
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Get the ID from the URL
-            
-            // Get the data from the form
-            $data = [
-                'name' => $_POST['name'],
-                'email' => $_POST['email'],
-                'role_id' => $_POST['role_id']
-            ];
-            
-            // Update the user using the model
-            $this->model->updateUser($id, $data);
-            
-            // Redirect to the list of users
-            $this->redirect('/list-users');
+{
+    $id = $_GET['id'];
+    // Check if the request method is POST
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Handle file upload
+        $profileImagePath = '';
+        if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] == UPLOAD_ERR_OK) {
+            $uploadDir = 'uploads/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            $profileImageName = basename($_FILES['profile_image']['name']);
+            $profileImagePath = $uploadDir . $profileImageName;
+            move_uploaded_file($_FILES['profile_image']['tmp_name'], $profileImagePath);
         }
+        
+        // Get the data from the form
+        $data = [
+            'profile' => $profileImagePath,
+            'name' => $_POST['name'],
+            'email' => $_POST['email'],
+            'role_id' => $_POST['role_id']
+        ];
+        
+        // Update the user using the model
+        $this->model->updateUser($id, $data);
+        
+        // Redirect to the list of users
+        $this->redirect('/list-users');
     }
-    
-    public function reset()
+}
+public function viewProfile()
+{
+    $users = $this->model->getUsers();
+    $this->view('users/view', ['users' => $users]);
+}
+public function reset()
     {
         $id = $_GET['id'];
         // Check if the request method is POST
