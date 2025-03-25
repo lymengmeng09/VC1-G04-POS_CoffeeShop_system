@@ -28,3 +28,8 @@
     height: 50px;
     
 }
+.drop{
+  color: rgba(53, 53, 53, 0.778);
+  margin-right: 10px;
+  text-decoration: none;
+}
