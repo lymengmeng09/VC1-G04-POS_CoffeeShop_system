@@ -1,3 +1,4 @@
+<div class="card">
 <div class="container">
   <?php
     if (isset($_SESSION['notification'])) {
@@ -250,3 +251,5 @@
     const hasReceipt = <?php echo json_encode(isset($_SESSION['receipt'])); ?>;
     const showReceipt = new URLSearchParams(window.location.search).get('showReceipt') === 'true';
   </script>
+
+</div>
