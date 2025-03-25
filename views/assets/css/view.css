@@ -16,9 +16,6 @@ body {
   padding: 15px 20px;
   border-bottom: 1px solid #eee;
   background-color: white;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
 }
 
 .header h1 {

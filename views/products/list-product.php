@@ -128,7 +128,7 @@
         });
     });
 </script>
-// <!-- Receipt Modal -->
+<!-- Receipt Modal -->
 <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
