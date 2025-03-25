@@ -21,16 +21,17 @@
                 <div class="col-md-2 category">
                     <div class="btn-group me-2">
                         <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            categories: <?= htmlspecialchars(ucfirst($_GET['category_name'] ?? 'all')) ?>
+                            categories: <span id="selected-category"><?= htmlspecialchars(ucfirst($_GET['category_name'] ?? 'all')) ?></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="">All category</a></li>
-                            <li><a class="dropdown-item" href="">Coffee</a></li>
-                            <li><a class="dropdown-item" href="">Tea</a></li>
-                            <li><a class="dropdown-item" href="">Smoothies</a></li>
+                            <li><a class="dropdown-item" data-category="all">All categories</a></li>
+                            <li><a class="dropdown-item" data-category="coffee">Coffee</a></li>
+                            <li><a class="dropdown-item" data-category="martcha">Martcha</a></li>
+                            <li><a class="dropdown-item" data-category="expresso">Expresso</a></li>
                         </ul>
                     </div>
                 </div>
+
                 <div class="col-md shop" style="position: relative;">
                     <a href="javascript:void(0)" id="cart-icon">
                         <i class="fas fa-shopping-cart"></i>
@@ -39,7 +40,7 @@
                 </div>
             </form>
         </div>
-        
+
         <div class="row g-4 coffee-grid">
             <!-- Product Section -->
             <div class="row g-4 coffee-grid">
@@ -51,8 +52,8 @@
                                     <div class="dropdown">
                                         <button class="dropbtn">⋮</button>
                                         <div class="dropdown-content">
-                                        <a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>">Edit</a>
-                                        <form action="/products/delete/<?= htmlspecialchars($product['product_id']) ?>" method="POST" style="display:inline;">
+                                            <a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>">Edit</a>
+                                            <form action="/products/delete/<?= htmlspecialchars($product['product_id']) ?>" method="POST" style="display:inline;">
                                                 <input type="hidden" name="_method" value="DELETE">
                                                 <button type="submit" onclick="return confirm('Are you sure?')" style="background:none;border:none;color:#000;padding:0;">Delete</button>
                                             </form>

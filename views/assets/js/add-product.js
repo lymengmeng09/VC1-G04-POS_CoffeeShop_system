@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const productItems = document.querySelectorAll(".product-item");
   const categoryFilterBtn = document.getElementById("categoryFilterBtn");
 
-  let selectedCategory = 'all'; // Default to 'all' category
+  let selectedCategory = 'all';
 
   // Function to filter products based on search input and category selection
   function filterProducts() {
@@ -73,7 +73,7 @@ document.querySelectorAll('.btn-Order').forEach(button => {
 function updateCartDisplay() {
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
   const cartTableBody = document.getElementById('cart-table-body');
-  const cartTotalElement = document.getElementById('cart-total');
+  // const cartTotalElement = document.getElementById('cart-total');
   const cartCountElement = document.getElementById('cart-count');
   const cartTable = document.getElementById('cart-table');
 
@@ -195,3 +195,5 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   }
 });
+
+
