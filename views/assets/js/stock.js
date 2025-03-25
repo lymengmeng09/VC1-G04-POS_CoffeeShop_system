@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
       newEntry.classList.add('product-entry', 'mb-3');
       newEntry.style.display = 'block'; // Ensure new entry is visible
       newEntry.innerHTML = `
-        <h6>Product ${addEntryCount + 1}</h6>
+       
         <div class="row g-3 align-items-end">
           <div class="col-md-3">
             <label for="addName-${addEntryCount}" class="form-label">Product Name</label>
@@ -257,36 +257,34 @@ document.addEventListener('DOMContentLoaded', function() {
     const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
     receiptModal.show();
     window.history.replaceState({}, document.title, window.location.pathname);
-  }
-// Save as PDF
-const savePdfButton = document.getElementById('save-pdf');
+  } const savePdfButton = document.getElementById('save-pdf');
 
-if (savePdfButton) {
-  savePdfButton.addEventListener('click', function() {
-    const receiptElement = document.getElementById('receipt-content');
-    
-    if (receiptElement) {
-      html2pdf().set({
-        margin: 10,
-        filename: 'stock_receipt_' + new Date().toISOString().slice(0, 10) + '.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, logging: false },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      }).from(receiptElement).save().then(() => {
-        // Ensure Bootstrap Modal is closed after saving
-        const receiptModal = document.getElementById('receiptModal');
-        if (receiptModal) {
-          const modalInstance = bootstrap.Modal.getInstance(receiptModal);
-          if (modalInstance) modalInstance.hide();
-        }
-      });
-    } else {
-      console.error('Error: #receipt-content not found.');
-    }
-  });
-} else {
-  console.error('Error: Save PDF button not found.');
-}
+  if (savePdfButton) {
+    savePdfButton.addEventListener('click', function() {
+      const receiptElement = document.getElementById('receipt-content');
+      
+      if (receiptElement) {
+        html2pdf().set({
+          margin: 10,
+          filename: 'stock_receipt_' + new Date().toISOString().slice(0, 10) + '.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, logging: false },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        }).from(receiptElement).save().then(() => {
+          // Ensure Bootstrap Modal is closed after saving
+          const receiptModal = document.getElementById('receiptModal');
+          if (receiptModal) {
+            const modalInstance = bootstrap.Modal.getInstance(receiptModal);
+            if (modalInstance) modalInstance.hide();
+          }
+        });
+      } else {
+        console.error('Error: #receipt-content not found.');
+      }
+    });
+  } else {
+    console.error('Error: Save PDF button not found.');
+  }
 // Clear and hide receipt
 const clearHideButton = document.getElementById('clear-hide');
 if (clearHideButton) {
@@ -334,7 +332,19 @@ setTimeout(() => {
   alert.style.display = 'none';
 }, 2000); // 2000ms = 2 seconds
 }
+///Clear 
 
+const okButton = document.getElementById('ok-button');
+const receiptModal = document.getElementById('receiptModal');
+
+if (okButton && receiptModal) {
+    okButton.addEventListener('click', function() {
+        const modalInstance = bootstrap.Modal.getInstance(receiptModal);
+        if (modalInstance) {
+            modalInstance.hide();
+        }
+    });
+}
 // Initial update of remove icons for both modals
 updateRemoveIcons('add-product-entries');
 updateRemoveIcons('product-entries');
