@@ -1,3 +1,12 @@
+<?php
+// Start the session if it hasn't been started already
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Initialize $user with default values if not set
+$user = $_SESSION['user'] ?? ['profile' => 'views/assets/images/profile.png'];
+?>
 <div class="card">
     <div class="card-body">
         <?php if (isset($errors['general'])): ?>

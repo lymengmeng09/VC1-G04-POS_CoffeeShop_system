@@ -1,5 +1,11 @@
 <?php
-$user = $_SESSION['user'];
+// Start the session if it hasn't been started already
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Initialize $user with default values if not set
+$user = $_SESSION['user'] ?? ['profile' => 'views/assets/images/profile.png'];
 ?>
 <nav class="navbar bg-light py-2 shadow-sm bg-white">
     <div class="container mx-auto px-4">
@@ -36,8 +42,8 @@ $user = $_SESSION['user'];
                         aria-expanded="false"
                     >
                     <img 
-                        src="<?php echo htmlspecialchars($user['profile']); ?>" 
-                        alt="Profile picture of a user" 
+                        src="<?= !empty($user['profile']) ? htmlspecialchars($user['profile']) : 'views/assets/images/profile.png' ?>" 
+                        alt="Profile picture" 
                          class="rounded-circle border avatar-img"
                     />
                     </button>
