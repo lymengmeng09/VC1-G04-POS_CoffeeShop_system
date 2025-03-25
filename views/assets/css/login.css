@@ -1,10 +1,10 @@
 .gradient-custom-2 {
-    background: #432115;
+    background: #844A24;
     padding: 20px;
 }
 
 .gradient-custom-2:hover {
-    background: #432115ce;
+    background: #b66d3d;
 }
 .form-control.is-valid {
     border-color: #ced4da !important; /* Default border color */

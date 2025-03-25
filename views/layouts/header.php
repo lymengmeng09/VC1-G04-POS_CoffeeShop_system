@@ -20,13 +20,14 @@
   <link rel="stylesheet" href="/views/assets/css/add-product.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <link rel="stylesheet" href="/views/assets/vendors/iconly/bold.css">
   <link rel="shortcut icon" href="/views/assets/images/favicon.svg" type="image/x-icon">
   <link rel="stylesheet" href="/views/assets/css/edit-product.css">
   <link rel="stylesheet" href="/views/assets/css/list-product.css">
   <link rel="stylesheet" href="/views/assets/css/Dashboard.css">
   <link rel="stylesheet" href="/views/assets/css/navbar.css">
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"> -->
+
 </head>
 
 <body>
