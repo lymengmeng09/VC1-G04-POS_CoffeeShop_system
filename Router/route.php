@@ -7,6 +7,7 @@ require_once "Controllers/LoginController.php";
 require_once "Controllers/ListUserController.php";
 require_once "Controllers/AddProductController.php";
 require_once "Controllers/ViewStockController.php";
+ 
 require_once "Middleware/AuthMiddleware.php";
 
 
@@ -56,7 +57,7 @@ $route->post("/users/update/{id}", [ListUserController::class, 'update'])
       ->middleware("/users/update/{id}", AuthMiddleware::class, 'update_users');
       $route->get("/view-profile", [ListUserController::class, 'viewProfile']);
 
-// products
+ 
 // products
 $route->get("/products", [AddProductController::class, 'index']);
 $route->get("/products/create", [AddProductController::class, 'create']);
@@ -64,6 +65,5 @@ $route->post("/products/store", [AddProductController::class, 'store']);
 $route->get("/products/edit/{id}", [AddProductController::class, 'edit']);
 $route->post("/products/update/{id}", [AddProductController::class, 'update']);
 $route->post("/products/delete/{id}", [AddProductController::class, 'destroy']);
-
-
+ 
 $route->route();
