@@ -109,6 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
+
       const newEntry = document.createElement('div');
       newEntry.classList.add('product-entry', 'mb-3');
       newEntry.style.display = 'block'; // Ensure new entry is visible
@@ -184,6 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+
   const newEntry = document.createElement('div');
   newEntry.classList.add('product-entry', 'mb-3');
   newEntry.style.display = 'block'; // Ensure new entry is visible
@@ -256,43 +258,87 @@ document.addEventListener('DOMContentLoaded', function() {
     receiptModal.show();
     window.history.replaceState({}, document.title, window.location.pathname);
   }
+// Save as PDF
+const savePdfButton = document.getElementById('save-pdf');
 
-  // Save as PDF
-  const savePdfButton = document.getElementById('save-pdf');
-  if (savePdfButton) {
-    savePdfButton.addEventListener('click', function() {
-      const element = document.getElementById('receipt-content');
-      if (typeof html2pdf !== 'undefined') {
-        html2pdf().from(element).save('stock_receipt_' + new Date().toISOString().slice(0, 10) + '.pdf')
-          .then(() => {
-            const receiptModal = bootstrap.Modal.getInstance(document.getElementById('receiptModal'));
-            receiptModal.hide();
-          });
-      } else {
-        console.error('html2pdf library not loaded');
-      }
-    });
-  }
-
-  // Clear and hide receipt
-  const clearHideButton = document.getElementById('clear-hide');
-  if (clearHideButton) {
-    clearHideButton.addEventListener('click', function() {
-      fetch('/clearReceipt', {
-        method: 'GET',
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest'
+if (savePdfButton) {
+  savePdfButton.addEventListener('click', function() {
+    const receiptElement = document.getElementById('receipt-content');
+    
+    if (receiptElement) {
+      html2pdf().set({
+        margin: 10,
+        filename: 'stock_receipt_' + new Date().toISOString().slice(0, 10) + '.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      }).from(receiptElement).save().then(() => {
+        // Ensure Bootstrap Modal is closed after saving
+        const receiptModal = document.getElementById('receiptModal');
+        if (receiptModal) {
+          const modalInstance = bootstrap.Modal.getInstance(receiptModal);
+          if (modalInstance) modalInstance.hide();
         }
-      })
-      .then(response => response.text())
-      .then(() => {
-        const receiptModal = bootstrap.Modal.getInstance(document.getElementById('receiptModal'));
-        receiptModal.hide();
-      })
-      .catch(error => console.error('Error clearing receipt:', error));
-    });
-  }
+      });
+    } else {
+      console.error('Error: #receipt-content not found.');
+    }
+  });
+} else {
+  console.error('Error: Save PDF button not found.');
+}
+// Clear and hide receipt
+const clearHideButton = document.getElementById('clear-hide');
+if (clearHideButton) {
+  clearHideButton.addEventListener('click', function() {
+    fetch('/clearReceipt', {
+      method: 'GET',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    })
+    .then(response => response.text())
+    .then(() => {
+      const receiptModal = bootstrap.Modal.getInstance(document.getElementById('receiptModal'));
+      receiptModal.hide();
+    })
+    .catch(error => console.error('Error clearing receipt:', error));
+  });
+}
 
+// Debug form submissions
+const addProductForm = document.getElementById('addProductForm');
+if (addProductForm) {
+  addProductForm.addEventListener('submit', function(e) {
+    console.log('Add Product Form submitted');
+    console.log(new FormData(this));
+  });
+}
+
+const updateProductForm = document.getElementById('updateProductForm');
+if (updateProductForm) {
+  updateProductForm.addEventListener('submit', function(e) {
+    console.log('Update Product Form submitted');
+    console.log(new FormData(this));
+  });
+}
+
+// Check for notification alert
+const alert = document.querySelector('.alert');
+
+if (alert) {
+console.log('Notification alert displayed:', alert.textContent.trim());
+
+// Hide alert after 2 seconds
+setTimeout(() => {
+  alert.style.display = 'none';
+}, 2000); // 2000ms = 2 seconds
+}
+
+// Initial update of remove icons for both modals
+updateRemoveIcons('add-product-entries');
+updateRemoveIcons('product-entries');
+});
   // Debug form submissions
   const addProductForm = document.getElementById('addProductForm');
   if (addProductForm) {
@@ -325,7 +371,7 @@ if (alert) {
   // Initial update of remove icons for both modals
   updateRemoveIcons('add-product-entries');
   updateRemoveIcons('product-entries');
-});
+
 
 // Research product function
 function researchProduct(query) {
@@ -353,6 +399,3 @@ function researchProduct(query) {
 
   console.log(`Found ${visibleCount} products matching "${query}"`);
 }
-
-
-//Add total recept 
