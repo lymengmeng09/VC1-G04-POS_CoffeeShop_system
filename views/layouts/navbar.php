@@ -6,6 +6,9 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Initialize $user with default values if not set
 $user = $_SESSION['user'] ?? ['profile' => 'views/assets/images/profile.png'];
+
+// Ensure profile path is properly formatted
+$profilePath = !empty($user['profile']) ? '/' . ltrim($user['profile'], '/') : '/views/assets/images/profile.png';
 ?>
 <nav class="navbar bg-light py-2 shadow-sm bg-white">
     <div class="container mx-auto px-4">
@@ -48,9 +51,11 @@ $user = $_SESSION['user'] ?? ['profile' => 'views/assets/images/profile.png'];
                         aria-expanded="false"
                     >
                     <img 
-                        src="<?= !empty($user['profile']) ? htmlspecialchars($user['profile']) : 'views/assets/images/profile.png' ?>" 
+                        src="<?= htmlspecialchars($profilePath) ?>" 
                         alt="Profile picture" 
-                         class="rounded-circle border avatar-img"
+                        class="rounded-circle border avatar-img"
+                        onerror="this.src='/views/assets/images/profile.png'"
+                        style="width: 40px; height: 40px;"
                     />
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">

@@ -85,7 +85,7 @@
         <form method="POST" action="/add-product" enctype="multipart/form-data" id="addProductForm">
           <div id="add-product-entries">
             <div class="product-entry mb-3">
-              <h6>Product 1</h6>
+               
               <div class="row g-3 align-items-end">
                 <div class="col-md-3">
                   <label for="addName-0" class="form-label">Product Name</label>
@@ -167,8 +167,13 @@
               </div>
             </div>
           </div>
+<<<<<<< HEAD
           <button type="button" class="btn btn-warning text-white mb-3"id="add-more">Add More</button>
           <button type="submit" class="btn btn-success" style=" margin-left: 60%; ,   background:green;">Completed</button>
+=======
+          <button type="button" class="btn btn-secondary mb-3"   style="background:orange;"id="add-more">Add More</button>
+          <button type="submit" class="btn btn-success" style=" margin-left: 60%; background:green;">Completed</button>
+>>>>>>> 751a6fb46e8003976b23c08952500a240843b74d
 
           
         </form>
