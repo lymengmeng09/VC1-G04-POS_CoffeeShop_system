@@ -75,12 +75,6 @@ $user = $_SESSION['user'];
                     <li class="sidebar-item">
                         <a href="/products" class='sidebar-link'>
                             <i class="bi bi-shop"></i>
-                            <span>Products</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="#" class='sidebar-link'>
-                            <i class="bi bi-collection-fill"></i>
                             <span>Order</span>
                         </a>
                     </li>

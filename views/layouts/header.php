@@ -26,8 +26,7 @@
   <link rel="stylesheet" href="/views/assets/css/list-product.css">
   <link rel="stylesheet" href="/views/assets/css/Dashboard.css">
   <link rel="stylesheet" href="/views/assets/css/navbar.css">
-  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"> -->
-
+  <link rel="stylesheet" href="/views/assets/css/create.css">
 </head>
 
 <body>

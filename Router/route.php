@@ -57,6 +57,7 @@ $route->post("/users/update/{id}", [ListUserController::class, 'update'])
       $route->get("/view-profile", [ListUserController::class, 'viewProfile']);
 
 // products
+// products
 $route->get("/products", [AddProductController::class, 'index']);
 $route->get("/products/create", [AddProductController::class, 'create']);
 $route->post("/products/store", [AddProductController::class, 'store']);

@@ -156,53 +156,72 @@ document.addEventListener('DOMContentLoaded', function() {
   const addMoreButton = document.getElementById('add-more');
   if (addMoreButton) {
     addMoreButton.addEventListener('click', function() {
-      console.log('Add More (Update) clicked');
-      updateEntryCount++;
-      const productEntries = document.getElementById('product-entries');
-      if (!productEntries) {
-        console.error('product-entries container not found');
-        return;
-      }
-
-      const newEntry = document.createElement('div');
-      newEntry.classList.add('product-entry', 'mb-3');
-      newEntry.style.display = 'block'; // Ensure new entry is visible
-      newEntry.innerHTML = `
-        <div class="row g-3 align-items-end">
-          <div class="col-md-3">
-            <label for="updateProduct-${updateEntryCount}" class="form-label">Select Product</label>
-            <select class="form-control update-product" id="updateProduct-${updateEntryCount}" name="product_id[]" required>
-              <option value="">Select a product...</option>
-              ${getProductOptions()}
-            </select>
-          </div>
-          <div class="col-md-2">
-            <label for="updatePrice-${updateEntryCount}" class="form-label">Price</label>
-            <input type="number" step="0.01" class="form-control update-price" id="updatePrice-${updateEntryCount}" name="price[]" required>
-          </div>
-          <div class="col-md-2">
-            <label for="updateQuantity-${updateEntryCount}" class="form-label">Quantity</label>
-            <input type="number" class="form-control update-quantity" id="updateQuantity-${updateEntryCount}" name="quantity[]" required>
-          </div>
-          <div class="col-md-2">
-            <label for="totalPrice-${updateEntryCount}" class="form-label">Total Price</label>
-            <div class="input-group">
-              <span class="input-group-text">$</span>
-              <input type="text" class="form-control total-price" id="totalPrice-${updateEntryCount}" readonly>
-            </div>
-          </div>
-          <div class="col-md-2 text-center">
-            <i class="bi bi-trash remove-entry" style="cursor: pointer; font-size: 1.5rem; color: #dc3545;" title="Remove"></i>
-          </div>
-        </div>
-      `;
-      productEntries.appendChild(newEntry);
-      updateRemoveIcons('product-entries');
-      addDynamicEventListeners(newEntry);
-    });
-  } else {
-    console.error('add-more button not found');
+  console.log('Add More (Update) clicked');
+  updateEntryCount++;
+  const productEntries = document.getElementById('product-entries');
+  if (!productEntries) {
+    console.error('product-entries container not found');
+    return;
   }
+
+  // Get all currently selected product IDs
+  const selectedProductIds = Array.from(document.querySelectorAll('#product-entries .update-product'))
+    .map(select => select.value)
+    .filter(value => value !== '');
+
+  // Get the original product options and filter out selected ones
+  const initialSelect = document.querySelector('#updateProduct-0');
+  let productOptions = initialSelect ? initialSelect.innerHTML : '<option value="">No products available</option>';
+  if (selectedProductIds.length > 0) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(`<select>${productOptions}</select>`, 'text/html');
+    const options = doc.querySelectorAll('option');
+    productOptions = '<option value="">Select a product...</option>';
+    options.forEach(option => {
+      if (option.value && !selectedProductIds.includes(option.value)) {
+        productOptions += option.outerHTML;
+      }
+    });
+  }
+
+  const newEntry = document.createElement('div');
+  newEntry.classList.add('product-entry', 'mb-3');
+  newEntry.style.display = 'block'; // Ensure new entry is visible
+  newEntry.innerHTML = `
+    <div class="row g-3 align-items-end">
+      <div class="col-md-3">
+        <label for="updateProduct-${updateEntryCount}" class="form-label">Select Product</label>
+        <select class="form-control update-product" id="updateProduct-${updateEntryCount}" name="product_id[]" required>
+          ${productOptions}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label for="updatePrice-${updateEntryCount}" class="form-label">Price</label>
+        <input type="number" step="0.01" class="form-control update-price" id="updatePrice-${updateEntryCount}" name="price[]" required>
+      </div>
+      <div class="col-md-2">
+        <label for="updateQuantity-${updateEntryCount}" class="form-label">Quantity</label>
+        <input type="number" class="form-control update-quantity" id="updateQuantity-${updateEntryCount}" name="quantity[]" required>
+      </div>
+      <div class="col-md-2">
+        <label for="totalPrice-${updateEntryCount}" class="form-label">Total Price</label>
+        <div class="input-group">
+          <span class="input-group-text">$</span>
+          <input type="text" class="form-control total-price" id="totalPrice-${updateEntryCount}" readonly>
+        </div>
+      </div>
+      <div class="col-md-2 text-center">
+        <i class="bi bi-trash remove-entry" style="cursor: pointer; font-size: 1.5rem; color: #dc3545;" title="Remove"></i>
+      </div>
+    </div>
+  `;
+  productEntries.appendChild(newEntry);
+  updateRemoveIcons('product-entries');
+  addDynamicEventListeners(newEntry);
+
+  updateAllDropdowns(); // 🔥 Ensure dropdown updates dynamically
+});
+}
 
   // Handle remove icon clicks (event delegation for both modals)
   document.addEventListener('click', function(e) {
