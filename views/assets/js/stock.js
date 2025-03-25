@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
       newEntry.classList.add('product-entry', 'mb-3');
       newEntry.style.display = 'block'; // Ensure new entry is visible
       newEntry.innerHTML = `
-        <h6>Product ${addEntryCount + 1}</h6>
+       
         <div class="row g-3 align-items-end">
           <div class="col-md-3">
             <label for="addName-${addEntryCount}" class="form-label">Product Name</label>

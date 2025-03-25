@@ -85,7 +85,7 @@
         <form method="POST" action="/add-product" enctype="multipart/form-data" id="addProductForm">
           <div id="add-product-entries">
             <div class="product-entry mb-3">
-              <h6>Product 1</h6>
+               
               <div class="row g-3 align-items-end">
                 <div class="col-md-3">
                   <label for="addName-0" class="form-label">Product Name</label>
