@@ -10,6 +10,12 @@ $user = $_SESSION['user'] ?? ['profile' => 'views/assets/images/profile.png'];
 <nav class="navbar bg-light py-2 shadow-sm bg-white">
     <div class="container mx-auto px-4">
         <div class="d-flex justify-content-end align-items-center w-100">
+        <div class="col-md shop" style="position: relative;">
+                    <a href="javascript:void(0)" id="cart-icon">
+                        <i class="fas fa-shopping-cart" style="font-size: 24px;"></i>
+                        <span class="count_cart" id="cart-count">0</span>
+                    </a>
+                </div>
             <!-- Right Side: Notification and Avatar -->
             <div class="d-flex align-items-center">
                 <!-- Notification Bell -->

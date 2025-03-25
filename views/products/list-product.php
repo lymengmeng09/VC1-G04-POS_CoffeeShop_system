@@ -2,7 +2,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Product Management</h2>
         <button class="btn btn-primary text-light">
-            <a href="/products/create"><i class="fas fa-plus me-2 text-light"></i> Add Product</a>
+            <a href="/products/create"><i class="fas fa-plus me-2 text-light"></i> Create Menu</a>
         </button>
     </div>
 
@@ -30,13 +30,6 @@
                             <li><a class="dropdown-item" data-category="expresso">Expresso</a></li>
                         </ul>
                     </div>
-                </div>
-
-                <div class="col-md shop" style="position: relative;">
-                    <a href="javascript:void(0)" id="cart-icon">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="count_cart" id="cart-count">0</span>
-                    </a>
                 </div>
             </form>
         </div>
@@ -68,7 +61,7 @@
                                             $<?= number_format($product['price'], 2) ?>
                                         </p>
                                         <button class="btn-Order" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-price="<?= number_format($product['price'], 2) ?>" data-img="<?= htmlspecialchars($product['image_url']) ?>">
-                                            Order New
+                                            Order
                                         </button>
                                     </div>
                                 </div>
