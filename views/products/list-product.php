@@ -198,6 +198,7 @@ document.getElementById('cart-table-body').addEventListener('click', function(e)
         const newTotal = currentTotal - productPrice;
         cartTotal.textContent = `$${newTotal.toFixed(2)}`;
 
+
         // If the cart is empty, hide the cart table
         if (document.getElementById('cart-table-body').children.length === 0) {
             document.getElementById('cart-table').style.display = 'none';
@@ -224,4 +225,3 @@ document.getElementById('clear-all').addEventListener('click', function() {
  
 
 </script>
- 
