@@ -36,7 +36,7 @@ $user = $_SESSION['user'];
                         aria-expanded="false"
                     >
                     <img 
-                        src="<?php echo htmlspecialchars($user['profile']); ?>" 
+                        src="<?= !empty($user['profile']) ? htmlspecialchars($user['profile']) : 'views/assets/images/profile.png' ?>" 
                         alt="Profile picture of a user" 
                          class="rounded-circle border avatar-img"
                     />
