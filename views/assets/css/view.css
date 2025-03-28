@@ -880,7 +880,6 @@ Recept style
  
 /* Add More Product Button */
 #add-more-product {
-  background:  orange;
   border: none;
   padding: 8px 15px;
   font-size: 14px;
@@ -888,9 +887,7 @@ Recept style
   transition: 0.3s;
 }
 
-#add-more-product:hover {
-  background: #5a6268;
-}
+
 
 /* Submit Button */
 .btn-primary {

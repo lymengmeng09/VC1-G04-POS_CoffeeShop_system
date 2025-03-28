@@ -113,7 +113,7 @@
               </div>
             </div>
           </div>
-          <button type="button" class="btn btn-secondary mb-3 " id="add-more-product">Add More</button>
+          <button type="button" class="btn btn-warning text-white mb-3 " id="add-more-product">Add More</button>
           <button type="submit" class=" btn-primary-add">Completed</button>
         </form>
       </div>
