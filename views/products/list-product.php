@@ -20,14 +20,14 @@
                 </div>
                 <div class="col-md-2 category">
                     <div class="btn-group me-2">
-                        <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            categories: <span id="selected-category"><?= htmlspecialchars(ucfirst($_GET['category_name'] ?? 'all')) ?></span>
+                        <button id="btnGroupDrop1" type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            Categories: <?= htmlspecialchars(ucfirst($_GET['category_name'] ?? 'all')) ?>
                         </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" data-category="all">All categories</a></li>
-                            <li><a class="dropdown-item" data-category="coffee">Coffee</a></li>
-                            <li><a class="dropdown-item" data-category="martcha">Martcha</a></li>
-                            <li><a class="dropdown-item" data-category="expresso">Expresso</a></li>
+                        <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                            <li><a class="dropdown-item" href="?category_name=all&products=<?= $_GET['products'] ?? 'all' ?>">All categories</a></li>
+                            <li><a class="dropdown-item" href="?category_name=coffee&products=<?= $_GET['products'] ?? 'all' ?>">Coffee</a></li>
+                            <li><a class="dropdown-item" href="?category_name=martcha&products=<?= $_GET['products'] ?? 'all' ?>">Martcha</a></li>
+                            <li><a class="dropdown-item" href="?category_name=expresso&products=<?= $_GET['products'] ?? 'all' ?>">Expresso</a></li>
                         </ul>
                     </div>
                 </div>
@@ -68,7 +68,7 @@
                                             $<?= number_format($product['price'], 2) ?>
                                         </p>
                                         <button class="btn-Order" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-price="<?= number_format($product['price'], 2) ?>" data-img="<?= htmlspecialchars($product['image_url']) ?>">
-                                            Order New
+                                            Order Now
                                         </button>
                                     </div>
                                 </div>
@@ -118,8 +118,8 @@
     </div>
 </div>
 
- 
- 
+
+
 <script>
     document.querySelectorAll('.dropbtn').forEach(button => {
         button.addEventListener('click', function() {
@@ -128,7 +128,7 @@
         });
     });
 </script>
-// <!-- Receipt Modal -->
+<!-- Receipt Modal -->
 <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -146,81 +146,77 @@
     </div>
 </div>
 
- 
- 
+
+
 <script>
-  // Adding a product to the cart
-document.querySelectorAll('.btn-Order').forEach(button => {
-    button.addEventListener('click', function() {
-        const productName = this.getAttribute('data-name');
-        const productPrice = this.getAttribute('data-price');
-        const productImg = this.getAttribute('data-img');
+    // Adding a product to the cart
+    document.querySelectorAll('.btn-Order').forEach(button => {
+        button.addEventListener('click', function() {
+            const productName = this.getAttribute('data-name');
+            const productPrice = this.getAttribute('data-price');
+            const productImg = this.getAttribute('data-img');
 
-        // Create a new row in the cart table
-        const cartTableBody = document.getElementById('cart-table-body');
-        const row = document.createElement('tr');
+            // Create a new row in the cart table
+            const cartTableBody = document.getElementById('cart-table-body');
+            const row = document.createElement('tr');
 
-        row.innerHTML = `
+            row.innerHTML = `
             <td><img src="${productImg}" alt="${productName}" style="width: 50px;"></td>
             <td>${productName}</td>
             <td>$${productPrice}</td>
             <td><button class="btn btn-danger remove-item">Remove</button></td>
         `;
-        cartTableBody.appendChild(row);
+            cartTableBody.appendChild(row);
 
-        // Update the cart total
-        const cartTotal = document.getElementById('cart-total');
-        const currentTotal = parseFloat(cartTotal.textContent.replace('$', ''));
-        const newTotal = currentTotal + parseFloat(productPrice);
-        cartTotal.textContent = `$${newTotal.toFixed(2)}`;
+            // Update the cart total
+            const cartTotal = document.getElementById('cart-total');
+            const currentTotal = parseFloat(cartTotal.textContent.replace('$', ''));
+            const newTotal = currentTotal + parseFloat(productPrice);
+            cartTotal.textContent = `$${newTotal.toFixed(2)}`;
 
-        // Show the cart table
-        document.getElementById('cart-table').style.display = 'block';
+            // Show the cart table
+            document.getElementById('cart-table').style.display = 'block';
+        });
     });
-});
 
-// Removing an item from the cart
-document.getElementById('cart-table-body').addEventListener('click', function(e) {
-    if (e.target && e.target.classList.contains('remove-item')) {
-        // Find the row that contains the "Remove" button
-        const row = e.target.closest('tr');
-        
-        // Get the price of the product being removed
-        const productPrice = parseFloat(row.children[2].textContent.replace('$', ''));
+    // Removing an item from the cart
+    document.getElementById('cart-table-body').addEventListener('click', function(e) {
+        if (e.target && e.target.classList.contains('remove-item')) {
+            // Find the row that contains the "Remove" button
+            const row = e.target.closest('tr');
 
-        // Remove the row
-        row.remove();
+            // Get the price of the product being removed
+            const productPrice = parseFloat(row.children[2].textContent.replace('$', ''));
 
-        // Update the cart total
-        const cartTotal = document.getElementById('cart-total');
-        const currentTotal = parseFloat(cartTotal.textContent.replace('$', ''));
-        const newTotal = currentTotal - productPrice;
-        cartTotal.textContent = `$${newTotal.toFixed(2)}`;
+            // Remove the row
+            row.remove();
+
+            // Update the cart total
+            const cartTotal = document.getElementById('cart-total');
+            const currentTotal = parseFloat(cartTotal.textContent.replace('$', ''));
+            const newTotal = currentTotal - productPrice;
+            cartTotal.textContent = `$${newTotal.toFixed(2)}`;
 
 
-        // If the cart is empty, hide the cart table
-        if (document.getElementById('cart-table-body').children.length === 0) {
-            document.getElementById('cart-table').style.display = 'none';
+            // If the cart is empty, hide the cart table
+            if (document.getElementById('cart-table-body').children.length === 0) {
+                document.getElementById('cart-table').style.display = 'none';
+            }
         }
-    }
-});
+    });
 
-// Cancel button event listener
-document.getElementById('clear-all').addEventListener('click', function() {
-    // Clear cart items in the table
-    const cartTableBody = document.getElementById('cart-table-body');
-    cartTableBody.innerHTML = '';  // This removes all rows
+    // Cancel button event listener
+    document.getElementById('clear-all').addEventListener('click', function() {
+        // Clear cart items in the table
+        const cartTableBody = document.getElementById('cart-table-body');
+        cartTableBody.innerHTML = ''; // This removes all rows
 
-    // Reset the total
-    const cartTotal = document.getElementById('cart-total');
-    cartTotal.textContent = '0.00';
+        // Reset the total
+        const cartTotal = document.getElementById('cart-total');
+        cartTotal.textContent = '0.00';
 
-    // Optionally hide the cart table after clearing
-    const cartTable = document.getElementById('cart-table');
-    cartTable.style.display = 'none';  // Hide the table
-});
-
-
- 
-
+        // Optionally hide the cart table after clearing
+        const cartTable = document.getElementById('cart-table');
+        cartTable.style.display = 'none'; // Hide the table
+    });
 </script>
