@@ -16,9 +16,6 @@ body {
   padding: 15px 20px;
   border-bottom: 1px solid #eee;
   background-color: white;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
 }
 
 .header h1 {
@@ -881,10 +878,8 @@ Recept style
 }
 
  
- 
 /* Add More Product Button */
 #add-more-product {
-  background: #6c757d;
   border: none;
   padding: 8px 15px;
   font-size: 14px;
@@ -892,9 +887,7 @@ Recept style
   transition: 0.3s;
 }
 
-#add-more-product:hover {
-  background: #5a6268;
-}
+
 
 /* Submit Button */
 .btn-primary {
@@ -903,13 +896,24 @@ Recept style
   padding: 8px 15px;
   font-size: 14px;
   border-radius: 5px;
+ 
 }
+.btn-primary-add{
+  margin-left: 75%;
+  background:green;
+  border: none;
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 5px;
+  color:#fff;
+}
+ 
 
 .btn-primary:hover {
   background: #0056b3;
 }
 
-
+ 
 .image-preview img {
   width: 80px; /* Adjust the width */
   height: 60px; /* Adjust the height */
@@ -918,6 +922,5 @@ Recept style
   border: 1px solid #ccc;
   margin-top: 4%; /* Optional: adds a subtle border */
 }
-
 
  

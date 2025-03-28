@@ -1,3 +1,12 @@
+<?php
+// Start the session if it hasn't been started already
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Initialize $user with default values if not set
+$user = $_SESSION['user'] ?? ['profile' => 'views/assets/images/profile.png'];
+?>
 <div class="card">
     <div class="card-body">
         <?php if (isset($errors['general'])): ?>
@@ -7,7 +16,7 @@
         <?php endif; ?>
         <form action="/users/store" method="POST" id="userForm" class="needs-validation" novalidate enctype="multipart/form-data">
             <!-- Other form fields -->
-            <div class="form-group">
+            <div class="mb-3">
                 <label for="productImage">Profile Image</label>
                 <div class="image-upload-container">
                     <input type="file" class="file-input" id="productImage" name="profile_image" accept="image/*" required>

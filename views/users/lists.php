@@ -57,7 +57,7 @@
                 <?php foreach ($filteredUsers as $user): ?>
                     <tr>
                         <td></td>
-                        <td class="py-2 "><img src="/<?= !empty($user['profile']) ? htmlspecialchars($user['profile']) : 'views/assets/images/profile.png' ?>" alt="" class="rounded-circle me-2" style="width: 40px; height:40px; object-fit: cover;">
+                        <td class="py-2 "><img src="/<?= !empty($user['profile']) ? htmlspecialchars($user['profile']) : 'views/assets/images/profile.png' ?>" alt="" class="rounded-circle me-2" style="width: 40px; height:40px;">
                             <span><?= htmlspecialchars($user['name']) ?></span>
                         </td>
                         <td style="color:rgb(106, 106, 106);"><?= htmlspecialchars($user['email']) ?></td>

@@ -25,20 +25,23 @@
                     <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
                 </div>
-
-                <!-- Role Selection Dropdown -->
-                <div class="mb-3">
-                    <label for="role_id" class="form-label">Role:</label>
-                    <select name="role_id" class="form-control" required>
-                        <option value="">Select a role</option>
-                        <?php foreach ($roles as $role): ?>
-                            <option value="<?= $role['id'] ?>" <?= $role['id'] == $user['role_id'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($role['role_name']) ?>
-                            </option>
-                        <?php endforeach ?>
-                    </select>
-                </div>
-
+                <?php if (AccessControl::isAdmin()): ?>
+                    <!-- Role Selection Dropdown (visible to admins) -->
+                    <div class="mb-3">
+                        <label for="role_id" class="form-label">Role:</label>
+                        <select name="role_id" class="form-control" required>
+                            <option value="">Select a role</option>
+                            <?php foreach ($roles as $role): ?>
+                                <option value="<?= $role['id'] ?>" <?= $role['id'] == $user['role_id'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($role['role_name']) ?>
+                                </option>
+                            <?php endforeach ?>
+                        </select>
+                    </div>
+                <?php else: ?>
+                    <!-- Hidden role_id field (for non-admins) -->
+                    <input type="hidden" name="role_id" value="<?= $user['role_id'] ?>">
+                <?php endif; ?>
                 <!-- Save and Cancel Buttons -->
                 <button type="submit" class="btn btn-primary mt-2">Save</button>
                 <a href="/list-users" class="btn btn-secondary mt-2">Cancel</a>
@@ -52,7 +55,7 @@
     .image-upload-container {
         margin-bottom: 20px;
     }
-    
+
     .image-preview-box {
         width: 200px;
         height: 200px;
@@ -66,7 +69,7 @@
         margin-bottom: 10px;
         cursor: pointer;
     }
-    
+
     .upload-placeholder {
         display: flex;
         flex-direction: column;
@@ -74,19 +77,19 @@
         justify-content: center;
         color: #999;
     }
-    
+
     .upload-placeholder p {
         margin-top: 10px;
         margin-bottom: 0;
         font-size: 14px;
     }
-    
+
     #imagePreview {
         max-width: 100%;
         max-height: 100%;
         object-fit: contain;
     }
-    
+
     .file-input {
         display: none;
     }
@@ -100,12 +103,12 @@
         const fileInput = document.getElementById('profileImage');
         const imagePreview = document.getElementById('imagePreview');
         const uploadPlaceholder = document.getElementById('uploadPlaceholder');
-        
+
         // Add event listener for file selection
         fileInput.addEventListener('change', function() {
             if (this.files && this.files[0]) {
                 const reader = new FileReader();
-                
+
                 reader.onload = function(e) {
                     // Set the image source to the loaded data URL
                     imagePreview.src = e.target.result;
@@ -114,7 +117,7 @@
                     // Hide the upload placeholder
                     uploadPlaceholder.style.display = 'none';
                 };
-                
+
                 // Read the selected file as a data URL
                 reader.readAsDataURL(this.files[0]);
             } else {
@@ -125,9 +128,42 @@
             }
         });
     });
-    
+
     // Function to trigger the file input when clicking on the upload box
     function triggerFileInput() {
         document.getElementById('profileImage').click();
     }
+// In your edit view file
+$(document).ready(function() {
+    $('#editForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        var formData = new FormData(this);
+        
+        $.ajax({
+            url: window.location.href,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                // Update profile info on the page immediately
+                $('.user-name').text($('#name').val());
+                $('.user-email').text($('#email').val());
+                
+                // If profile image was updated
+                if ($('#profile_image').val()) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('.user-profile-img').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL($('#profile_image')[0].files[0]);
+                }
+                
+                // Show success message
+                alert('Profile updated successfully!');
+            }
+        });
+    });
+});
 </script>
