@@ -162,28 +162,28 @@ document.querySelectorAll('.btn-Order').forEach(button => {
         const productPrice = this.getAttribute('data-price');
         const productImg = this.getAttribute('data-img');
 
-        // Create a new row in the cart table
-        const cartTableBody = document.getElementById('cart-table-body');
-        const row = document.createElement('tr');
+            // Create a new row in the cart table
+            const cartTableBody = document.getElementById('cart-table-body');
+            const row = document.createElement('tr');
 
-        row.innerHTML = `
+            row.innerHTML = `
             <td><img src="${productImg}" alt="${productName}" style="width: 50px;"></td>
             <td>${productName}</td>
             <td>$${productPrice}</td>
             <td><button class="btn btn-danger remove-item">Remove</button></td>
         `;
-        cartTableBody.appendChild(row);
+            cartTableBody.appendChild(row);
 
-        // Update the cart total
-        const cartTotal = document.getElementById('cart-total');
-        const currentTotal = parseFloat(cartTotal.textContent.replace('$', ''));
-        const newTotal = currentTotal + parseFloat(productPrice);
-        cartTotal.textContent = `$${newTotal.toFixed(2)}`;
+            // Update the cart total
+            const cartTotal = document.getElementById('cart-total');
+            const currentTotal = parseFloat(cartTotal.textContent.replace('$', ''));
+            const newTotal = currentTotal + parseFloat(productPrice);
+            cartTotal.textContent = `$${newTotal.toFixed(2)}`;
 
-        // Show the cart table
-        document.getElementById('cart-table').style.display = 'block';
+            // Show the cart table
+            document.getElementById('cart-table').style.display = 'block';
+        });
     });
-});
 
 // Removing an item from the cart
 document.getElementById('cart-table-body').addEventListener('click', function(e) {
@@ -194,32 +194,35 @@ document.getElementById('cart-table-body').addEventListener('click', function(e)
         // Get the price of the product being removed
         const productPrice = parseFloat(row.children[2].textContent.replace('$', ''));
 
-        // Remove the row
-        row.remove();
+            // Get the price of the product being removed
+            const productPrice = parseFloat(row.children[2].textContent.replace('$', ''));
 
-        // Update the cart total
-        const cartTotal = document.getElementById('cart-total');
-        const currentTotal = parseFloat(cartTotal.textContent.replace('$', ''));
-        const newTotal = currentTotal - productPrice;
-        cartTotal.textContent = `$${newTotal.toFixed(2)}`;
+            // Remove the row
+            row.remove();
+
+            // Update the cart total
+            const cartTotal = document.getElementById('cart-total');
+            const currentTotal = parseFloat(cartTotal.textContent.replace('$', ''));
+            const newTotal = currentTotal - productPrice;
+            cartTotal.textContent = `$${newTotal.toFixed(2)}`;
 
 
-        // If the cart is empty, hide the cart table
-        if (document.getElementById('cart-table-body').children.length === 0) {
-            document.getElementById('cart-table').style.display = 'none';
+            // If the cart is empty, hide the cart table
+            if (document.getElementById('cart-table-body').children.length === 0) {
+                document.getElementById('cart-table').style.display = 'none';
+            }
         }
-    }
-});
+    });
 
-// Cancel button event listener
-document.getElementById('clear-all').addEventListener('click', function() {
-    // Clear cart items in the table
-    const cartTableBody = document.getElementById('cart-table-body');
-    cartTableBody.innerHTML = ''; // This removes all rows
+    // Cancel button event listener
+    document.getElementById('clear-all').addEventListener('click', function() {
+        // Clear cart items in the table
+        const cartTableBody = document.getElementById('cart-table-body');
+        cartTableBody.innerHTML = ''; // This removes all rows
 
-    // Reset the total
-    const cartTotal = document.getElementById('cart-total');
-    cartTotal.textContent = '0.00';
+        // Reset the total
+        const cartTotal = document.getElementById('cart-total');
+        cartTotal.textContent = '0.00';
 
     // Optionally hide the cart table after clearing
     const cartTable = document.getElementById('cart-table');
