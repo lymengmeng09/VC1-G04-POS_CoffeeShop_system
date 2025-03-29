@@ -167,13 +167,8 @@
               </div>
             </div>
           </div>
-<<<<<<< HEAD
           <button type="button" class="btn btn-warning text-white mb-3"id="add-more">Add More</button>
           <button type="submit" class="btn btn-success" style=" margin-left: 60%; ,   background:green;">Completed</button>
-=======
-          <button type="button" class="btn btn-secondary mb-3"   style="background:orange;"id="add-more">Add More</button>
-          <button type="submit" class="btn btn-success" style=" margin-left: 60%; background:green;">Completed</button>
->>>>>>> 751a6fb46e8003976b23c08952500a240843b74d
 
           
         </form>
@@ -189,7 +184,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="receiptModalLabel">Recent Stock Receipt</h5>
+                        <h5 class="modal-title text-white" id="receiptModalLabel">Recent Stock Receipt</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">

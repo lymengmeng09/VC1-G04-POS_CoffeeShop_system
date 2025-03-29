@@ -764,7 +764,7 @@ Recept style
 }
 
 #receiptModal .modal-header {
-  background-color: #007bff;
+  background-color: #8F5D46;
   color: white;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
@@ -818,7 +818,7 @@ Recept style
 
 /* Total Price Row */
 #receiptModal .table tbody tr:last-child {
-  background: #007bff;
+  background: #462b23ad;
   color: white;
   font-size: 1.1em;
   font-weight: bold;

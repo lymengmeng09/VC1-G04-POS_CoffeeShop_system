@@ -87,6 +87,7 @@ class AddProductController extends BaseController
         $this->view('products/edit', ['product' => $product]);
     }
 
+
     public function update($id)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
