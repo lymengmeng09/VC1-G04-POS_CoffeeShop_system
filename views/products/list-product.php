@@ -20,10 +20,9 @@
                 </div>
                 <div class="col-md-2 category">
                     <div class="btn-group me-2">
-                        <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            categories: <span
-                                id="selected-category"><?= htmlspecialchars(ucfirst($_GET['category_name'] ?? 'all')) ?></span>
+                        <button id="btnGroupDrop1" type="button" class="btn btn-outline-primary dropdown-toggle"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Category: <?= htmlspecialchars(ucfirst($_GET['category'] ?? 'All')) ?>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1" id="categoryList">
                             <li><a class="dropdown-item" href="?category=all&category_id=<?= $_GET['category_id'] ?? 'all' ?>">All</a></li>
@@ -45,71 +44,55 @@
         </div>
     </div>
 
-        <div class="row g-4 coffee-grid">
-            <!-- Product Section -->
-            <div class="row g-4 coffee-grid">
-                <?php foreach ($products as $index => $product): ?>
-                <div class="col-6 col-md-3 product-item" data-category="Coffee">
-                    <div class="card border-0 h-100">
-                        <div class="text-center p-2">
-                            <div class="product-entry">
-                                <div class="dropdown">
-                                    <button class="dropbtn">⋮</button>
-                                    <div class="dropdown-content">
-                                        <a
-                                            href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>">Edit</a>
-                                        <form action="/products/delete/<?= htmlspecialchars($product['product_id']) ?>"
-                                            method="POST" style="display:inline;">
-                                            <input type="hidden" name="_method" value="DELETE">
-                                            <button type="submit" onclick="return confirm('Are you sure?')"
-                                                style="background:none;border:none;color:#000;padding:0;">Delete</button>
-                                        </form>
-                                    </div>
-                                </div>
-                                <div class="image-container">
-                                    <img src="<?= htmlspecialchars($product['image_url']) ?>"
-                                        alt="<?= htmlspecialchars($product['product_name']) ?>"
-                                        class="img-fluid mb-2 product-image">
-                                </div>
-                                <div class="mt-2">
-                                    <h6 class="card-title text-center mb-1" style="font-size: 1.2em; font-weight:300;">
-                                        <strong><?= htmlspecialchars($product['product_name']) ?></strong>
-                                    </h6>
 
-                                    <p class="text-success fw-bold mb-0">
-                                        $<?= number_format($product['price'], 2) ?>
-                                    </p>
-                                    <button class="btn-Order"
-                                        data-name="<?= htmlspecialchars($product['product_name']) ?>"
-                                        data-price="<?= number_format($product['price'], 2) ?>"
-                                        data-img="<?= htmlspecialchars($product['image_url']) ?>">
-                                        Order
-                                    </button>
-                                </div>
-                            </div>
+    <div class="row g-4 coffee-grid">
+      <!-- Product Section -->
+<div class="row g-4 coffee-grid">
+    <?php foreach ($products as $index => $product): ?>
+    <div class="col-6 col-md-3 product-item" data-category="Coffee">
+        <div class="card border-0 h-100">
+            <div class="text-center p-2">
+                <div class="product-entry">
+                    <!-- Dropdown for Edit/Delete -->
+                    <div class="dropdown">
+                        <button class="dropbtn">⋮</button>
+                        <div class="dropdown-content">
+                            <!-- Edit Link -->
+                            <a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>">Edit</a>
+                            <!-- Delete Button with Confirmation -->
+                            <button type="button" class="btn-delete" 
+                                data-id="<?= htmlspecialchars($product['product_id']) ?>" 
+                                data-name="<?= htmlspecialchars($product['product_name']) ?>" 
+                                data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                Delete
+                            </button>
                         </div>
                     </div>
-                </div>
-                <?php endforeach; ?>
-            </div>
-
-            <!-- Cart Table -->
-            <div id="cart-table" style="display: none;" class="card-order">
-                <h3>Bills</h3>
-                <table class="table table-bordered">
-                    <div id="cart-table-body">
-                    </div>
-                </table>
-                <div class="d-flex justify-content-between total" id="btn">
-                    <div class="cart-total">Total: $<span id="cart-total">0.00</span></div>
-                    <div class="btn_cart">
-                        <button id="clear-all" class="btn btn-secondary">Cancel</button>
-                        <button id="PayMent" class="btn btn-primary">Pay Now</button>
+                    <!-- Product Image -->
+                    <img src="<?= htmlspecialchars($product['image_url']) ?>" 
+                        alt="<?= htmlspecialchars($product['product_name']) ?>" 
+                        class="img-fluid mb-2" 
+                        onerror="this.src='/path/to/placeholder-image.jpg';">
+                    <div class="mt-2">
+                        <!-- Product Name and Price -->
+                        <h6 class="card-title fw-normal text-center mb-1" style="font-size: 0.9rem;">
+                            <?= htmlspecialchars($product['product_name']) ?>
+                        </h6>
+                        <p class="text-success fw-bold mb-0">
+                            $<?= number_format($product['price'], 2) ?>
+                        </p>
+                        <!-- Order Button -->
+                        <button class="btn-Order" data-name="<?= htmlspecialchars($product['product_name']) ?>" 
+                            data-price="<?= number_format($product['price'], 2) ?>" 
+                            data-img="<?= htmlspecialchars($product['image_url']) ?>">
+                            Order
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <?php endforeach; ?>
 </div>
 
  
@@ -320,4 +303,3 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 </script>
-    

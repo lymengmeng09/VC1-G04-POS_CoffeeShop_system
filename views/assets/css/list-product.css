@@ -106,13 +106,11 @@ hr {
   color: #888;
 }
 .remove-item {
-  background-color: white;
-  color: red;
   border: none;
-  cursor: pointer;
-  font-size: 22px;  
-  margin-left: 40px;
-  
+  background:red;
+   font-size: 13px;
+   margin-left: 30%;
+  color: #fff;
 }
 .quantity-input {
   width: 50px;
@@ -187,7 +185,10 @@ td:nth-child(3) {
   opacity: 1;
 }
 
-
+.img-fluid{
+  border-radius: 18px;
+   
+}
 @media print {
     body * {
         visibility: hidden;
