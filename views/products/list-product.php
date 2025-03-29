@@ -6,7 +6,7 @@
         </button>
     </div>
 
-    <!-- Search and Filter Section -->
+    <!-- Modified Search and Filter Section -->
     <div class="card mb-4">
         <div class="card-body">
             <form id="filterForm" method="GET" class="row g-3">
@@ -15,8 +15,7 @@
                         <input type="text" class="form-control" placeholder="Search products..." name="search"
                             id="searchInput">
                         <button class="btn btn-outline-secondary" type="submit">
-                            <i class="fas fa-search"></i>
-                        </button>
+                            <i class="fas fa-search"></i></button>
                     </div>
                 </div>
                 <div class="col-md-2 category">
@@ -26,16 +25,25 @@
                             categories: <span
                                 id="selected-category"><?= htmlspecialchars(ucfirst($_GET['category_name'] ?? 'all')) ?></span>
                         </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" data-category="all">All categories</a></li>
-                            <li><a class="dropdown-item" data-category="coffee">Coffee</a></li>
-                            <li><a class="dropdown-item" data-category="martcha">Martcha</a></li>
-                            <li><a class="dropdown-item" data-category="expresso">Expresso</a></li>
+                        <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1" id="categoryList">
+                            <li><a class="dropdown-item" href="?category=all&category_id=<?= $_GET['category_id'] ?? 'all' ?>">All</a></li>
+                            <li><a class="dropdown-item"
+                                    href="?category=ColdDrinks&category_id=<?= $_GET['category_id'] ?? 'all' ?>">Cold Drinks</a>
+                            </li>
+                            <li><a class="dropdown-item"
+                                    href="?category=Frappe&category_id=<?= $_GET['category_id'] ?? 'all' ?>">Frappe</a></li>
+                            <li><a class="dropdown-item"
+                                    href="?category=HotDrinks&category_id=<?= $_GET['category_id'] ?? 'all' ?>">Hot Drinks</a>
+                            </li>
+                            <li><a class="dropdown-item"
+                                    href="?category=Smoothies&category_id=<?= $_GET['category_id'] ?? 'all' ?>">Smoothies</a></li>
                         </ul>
                     </div>
                 </div>
+
             </form>
         </div>
+    </div>
 
         <div class="row g-4 coffee-grid">
             <!-- Product Section -->
@@ -104,6 +112,76 @@
     </div>
 </div>
 
+ 
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete <strong id="modalProductName"></strong>?
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-danger" style = " margin-top:9%;">Delete</button>
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Handle Delete Confirmation Modal
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function () {
+            const productId = this.dataset.id;
+            const productName = this.dataset.name;
+
+            // Set modal product name and update form action
+            document.getElementById('modalProductName').textContent = productName;
+            document.getElementById('deleteForm').action = `/products/delete/${productId}`;
+        });
+    });
+
+    // Handle Order Button
+    document.querySelectorAll('.btn-Order').forEach(button => {
+        button.addEventListener('click', function () {
+            const productName = this.dataset.name;
+            const productPrice = this.dataset.price;
+            const productImg = this.dataset.img;
+
+            alert(`Order placed for: ${productName}, Price: $${productPrice}`);
+            // Add additional logic for order handling (e.g., add to cart or open order modal)
+        });
+    });
+</script>
+
+
+        <!-- Cart Table -->
+        <div id="cart-table" style="display: none;" class="card-order">
+            <h3>Bills</h3>
+            <table class="table table-bordered">
+                <div id="cart-table-body">
+                </div>
+            </table>
+            <div class="d-flex justify-content-between total" id="btn">
+                <div class="cart-total">Total: $<span id="cart-total">0.00</span></div>
+                <div class="btn_cart">
+                    <button id="clear-all" class="btn btn-secondary">Cancel</button>
+                    <button id="PayMent" class="btn btn-primary">Pay Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
 
 <!-- Receipt Modal -->
 <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
@@ -122,7 +200,6 @@
         </div>
     </div>
 </div>
-
 
 
 <script>
@@ -224,4 +301,23 @@ document.getElementById('clear-all').addEventListener('click', function() {
     const cartTable = document.getElementById('cart-table');
     cartTable.style.display = 'none'; // Hide the table
 });
+
+
+//search category
+document.addEventListener("DOMContentLoaded", function () {
+    const categoryButton = document.getElementById("btnGroupDrop1");
+    const categoryLinks = document.querySelectorAll(".dropdown-item");
+
+    categoryLinks.forEach(link => {
+        link.addEventListener("click", function (e) {
+            e.preventDefault();
+            const selectedCategory = this.textContent;
+            categoryButton.textContent = "Category: " + selectedCategory;
+            window.location.href = this.href; // Redirect with selected category
+        });
+    });
+});
+
+
 </script>
+    
