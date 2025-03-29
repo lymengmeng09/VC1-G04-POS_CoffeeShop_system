@@ -220,4 +220,3 @@ function filterByRole(role) {
         }
     }
 }
-
