@@ -52,11 +52,14 @@
                                             </form>
                                         </div>
                                     </div>
-                                    <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>" class="img-fluid mb-2">
+                                    <div class="image-container">
+                                    <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>" class="img-fluid mb-2 product-image">
+                                    </div>
                                     <div class="mt-2">
-                                        <h6 class="card-title fw-normal text-center mb-1" style="font-size: 0.9rem;">
-                                            <?= htmlspecialchars($product['product_name']) ?>
-                                        </h6>
+                                    <h6 class="card-title text-center mb-1" style="font-size: 1.2em; font-weight:350;">
+    <strong><?= htmlspecialchars($product['product_name']) ?></strong>
+</h6>
+
                                         <p class="text-success fw-bold mb-0">
                                             $<?= number_format($product['price'], 2) ?>
                                         </p>
