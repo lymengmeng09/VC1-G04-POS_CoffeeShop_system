@@ -212,6 +212,7 @@ document.querySelectorAll('.dropbtn').forEach(button => {
 
 
 
+
 <script>
 // Adding a product to the cart
 document.querySelectorAll('.btn-Order').forEach(button => {
