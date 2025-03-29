@@ -94,6 +94,7 @@
     </div>
     <?php endforeach; ?>
 </div>
+
  
 <!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
