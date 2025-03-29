@@ -38,39 +38,74 @@
                 </button>
             </div>
         </div>
-    <div class="products-section">
-      <h2 class="section-title"></h2>
-      <div class="products-grid">
-        <?php 
-        // Sort products by quantity in ascending order (lowest to highest)
-        usort($products, function($a, $b) {
-            return $a['quantity'] - $b['quantity'];
-        });
-        
-        foreach ($products as $product) : ?>
-          <div class="product-card <?= $product['quantity'] == 0 ? 'out-of-stock' : '' ?>" 
-               data-name="<?= htmlspecialchars(strtolower($product['name'])) ?>" 
-               data-price="<?= $product['price'] ?>" 
-               data-quantity="<?= $product['quantity'] ?>">
-            <div class="dropdown">
-              <button class="dropbtn">⋮</button>
-              <div class="dropdown-content">
-                <a href="/edit_product?id=<?= $product['id'] ?>">Edit</a>
-                <a href="/delete_product/<?= $product['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
-              </div>
-            </div>
-            <div class="product-image">
-              <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
-            </div>
-            <div class="product-info">
-              <h3 class="origin"><?= htmlspecialchars($product['name']) ?></h3>
-              <p class="price">Price: $<?= number_format($product['price'], 2) ?></p>
-              <p class="quantity">Quantity: <?= $product['quantity'] ?> <?= $product['quantity'] == 0 ? '(Out of Stock)' : '' ?></p>
-            </div>
+        <div class="products-section">
+  <h2 class="section-title">Products</h2>
+  <div class="products-grid">
+    <?php 
+    // Sort products by quantity in ascending order (lowest to highest)
+    usort($products, function($a, $b) {
+        return $a['quantity'] - $b['quantity'];
+    });
+
+    foreach ($products as $product) : ?>
+      <div class="product-card <?= $product['quantity'] == 0 ? 'out-of-stock' : '' ?>" 
+           data-name="<?= htmlspecialchars(strtolower($product['name'])) ?>" 
+           data-price="<?= $product['price'] ?>" 
+           data-quantity="<?= $product['quantity'] ?>">
+        <div class="dropdown">
+          <button class="dropbtn">⋮</button>
+          <div class="dropdown-content">
+            <a href="/edit_product?id=<?= $product['id'] ?>">Edit</a>
+            <!-- Delete button to trigger modal -->
+            <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal" 
+               onclick="setDeleteModal(<?= $product['id'] ?>, '<?= htmlspecialchars($product['name']) ?>')">Delete</a>
           </div>
-        <?php endforeach; ?>
+        </div>
+        <div class="product-image">
+          <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
+        </div>
+        <div class="product-info">
+          <h3 class="origin"><?= htmlspecialchars($product['name']) ?></h3>
+          <p class="price">Price: $<?= number_format($product['price'], 2) ?></p>
+          <p class="quantity">Quantity: <?= $product['quantity'] ?> <?= $product['quantity'] == 0 ? '(Out of Stock)' : '' ?></p>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Delete Product</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete <strong id="productName"></strong>?
+      </div>
+      <div class="modal-footer">
+        <form id="deleteForm" method="POST">
+          <input type="hidden" name="_method" value="DELETE">
+          <button type="submit" class="btn btn-danger" style = " margin-top:9%;">Delete</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </form>
       </div>
     </div>
+  </div>
+</div>
+
+<script>
+  function setDeleteModal(productId, productName) {
+    // Set product name in the modal
+    document.getElementById('productName').textContent = productName;
+
+    // Update the form action URL with the product ID
+    const deleteForm = document.getElementById('deleteForm');
+    deleteForm.action = `/delete_product/${productId}`;
+  }
+</script>
 
 
   <!-- Add New Product Modal -->
@@ -183,8 +218,8 @@
         <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="receiptModalLabel">Recent Stock Receipt</h5>
+                    <div class="modal-header" >
+                        <h5 class="modal-title" id="Recept">Recent Stock Receipt</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
