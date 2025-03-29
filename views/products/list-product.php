@@ -44,47 +44,106 @@
         </div>
     </div>
 
+
     <div class="row g-4 coffee-grid">
-        <!-- Product Section -->
-        <div class="row g-4 coffee-grid">
-            <?php foreach ($products as $index => $product): ?>
-            <div class="col-6 col-md-3 product-item" data-category="Coffee">
-                <div class="card border-0 h-100">
-                    <div class="text-center p-2">
-                        <div class="product-entry">
-                            <div class="dropdown">
-                                <button class="dropbtn">⋮</button>
-                                <div class="dropdown-content">
-                                    <a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>">Edit</a>
-                                    <form action="/products/delete/<?= htmlspecialchars($product['product_id']) ?>"
-                                        method="POST" style="display:inline;">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <button type="submit" onclick="return confirm('Are you sure?')"
-                                            style="background:none;border:none;color:#000;padding:0;">Delete</button>
-                                    </form>
-                                </div>
-                            </div>
-                            <img src="<?= htmlspecialchars($product['image_url']) ?>"
-                                alt="<?= htmlspecialchars($product['product_name']) ?>" class="img-fluid mb-2">
-                            <div class="mt-2">
-                                <h6 class="card-title fw-normal text-center mb-1" style="font-size: 0.9rem;">
-                                    <?= htmlspecialchars($product['product_name']) ?>
-                                </h6>
-                                <p class="text-success fw-bold mb-0">
-                                    $<?= number_format($product['price'], 2) ?>
-                                </p>
-                                <button class="btn-Order" data-name="<?= htmlspecialchars($product['product_name']) ?>"
-                                    data-price="<?= number_format($product['price'], 2) ?>"
-                                    data-img="<?= htmlspecialchars($product['image_url']) ?>">
-                                    Order
-                                </button>
-                            </div>
+      <!-- Product Section -->
+<div class="row g-4 coffee-grid">
+    <?php foreach ($products as $index => $product): ?>
+    <div class="col-6 col-md-3 product-item" data-category="Coffee">
+        <div class="card border-0 h-100">
+            <div class="text-center p-2">
+                <div class="product-entry">
+                    <!-- Dropdown for Edit/Delete -->
+                    <div class="dropdown">
+                        <button class="dropbtn">⋮</button>
+                        <div class="dropdown-content">
+                            <!-- Edit Link -->
+                            <a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>">Edit</a>
+                            <!-- Delete Button with Confirmation -->
+                            <button type="button" class="btn-delete" 
+                                data-id="<?= htmlspecialchars($product['product_id']) ?>" 
+                                data-name="<?= htmlspecialchars($product['product_name']) ?>" 
+                                data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                Delete
+                            </button>
                         </div>
+                    </div>
+                    <!-- Product Image -->
+                    <img src="<?= htmlspecialchars($product['image_url']) ?>" 
+                        alt="<?= htmlspecialchars($product['product_name']) ?>" 
+                        class="img-fluid mb-2" 
+                        onerror="this.src='/path/to/placeholder-image.jpg';">
+                    <div class="mt-2">
+                        <!-- Product Name and Price -->
+                        <h6 class="card-title fw-normal text-center mb-1" style="font-size: 0.9rem;">
+                            <?= htmlspecialchars($product['product_name']) ?>
+                        </h6>
+                        <p class="text-success fw-bold mb-0">
+                            $<?= number_format($product['price'], 2) ?>
+                        </p>
+                        <!-- Order Button -->
+                        <button class="btn-Order" data-name="<?= htmlspecialchars($product['product_name']) ?>" 
+                            data-price="<?= number_format($product['price'], 2) ?>" 
+                            data-img="<?= htmlspecialchars($product['image_url']) ?>">
+                            Order
+                        </button>
                     </div>
                 </div>
             </div>
-            <?php endforeach; ?>
         </div>
+    </div>
+    <?php endforeach; ?>
+</div>
+ 
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete <strong id="modalProductName"></strong>?
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-danger" style = " margin-top:9%;">Delete</button>
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Handle Delete Confirmation Modal
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function () {
+            const productId = this.dataset.id;
+            const productName = this.dataset.name;
+
+            // Set modal product name and update form action
+            document.getElementById('modalProductName').textContent = productName;
+            document.getElementById('deleteForm').action = `/products/delete/${productId}`;
+        });
+    });
+
+    // Handle Order Button
+    document.querySelectorAll('.btn-Order').forEach(button => {
+        button.addEventListener('click', function () {
+            const productName = this.dataset.name;
+            const productPrice = this.dataset.price;
+            const productImg = this.dataset.img;
+
+            alert(`Order placed for: ${productName}, Price: $${productPrice}`);
+            // Add additional logic for order handling (e.g., add to cart or open order modal)
+        });
+    });
+</script>
+
 
         <!-- Cart Table -->
         <div id="cart-table" style="display: none;" class="card-order">
@@ -123,7 +182,6 @@
         </div>
     </div>
 </div>
-
 
 
 <script>
@@ -214,11 +272,11 @@ document.getElementById('cart-table-body').addEventListener('click', function(e)
         }
     });
 
-    // Cancel button event listener
-    document.getElementById('clear-all').addEventListener('click', function() {
-        // Clear cart items in the table
-        const cartTableBody = document.getElementById('cart-table-body');
-        cartTableBody.innerHTML = ''; // This removes all rows
+// Cancel button event listener
+document.getElementById('clear-all').addEventListener('click', function() {
+    // Clear cart items in the table
+    const cartTableBody = document.getElementById('cart-table-body');
+    cartTableBody.innerHTML = ''; // This removes all rows
 
         // Reset the total
         const cartTotal = document.getElementById('cart-total');
@@ -227,6 +285,12 @@ document.getElementById('cart-table-body').addEventListener('click', function(e)
     // Optionally hide the cart table after clearing
     const cartTable = document.getElementById('cart-table');
     cartTable.style.display = 'none'; // Hide the table
+});
+
+//search category
+document.addEventListener("DOMContentLoaded", function () {
+    const categoryButton = document.getElementById("btnGroupDrop1");
+    const categoryLinks = document.querySelectorAll(".dropdown-item");
 });
 
 //search category
