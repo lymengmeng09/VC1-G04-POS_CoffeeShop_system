@@ -24,16 +24,13 @@ class UserModel {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
     public function getUserById($id) {
-        $stmt = $this->db->prepare("
-            SELECT users.*, roles.role_name 
-            FROM users 
-            LEFT JOIN roles ON users.role_id = roles.id 
-            WHERE users.id = :id
-        ");
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE id = :id");
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    
     /**
      * Check if an email already exists in the database
      * 
@@ -114,24 +111,18 @@ class UserModel {
         return $stmt->execute(['id' => $id]);
     }
     
-    // Modify the updateUser method to return updated user data
-public function updateUser($id, $data) {
-    $stmt = $this->db->prepare("UPDATE users SET profile = :profile, name = :name, email = :email, role_id = :role_id WHERE id = :id");
-    $result = $stmt->execute([
-        'id' => $id,
-        'profile' => $data['profile'],
-        'name' => $data['name'],
-        'email' => $data['email'],
-        'role_id' => $data['role_id']
-    ]);
-    
-    // Return the updated user data if successful
-    if ($result) {
-        return $this->getUserById($id);
-    }
-    return false;
-}
+    public function updateUser($id, $data) {
 
+        $stmt = $this->db->prepare("UPDATE users SET profile = :profile, name = :name, email = :email, role_id = :role_id WHERE id = :id");
+        $result = $stmt->execute([
+            'id' => $id,
+            'profile'  => $data['profile'],
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'role_id' => $data['role_id']
+        ]);
+    }
+    
     public function resetPassword($id, $data) {
         $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
         $stmt = $this->db->prepare("UPDATE users SET password = :password WHERE id = :id");
@@ -147,4 +138,3 @@ public function updateUser($id, $data) {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
-

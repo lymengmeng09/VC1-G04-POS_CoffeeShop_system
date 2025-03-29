@@ -65,5 +65,6 @@ $route->post("/products/store", [AddProductController::class, 'store']);
 $route->get("/products/edit/{id}", [AddProductController::class, 'edit']);
 $route->post("/products/update/{id}", [AddProductController::class, 'update']);
 $route->post("/products/delete/{id}", [AddProductController::class, 'destroy']);
+
  
 $route->route();

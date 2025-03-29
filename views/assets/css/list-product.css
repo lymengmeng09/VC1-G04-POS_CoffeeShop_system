@@ -106,17 +106,13 @@ hr {
   color: #888;
 }
 .remove-item {
-  background-color: red;
-  color: white;
+  background-color: white;
+  color: red;
   border: none;
   cursor: pointer;
-  padding: 5px;
-  font-size: 10px;
-  border-radius: 3px;
+  font-size: 22px;  
   margin-left: 40px;
-}
-.remove-item:hover {
-  background-color: rgb(167, 22, 22);
+  
 }
 .quantity-input {
   width: 50px;
