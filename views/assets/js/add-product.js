@@ -131,18 +131,8 @@ function displayCartItems(cart) {
     }
   });
   
-  // Remove product from cart
-  document.getElementById('cart-table-body').addEventListener('click', function (e) {
-    if (e.target && e.target.classList.contains('remove-item')) {
-      const productId = parseInt(e.target.getAttribute('data-id'));
-      
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const updatedCart = cart.filter(item => item.id !== productId);
-      
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
-      updateCartDisplay();
-    }
-  });
+ 
+    
   
   // Cart Management Functions
   function addToCart(productName, productPrice, productImg) {

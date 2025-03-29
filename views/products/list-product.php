@@ -213,12 +213,11 @@ document.querySelectorAll('.dropbtn').forEach(button => {
 
 
 
-<script>
-// Adding a product to the cart
+<script>// Adding a product to the cart
 document.querySelectorAll('.btn-Order').forEach(button => {
     button.addEventListener('click', function() {
         const productName = this.getAttribute('data-name');
-        const productPrice = this.getAttribute('data-price');
+        const productPrice = parseFloat(this.getAttribute('data-price'));
         const productImg = this.getAttribute('data-img');
 
         // Create a new row in the cart table
@@ -228,21 +227,26 @@ document.querySelectorAll('.btn-Order').forEach(button => {
         row.innerHTML = `
             <td><img src="${productImg}" alt="${productName}" style="width: 50px;"></td>
             <td>${productName}</td>
-            <td>$${productPrice}</td>
+            <td>$${productPrice.toFixed(2)}</td>
             <td><button class="btn btn-danger remove-item">Remove</button></td>
         `;
         cartTableBody.appendChild(row);
 
         // Update the cart total
-        const cartTotal = document.getElementById('cart-total');
-        const currentTotal = parseFloat(cartTotal.textContent.replace('$', ''));
-        const newTotal = currentTotal + parseFloat(productPrice);
-        cartTotal.textContent = `$${newTotal.toFixed(2)}`;
-
+        updateCartTotal(productPrice);
+        
         // Show the cart table
         document.getElementById('cart-table').style.display = 'block';
     });
 });
+
+// Helper function to update the cart total
+function updateCartTotal(amount) {
+    const cartTotal = document.getElementById('cart-total');
+    const currentTotal = parseFloat(cartTotal.textContent.replace('$', '')) || 0;
+    const newTotal = currentTotal + amount;
+    cartTotal.textContent = `$${newTotal.toFixed(2)}`;
+}
 
 // Removing an item from the cart
 document.getElementById('cart-table-body').addEventListener('click', function(e) {
@@ -257,11 +261,7 @@ document.getElementById('cart-table-body').addEventListener('click', function(e)
         row.remove();
 
         // Update the cart total
-        const cartTotal = document.getElementById('cart-total');
-        const currentTotal = parseFloat(cartTotal.textContent.replace('$', ''));
-        const newTotal = currentTotal - productPrice;
-        cartTotal.textContent = `$${newTotal.toFixed(2)}`;
-
+        updateCartTotal(-productPrice);
 
         // If the cart is empty, hide the cart table
         if (document.getElementById('cart-table-body').children.length === 0) {
@@ -285,8 +285,7 @@ document.getElementById('clear-all').addEventListener('click', function() {
     cartTable.style.display = 'none'; // Hide the table
 });
 
-
-//search category
+// Search category
 document.addEventListener("DOMContentLoaded", function () {
     const categoryButton = document.getElementById("btnGroupDrop1");
     const categoryLinks = document.querySelectorAll(".dropdown-item");
@@ -300,6 +299,5 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
-
 
 </script>
