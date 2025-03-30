@@ -106,14 +106,20 @@ hr {
   color: #888;
 }
 .remove-item {
-  background-color: white;
-  color: red;
   border: none;
+  background: red;
+  font-size: 10px;
+  margin-left: 30%;
+  color: #fff;
+  padding: 5px 8px;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 22px;  
-  margin-left: 40px;
-  
 }
+
+.remove-item:hover {
+  background: darkred; /* Adds a hover effect */
+}
+
 .quantity-input {
   width: 50px;
 }
@@ -187,7 +193,10 @@ td:nth-child(3) {
   opacity: 1;
 }
 
-
+.img-fluid{
+  border-radius: 18px;
+   
+}
 @media print {
     body * {
         visibility: hidden;

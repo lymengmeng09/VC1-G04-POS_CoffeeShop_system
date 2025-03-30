@@ -20,10 +20,9 @@
                 </div>
                 <div class="col-md-2 category">
                     <div class="btn-group me-2">
-                        <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            categories: <span
-                                id="selected-category"><?= htmlspecialchars(ucfirst($_GET['category_name'] ?? 'all')) ?></span>
+                        <button id="btnGroupDrop1" type="button" class="btn btn-outline-primary dropdown-toggle"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Category: <?= htmlspecialchars(ucfirst($_GET['category'] ?? 'All')) ?>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1" id="categoryList">
                             <li><a class="dropdown-item" href="?category=all&category_id=<?= $_GET['category_id'] ?? 'all' ?>">All</a></li>
@@ -45,10 +44,10 @@
         </div>
     </div>
 
+    <div class="row g-4 coffee-grid">
+        <!-- Product Section -->
         <div class="row g-4 coffee-grid">
-            <!-- Product Section -->
-            <div class="row g-4 coffee-grid">
-                <?php foreach ($products as $index => $product): ?>
+            <?php foreach ($products as $index => $product): ?>
                 <div class="col-6 col-md-3 product-item" data-category="Coffee">
                     <div class="card border-0 h-100">
                         <div class="text-center p-2">
@@ -56,60 +55,34 @@
                                 <div class="dropdown">
                                     <button class="dropbtn">⋮</button>
                                     <div class="dropdown-content">
-                                        <a
-                                            href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>">Edit</a>
-                                        <form action="/products/delete/<?= htmlspecialchars($product['product_id']) ?>"
-                                            method="POST" style="display:inline;">
+                                        <a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>">Edit</a>
+                                        <form action="/products/delete/<?= htmlspecialchars($product['product_id']) ?>" method="POST" style="display:inline;">
                                             <input type="hidden" name="_method" value="DELETE">
-                                            <button type="submit" onclick="return confirm('Are you sure?')"
-                                                style="background:none;border:none;color:#000;padding:0;">Delete</button>
+                                            <button type="submit" onclick="return confirm('Are you sure?')" style="background:none;border:none;color:#000;padding:0;">Delete</button>
                                         </form>
                                     </div>
                                 </div>
                                 <div class="image-container">
-                                    <img src="<?= htmlspecialchars($product['image_url']) ?>"
-                                        alt="<?= htmlspecialchars($product['product_name']) ?>"
-                                        class="img-fluid mb-2 product-image">
+                                <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>" class="img-fluid mb-2 product-image">
                                 </div>
                                 <div class="mt-2">
-                                    <h6 class="card-title text-center mb-1" style="font-size: 1.2em; font-weight:300;">
-                                        <strong><?= htmlspecialchars($product['product_name']) ?></strong>
-                                    </h6>
+                                <h6 class="card-title text-center mb-1" style="font-size: 1.2em; font-weight:350;">
+    <strong><?= htmlspecialchars($product['product_name']) ?></strong>
+    </h6>
 
                                     <p class="text-success fw-bold mb-0">
                                         $<?= number_format($product['price'], 2) ?>
                                     </p>
-                                    <button class="btn-Order"
-                                        data-name="<?= htmlspecialchars($product['product_name']) ?>"
-                                        data-price="<?= number_format($product['price'], 2) ?>"
-                                        data-img="<?= htmlspecialchars($product['image_url']) ?>">
+                                    <button class="btn-Order" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-price="<?= number_format($product['price'], 2) ?>" data-img="<?= htmlspecialchars($product['image_url']) ?>">
                                         Order
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-            </div>
 
-            <!-- Cart Table -->
-            <div id="cart-table" style="display: none;" class="card-order">
-                <h3>Bills</h3>
-                <table class="table table-bordered">
-                    <div id="cart-table-body">
-                    </div>
-                </table>
-                <div class="d-flex justify-content-between total" id="btn">
-                    <div class="cart-total">Total: $<span id="cart-total">0.00</span></div>
-                    <div class="btn_cart">
-                        <button id="clear-all" class="btn btn-secondary">Cancel</button>
-                        <button id="PayMent" class="btn btn-primary">Pay Now</button>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
+    <?php endforeach; ?>
 </div>
 
  
@@ -230,8 +203,40 @@ document.querySelectorAll('.dropbtn').forEach(button => {
 
 
 
-<script>
+<script>// Adding a product to the cart
+document.querySelectorAll('.btn-Order').forEach(button => {
+    button.addEventListener('click', function() {
+        const productName = this.getAttribute('data-name');
+        const productPrice = parseFloat(this.getAttribute('data-price'));
+        const productImg = this.getAttribute('data-img');
 
+        // Create a new row in the cart table
+        const cartTableBody = document.getElementById('cart-table-body');
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+            <td><img src="${productImg}" alt="${productName}" style="width: 50px;"></td>
+            <td>${productName}</td>
+            <td>$${productPrice.toFixed(2)}</td>
+            <td><button class="btn btn-danger remove-item">Remove</button></td>
+        `;
+        cartTableBody.appendChild(row);
+
+        // Update the cart total
+        updateCartTotal(productPrice);
+        
+        // Show the cart table
+        document.getElementById('cart-table').style.display = 'block';
+    });
+});
+
+// Helper function to update the cart total
+function updateCartTotal(amount) {
+    const cartTotal = document.getElementById('cart-total');
+    const currentTotal = parseFloat(cartTotal.textContent.replace('$', '')) || 0;
+    const newTotal = currentTotal + amount;
+    cartTotal.textContent = `$${newTotal.toFixed(2)}`;
+}
 
 // Removing an item from the cart
 document.getElementById('cart-table-body').addEventListener('click', function(e) {
@@ -246,11 +251,7 @@ document.getElementById('cart-table-body').addEventListener('click', function(e)
         row.remove();
 
         // Update the cart total
-        const cartTotal = document.getElementById('cart-total');
-        const currentTotal = parseFloat(cartTotal.textContent.replace('$', ''));
-        const newTotal = currentTotal - productPrice;
-        cartTotal.textContent = `$${newTotal.toFixed(2)}`;
-
+        updateCartTotal(-productPrice);
 
         // If the cart is empty, hide the cart table
         if (document.getElementById('cart-table-body').children.length === 0) {
@@ -274,8 +275,7 @@ document.getElementById('clear-all').addEventListener('click', function() {
     cartTable.style.display = 'none'; // Hide the table
 });
 
-
-//search category
+// Search category
 document.addEventListener("DOMContentLoaded", function () {
     const categoryButton = document.getElementById("btnGroupDrop1");
     const categoryLinks = document.querySelectorAll(".dropdown-item");
@@ -290,6 +290,4 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-
 </script>
-    
