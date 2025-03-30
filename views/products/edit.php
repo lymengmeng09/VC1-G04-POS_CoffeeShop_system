@@ -60,16 +60,17 @@
             <!-- Category -->
             <div class="form-group mb-3">
                 <label for="category">Category</label>
-                <select class="form-control" id="category" name="category" required>
-                    <option value="Cold Drinks" <?= $product['category'] === 'Cold Drinks' ? 'selected' : '' ?>>Cold
-                        Drinks
-                    </option>
-                    <option value="Frappe" <?= $product['category'] === 'Frappe' ? 'selected' : '' ?>>Frappe</option>
-                    <option value="Hot Drinks" <?= $product['category'] === 'Hot Drinks' ? 'selected' : '' ?>>Hot Drinks
-                    </option>
-                    <option value="Smoothies" <?= $product['category'] === 'Smoothies' ? 'selected' : '' ?>>Smoothies
-                    </option>
+                <select class="form-control" id="category" name="category" required onchange="updateCategoryId(this)">
+                    <?php foreach ($categories as $category): ?>
+                        <option value="<?= htmlspecialchars($category['category_name']) ?>" 
+                                data-id="<?= htmlspecialchars($category['category_id']) ?>"
+                                <?= $product['category'] === $category['category_name'] ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($category['category_name']) ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
+                <!-- Hidden field for category_id -->
+                <input type="hidden" name="category_id" id="categoryId" value="<?= htmlspecialchars($product['category_id']) ?>">
             </div>
 
             <!-- Price -->
@@ -78,14 +79,6 @@
                 <input type="number" class="form-control" id="price" name="price"
                     value="<?= htmlspecialchars($product['price']) ?>" placeholder="Enter price" required step="0.01"
                     min="0">
-            </div>
-
-            <!-- Category ID -->
-            <div class="form-group mb-3">
-                <label for="categoryId">Category ID</label>
-                <input type="number" class="form-control" id="categoryId" name="category_id"
-                    value="<?= htmlspecialchars($product['category_id']) ?>" placeholder="Enter category ID" required
-                    min="1">
             </div>
 
             <!-- Buttons -->
@@ -98,8 +91,18 @@
     </div>
 </div>
 <script>
-        // Wait for the DOM to be fully loaded
-        document.addEventListener('DOMContentLoaded', function() {
+    // Function to update the hidden category ID field when category changes
+    function updateCategoryId(selectElement) {
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+        document.getElementById('categoryId').value = selectedOption.getAttribute('data-id');
+    }
+    
+    // Wait for the DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize category ID
+        const categorySelect = document.getElementById('category');
+        updateCategoryId(categorySelect);
+        
         // Get the file input element
         const fileInput = document.getElementById('productImage');
         const imagePreview = document.getElementById('imagePreview');
