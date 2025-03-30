@@ -231,35 +231,7 @@ document.querySelectorAll('.dropbtn').forEach(button => {
 
 
 <script>
-// Adding a product to the cart
-document.querySelectorAll('.btn-Order').forEach(button => {
-    button.addEventListener('click', function() {
-        const productName = this.getAttribute('data-name');
-        const productPrice = this.getAttribute('data-price');
-        const productImg = this.getAttribute('data-img');
 
-        // Create a new row in the cart table
-        const cartTableBody = document.getElementById('cart-table-body');
-        const row = document.createElement('tr');
-
-        row.innerHTML = `
-            <td><img src="${productImg}" alt="${productName}" style="width: 50px;"></td>
-            <td>${productName}</td>
-            <td>$${productPrice}</td>
-            <td><button class="btn btn-danger remove-item">Remove</button></td>
-        `;
-        cartTableBody.appendChild(row);
-
-        // Update the cart total
-        const cartTotal = document.getElementById('cart-total');
-        const currentTotal = parseFloat(cartTotal.textContent.replace('$', ''));
-        const newTotal = currentTotal + parseFloat(productPrice);
-        cartTotal.textContent = `$${newTotal.toFixed(2)}`;
-
-        // Show the cart table
-        document.getElementById('cart-table').style.display = 'block';
-    });
-});
 
 // Removing an item from the cart
 document.getElementById('cart-table-body').addEventListener('click', function(e) {
