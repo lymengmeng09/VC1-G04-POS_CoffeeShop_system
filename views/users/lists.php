@@ -72,27 +72,41 @@
                 <td style="color:rgb(106, 106, 106);"><?= htmlspecialchars($user['email']) ?></td>
                 <td style="color:rgb(17, 136, 51); "><?= htmlspecialchars($user['role_name']) ?></td>
                 <?php if (AccessControl::isAdmin()): ?>
-                <td>
-                    <?php if (AccessControl::hasPermission('reset_password')): ?>
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#resetPassword<?= $user['id'] ?>"
-                        style="border: none; background:none; color: #007BFF;">
-                        <i class="bi bi-arrow-clockwise me-1"></i>
-                    </button>
-                    <?php require 'reset-password.php'; ?>
-                    <?php endif; ?>
-                    <?php if (AccessControl::hasPermission('edit_users')): ?>
-                    <a href="/edit-user?id=<?= htmlspecialchars($user['id']) ?>"><i
-                            class="bi bi-pencil-square me-1"></i></a>
-                    <?php endif; ?>
-                    <?php if (AccessControl::hasPermission('delete_users')): ?>
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#user<?= $user['id'] ?>"
-                        class="btn-delete">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                    <?php require 'delete.php' ?>
-                    <?php endif; ?>
-                </td>
-                <?php endif; ?>
+                            <td class="text-center ps-0" style="padding-right: 10px;">
+                                <div class="btn-group dropend">
+                                    <a href="#" class="text-secondary" id="dropdownMenuButton<?= $user['id'] ?>" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-start" style="padding-right: 30px;" aria-labelledby="dropdownMenuButton<?= $user['id'] ?>">
+                                        <?php if (AccessControl::hasPermission('reset_password')): ?>
+                                            <li>
+                                                <button type="button" class="dropdown-item btn-reset" data-bs-toggle="modal" data-bs-target="#resetPassword<?= $user['id'] ?>">
+                                                    <i class="bi bi-arrow-clockwise"></i> Reset Password
+                                                </button>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if (AccessControl::hasPermission('edit_users')): ?>
+                                            <li class="edit">
+                                                <a href="/edit-user?id=<?= htmlspecialchars($user['id']) ?>" class="edit-link">
+                                                    <i class="bi bi-pencil-square"></i> Edit User
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if (AccessControl::hasPermission('delete_users')): ?>
+                                            <li>
+                                                <button type="button" class="dropdown-item btn-delete" data-bs-toggle="modal" data-bs-target="#user<?= $user['id'] ?>">
+                                                    <i class="bi bi-trash"></i> Delete User
+                                                </button>
+
+                                            </li>
+                                        <?php endif; ?>
+                                    </ul>
+                                </div>
+                                <?php require 'reset-password.php'; ?>
+                                <?php require 'delete.php' ?>
+                            </td>
+                        <?php endif; ?>
+
             </tr>
             <?php endforeach; ?>
             <?php else: ?>
