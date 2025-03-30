@@ -81,6 +81,7 @@
                 <div class="d-flex justify-content-between total" id="btn">
                     <div class="cart-total">Total: $<span id="cart-total">0.00</span></div>
                     <div class="btn_cart">
+                        
                         <button id="clear-all" class="btn btn-secondary">Cancel</button>
                         <button id="PayMent" class="btn btn-primary">Pay Now</button>
                     </div>
