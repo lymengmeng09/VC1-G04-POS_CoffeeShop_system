@@ -105,14 +105,14 @@ function displayCartItems(cart) {
         <td>${product.name}</td>
         <td>$${product.price}</td>
         <td><input type="number" class="quantity-input" value="${product.quantity}" data-id="${product.id}" min="1"></td>
-        <td><button class="remove-item" data-id="${product.id}">Remove</button></td>
+        <td><button class="btn btn-link remove-item" data-id="${product.id}"><i class="fas fa-trash-alt text-danger"></i></button></td>
       `;
       cartTableBody.appendChild(row);
       total += product.price * product.quantity;
     });
     
     cartTotalElement.textContent = total.toFixed(2);
-  }
+}
   
   // Cart quantity change
   document.getElementById('cart-table-body').addEventListener('input', function (e) {
@@ -417,4 +417,37 @@ if (cart.length === 0) {
 }
 });
 
+function toggleCart(show) {
+    const cartSection = document.getElementById('cart-section');
+    const productGrid = document.getElementById('product-grid');
+    
+    if(show) {
+        cartSection.style.display = 'block';
+        productGrid.classList.remove('col-lg-12');
+        productGrid.classList.add('col-lg-7');
+        
+        // Change product items to 3 per row
+        document.querySelectorAll('#product-grid .col-md-3').forEach(el => {
+            el.classList.remove('col-md-3');
+            el.classList.add('col-md-4');
+        });
+    } else {
+        cartSection.style.display = 'none';
+        productGrid.classList.remove('col-lg-7');
+        productGrid.classList.add('col-lg-12');
+        
+        // Change product items to 4 per row
+        document.querySelectorAll('#product-grid .col-md-4').forEach(el => {
+            el.classList.remove('col-md-4');
+            el.classList.add('col-md-3');
+        });
+    }
+}
+
+// Initialize event listeners
+document.querySelectorAll('.btn-Order').forEach(btn => {
+    btn.addEventListener('click', () => toggleCart(true));
+});
+
+document.getElementById('clear-all').addEventListener('click', () => toggleCart(false));
 
