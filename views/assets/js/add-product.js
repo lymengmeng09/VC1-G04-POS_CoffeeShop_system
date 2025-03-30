@@ -131,18 +131,8 @@ function displayCartItems(cart) {
     }
   });
   
-  // Remove product from cart
-  document.getElementById('cart-table-body').addEventListener('click', function (e) {
-    if (e.target && e.target.classList.contains('remove-item')) {
-      const productId = parseInt(e.target.getAttribute('data-id'));
-      
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const updatedCart = cart.filter(item => item.id !== productId);
-      
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
-      updateCartDisplay();
-    }
-  });
+ 
+    
   
   // Cart Management Functions
   function addToCart(productName, productPrice, productImg) {
@@ -321,6 +311,76 @@ function displayCartItems(cart) {
         console.error('Fetch error:', error);
     });
 });
+
+
+//Save as PDF
+
+
+document.getElementById('confirm-receipt').addEventListener('click', function() {
+    saveAsPDF();
+    
+    // Clear cart and close modal after saving
+    cart = [];
+    localStorage.removeItem('cart');
+    updateCartCount();
+    receiptModal.hide();
+});
+
+// Function to save receipt as a styled PDF
+function saveAsPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Get current date and time
+    const now = new Date();
+    const dateStr = now.toLocaleDateString();
+    const timeStr = now.toLocaleTimeString();
+
+    // Style the Title
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(40, 40, 40);
+    doc.text("Target Coffee ", 105, 20, null, null, "center");
+    // logo image
+   
+    // Add Date and Time
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(60, 60, 60);
+    doc.text(`Date: ${dateStr}`, 20, 30);
+    doc.text(`Time: ${timeStr}`, 20, 38);
+
+    // Prepare Data for the Table
+    let totalPrice = 0;
+    const tableData = cart.map(item => {
+        const itemTotal = item.quantity * item.price;
+        totalPrice += itemTotal;
+        return [item.name, item.quantity, `$${item.price.toFixed(2)}`, `$${itemTotal.toFixed(2)}`];
+    });
+
+    // Add table with styles
+    doc.autoTable({
+        startY: 45,
+        head: [['Item', 'Quantity', 'Price', 'Total']],
+        body: tableData,
+        theme: 'grid', // Grid theme for table
+        headStyles: { fillColor: [100, 100, 255], textColor: 255, fontStyle: 'bold' }, // Blue header
+        alternateRowStyles: { fillColor: [240, 240, 240] }, // Light gray alternate rows
+        margin: { left: 20, right: 20 },
+        styles: { fontSize: 12, cellPadding: 5 },
+    });
+
+    // Add Total Price at the bottom
+    let finalY = doc.lastAutoTable.finalY + 10;
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(0, 0, 0);
+    doc.text("TOTAL:", 130, finalY);
+    doc.text(`$${totalPrice.toFixed(2)}`, 170, finalY);
+
+    // Save the PDF
+    doc.save(`receipt_${now.getTime()}.pdf`);
+}
 //unctionality
 document.querySelectorAll('.dropbtn').forEach(button => {
     button.addEventListener('click', function() {
@@ -355,150 +415,6 @@ if (cart.length === 0) {
     alert('Error: Cannot save an empty receipt.');
     return;
 }
-
-// Save as HTML file
-saveAsHTML();
-
-// Clear cart and close modal after saving
-cart = [];
-localStorage.removeItem('cart');
-updateCartCount();
-receiptModal.hide();
 });
 
-// Function to save receipt as HTML
-function saveAsHTML() {
-// Get current date and time
-const now = new Date();
-const dateStr = now.toLocaleDateString();
-const timeStr = now.toLocaleTimeString();
 
-// Calculate total
-let totalPrice = 0;
-cart.forEach(item => {
-    totalPrice += item.quantity * item.price;
-});
-
-// Create HTML content with styling
-let htmlContent = `
-
- 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .receipt {
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
-        }
-        .logo {
-            max-width: 150px;
-            margin-bottom: 10px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-        th {
-            background-color: #f8f8f8;
-        }
-        .total-row {
-            font-weight: bold;
-            background-color: #f8f8f8;
-        }
-        .footer {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 14px;
-            color: #777;
-        }
-        .timestamp {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #777;
-        }
-    </style>
-
-
-    <div class="receipt">
-    <div class="header">
-        <h1>Order Receipt</h1>
-    </div>
-    
-    <div class="timestamp">
-        <p><strong>Date:</strong> ${dateStr}</p>
-        <p><strong>Time:</strong> ${timeStr}</p>
-    </div>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>Item</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-`;
-
-// Add each item to the HTML table
-cart.forEach(item => {
-const itemTotal = item.quantity * item.price;
-htmlContent += `
-            <tr>
-                <td>${item.name}</td>
-                <td>${item.quantity}</td>
-                <td>$${item.price.toFixed(2)}</td>
-                <td>$${itemTotal.toFixed(2)}</td>
-            </tr>
-`;
-});
-
-// Add total row and close the HTML
-htmlContent += `
-            <tr class="total-row">
-                <td colspan="3"><strong>TOTAL</strong></td>
-                <td><strong>$${totalPrice.toFixed(2)}</strong></td>
-            </tr>
-        </tbody>
-    </table>
-    
- 
-</div>
-
-`;
-
-// Create a Blob with the HTML content
-const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8;' });
-
-// Create a download link and trigger it
-const link = document.createElement('a');
-const url = URL.createObjectURL(blob);
-link.setAttribute('href', url);
-link.setAttribute('download', `receipt_${now.getTime()}.html`);
-link.style.visibility = 'hidden';
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-
-}

@@ -107,11 +107,19 @@ hr {
 }
 .remove-item {
   border: none;
-  background:red;
-   font-size: 13px;
-   margin-left: 30%;
+  background: red;
+  font-size: 10px;
+  margin-left: 30%;
   color: #fff;
+  padding: 5px 8px;
+  border-radius: 4px;
+  cursor: pointer;
 }
+
+.remove-item:hover {
+  background: darkred; /* Adds a hover effect */
+}
+
 .quantity-input {
   width: 50px;
 }
