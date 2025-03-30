@@ -68,23 +68,17 @@
                             </button>
                         </div>
                     </div>
-                    <!-- Product Image -->
-                    <img src="<?= htmlspecialchars($product['image_url']) ?>" 
-                        alt="<?= htmlspecialchars($product['product_name']) ?>" 
-                        class="img-fluid mb-2" 
-                        onerror="this.src='/path/to/placeholder-image.jpg';">
-                    <div class="mt-2">
-                        <!-- Product Name and Price -->
-                        <h6 class="card-title fw-normal text-center mb-1" style="font-size: 0.9rem;">
-                            <?= htmlspecialchars($product['product_name']) ?>
+                    <div class="image-container">
+                        <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>" class="img-fluid mb-2 product-image">
+                        </div>
+                        <div class="mt-2">
+                        <h6 class="card-title text-center mb-1" style="font-size: 1.2em; font-weight:350;">
+                             <strong><?= htmlspecialchars($product['product_name']) ?></strong>
                         </h6>
                         <p class="text-success fw-bold mb-0">
                             $<?= number_format($product['price'], 2) ?>
                         </p>
-                        <!-- Order Button -->
-                        <button class="btn-Order" data-name="<?= htmlspecialchars($product['product_name']) ?>" 
-                            data-price="<?= number_format($product['price'], 2) ?>" 
-                            data-img="<?= htmlspecialchars($product['image_url']) ?>">
+                        <button class="btn-Order" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-price="<?= number_format($product['price'], 2) ?>" data-img="<?= htmlspecialchars($product['image_url']) ?>">
                             Order
                         </button>
                     </div>
@@ -125,6 +119,7 @@
         button.addEventListener('click', function () {
             const productId = this.dataset.id;
             const productName = this.dataset.name;
+
 
             // Set modal product name and update form action
             document.getElementById('modalProductName').textContent = productName;
@@ -225,6 +220,7 @@ document.querySelectorAll('.btn-Order').forEach(button => {
         const cartTableBody = document.getElementById('cart-table-body');
         const row = document.createElement('tr');
 
+
         row.innerHTML = `
             <td><img src="${productImg}" alt="${productName}" style="width: 50px;"></td>
             <td>${productName}</td>
@@ -253,14 +249,14 @@ document.getElementById('cart-table-body').addEventListener('click', function(e)
         // Get the price of the product being removed
         const productPrice = parseFloat(row.children[2].textContent.replace('$', ''));
 
-        // Remove the row
-        row.remove();
+            // Remove the row
+            row.remove();
 
-        // Update the cart total
-        const cartTotal = document.getElementById('cart-total');
-        const currentTotal = parseFloat(cartTotal.textContent.replace('$', ''));
-        const newTotal = currentTotal - productPrice;
-        cartTotal.textContent = `$${newTotal.toFixed(2)}`;
+            // Update the cart total
+            const cartTotal = document.getElementById('cart-total');
+            const currentTotal = parseFloat(cartTotal.textContent.replace('$', ''));
+            const newTotal = currentTotal - productPrice;
+            cartTotal.textContent = `$${newTotal.toFixed(2)}`;
 
 
         // If the cart is empty, hide the cart table
