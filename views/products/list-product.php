@@ -162,6 +162,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="receiptModalLabel">Order Receipt</h5>
+         
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="receipt-content">
@@ -174,35 +175,7 @@
     </div>
 </div>
 
-
-<script>
-document.querySelectorAll('.dropbtn').forEach(button => {
-    button.addEventListener('click', function() {
-        const dropdownContent = this.nextElementSibling;
-        dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
-    });
-});
-</script>
-<!-- Receipt Modal -->
-<div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="receiptModalLabel">Order Receipt</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="receipt-content">
-                <!-- Receipt details will be inserted here dynamically -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" id="confirm-receipt">Confirm</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
+ 
 <script>// Adding a product to the cart
 document.querySelectorAll('.btn-Order').forEach(button => {
     button.addEventListener('click', function() {
