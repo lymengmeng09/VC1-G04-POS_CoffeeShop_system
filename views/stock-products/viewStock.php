@@ -39,7 +39,7 @@
             </div>
         </div>
         <div class="products-section">
-  <h2 class="section-title">Products</h2>
+  <!-- <h2 class="section-title">Products</h2> -->
   <div class="products-grid">
     <?php 
     // Sort products by quantity in ascending order (lowest to highest)
