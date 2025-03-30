@@ -44,42 +44,52 @@
         </div>
     </div>
 
+
     <div class="row g-4 coffee-grid">
-        <!-- Product Section -->
-        <div class="row g-4 coffee-grid">
-            <?php foreach ($products as $index => $product): ?>
-                <div class="col-6 col-md-3 product-item" data-category="Coffee">
-                    <div class="card border-0 h-100">
-                        <div class="text-center p-2">
-                            <div class="product-entry">
-                                <div class="dropdown">
-                                    <button class="dropbtn">⋮</button>
-                                    <div class="dropdown-content">
-                                        <a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>">Edit</a>
-                                        <form action="/products/delete/<?= htmlspecialchars($product['product_id']) ?>" method="POST" style="display:inline;">
-                                            <input type="hidden" name="_method" value="DELETE">
-                                            <button type="submit" onclick="return confirm('Are you sure?')" style="background:none;border:none;color:#000;padding:0;">Delete</button>
-                                        </form>
-                                    </div>
-                                </div>
-                                <div class="image-container">
-                                <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>" class="img-fluid mb-2 product-image">
-                                </div>
-                                <div class="mt-2">
-                                <h6 class="card-title text-center mb-1" style="font-size: 1.2em; font-weight:350;">
-    <strong><?= htmlspecialchars($product['product_name']) ?></strong>
-    </h6>
-
-                                    <p class="text-success fw-bold mb-0">
-                                        $<?= number_format($product['price'], 2) ?>
-                                    </p>
-                                    <button class="btn-Order" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-price="<?= number_format($product['price'], 2) ?>" data-img="<?= htmlspecialchars($product['image_url']) ?>">
-                                        Order
-                                    </button>
-                                </div>
-                            </div>
+      <!-- Product Section -->
+<div class="row g-4 coffee-grid">
+    <?php foreach ($products as $index => $product): ?>
+    <div class="col-6 col-md-3 product-item" data-category="Coffee">
+        <div class="card border-0 h-100">
+            <div class="text-center p-2">
+                <div class="product-entry">
+                    <!-- Dropdown for Edit/Delete -->
+                    <div class="dropdown">
+                        <button class="dropbtn">⋮</button>
+                        <div class="dropdown-content">
+                            <!-- Edit Link -->
+                            <a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>">Edit</a>
+                            <!-- Delete Button with Confirmation -->
+                            <button type="button" class="btn-delete" 
+                                data-id="<?= htmlspecialchars($product['product_id']) ?>" 
+                                data-name="<?= htmlspecialchars($product['product_name']) ?>" 
+                                data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                Delete
+                            </button>
                         </div>
-
+                    </div>
+                    <!-- Product Image -->
+                    <img src="<?= htmlspecialchars($product['image_url']) ?>" 
+                        alt="<?= htmlspecialchars($product['product_name']) ?>" 
+                        class="img-fluid mb-2" 
+                        onerror="this.src='/path/to/placeholder-image.jpg';">
+                    <div class="mt-2">
+                        <!-- Product Name and Price -->
+                        <h6 class="card-title fw-normal text-center mb-1" style="font-size: 0.9rem;">
+                            <?= htmlspecialchars($product['product_name']) ?>
+                        </h6>
+                        <p class="text-success fw-bold mb-0">
+                            $<?= number_format($product['price'], 2) ?>
+                        </p>
+                        <!-- Order Button -->
+                        <button class="btn-Order" data-name="<?= htmlspecialchars($product['product_name']) ?>" 
+                            data-price="<?= number_format($product['price'], 2) ?>" 
+                            data-img="<?= htmlspecialchars($product['image_url']) ?>">
+                            Order
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <?php endforeach; ?>
@@ -115,6 +125,7 @@
         button.addEventListener('click', function () {
             const productId = this.dataset.id;
             const productName = this.dataset.name;
+
 
             // Set modal product name and update form action
             document.getElementById('modalProductName').textContent = productName;
@@ -162,7 +173,6 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="receiptModalLabel">Order Receipt</h5>
-         
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="receipt-content">
@@ -175,41 +185,66 @@
     </div>
 </div>
 
- 
-<script>// Adding a product to the cart
+
+<script>
+document.querySelectorAll('.dropbtn').forEach(button => {
+    button.addEventListener('click', function() {
+        const dropdownContent = this.nextElementSibling;
+        dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+    });
+});
+</script>
+<!-- Receipt Modal -->
+<div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="receiptModalLabel">Order Receipt</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="receipt-content">
+                <!-- Receipt details will be inserted here dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="confirm-receipt">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+// Adding a product to the cart
 document.querySelectorAll('.btn-Order').forEach(button => {
     button.addEventListener('click', function() {
         const productName = this.getAttribute('data-name');
-        const productPrice = parseFloat(this.getAttribute('data-price'));
+        const productPrice = this.getAttribute('data-price');
         const productImg = this.getAttribute('data-img');
 
         // Create a new row in the cart table
         const cartTableBody = document.getElementById('cart-table-body');
         const row = document.createElement('tr');
 
+
         row.innerHTML = `
             <td><img src="${productImg}" alt="${productName}" style="width: 50px;"></td>
             <td>${productName}</td>
-            <td>$${productPrice.toFixed(2)}</td>
+            <td>$${productPrice}</td>
             <td><button class="btn btn-danger remove-item">Remove</button></td>
         `;
         cartTableBody.appendChild(row);
 
         // Update the cart total
-        updateCartTotal(productPrice);
-        
+        const cartTotal = document.getElementById('cart-total');
+        const currentTotal = parseFloat(cartTotal.textContent.replace('$', ''));
+        const newTotal = currentTotal + parseFloat(productPrice);
+        cartTotal.textContent = `$${newTotal.toFixed(2)}`;
+
         // Show the cart table
         document.getElementById('cart-table').style.display = 'block';
     });
 });
-
-// Helper function to update the cart total
-function updateCartTotal(amount) {
-    const cartTotal = document.getElementById('cart-total');
-    const currentTotal = parseFloat(cartTotal.textContent.replace('$', '')) || 0;
-    const newTotal = currentTotal + amount;
-    cartTotal.textContent = `$${newTotal.toFixed(2)}`;
-}
 
 // Removing an item from the cart
 document.getElementById('cart-table-body').addEventListener('click', function(e) {
@@ -224,7 +259,11 @@ document.getElementById('cart-table-body').addEventListener('click', function(e)
         row.remove();
 
         // Update the cart total
-        updateCartTotal(-productPrice);
+        const cartTotal = document.getElementById('cart-total');
+        const currentTotal = parseFloat(cartTotal.textContent.replace('$', ''));
+        const newTotal = currentTotal - productPrice;
+        cartTotal.textContent = `$${newTotal.toFixed(2)}`;
+
 
         // If the cart is empty, hide the cart table
         if (document.getElementById('cart-table-body').children.length === 0) {
@@ -248,7 +287,8 @@ document.getElementById('clear-all').addEventListener('click', function() {
     cartTable.style.display = 'none'; // Hide the table
 });
 
-// Search category
+
+//search category
 document.addEventListener("DOMContentLoaded", function () {
     const categoryButton = document.getElementById("btnGroupDrop1");
     const categoryLinks = document.querySelectorAll(".dropdown-item");
@@ -262,5 +302,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
 
 </script>

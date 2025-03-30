@@ -1,288 +1,299 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const searchInput = document.getElementById("searchInput");
-    const categoryDropdown = document.getElementById("categoryDropdown");
-    const productItems = document.querySelectorAll(".product-item");
-    const categoryFilterBtn = document.getElementById("categoryFilterBtn");
-  
-    let selectedCategory = 'all'; // Default to 'all' category
-  
-    // Function to filter products based on search input and category selection
-    function filterProducts() {
-      const searchTerm = searchInput.value.toLowerCase(); // Get the search term in lowercase
-  
-      productItems.forEach(function (product) {
-        const productName = product.querySelector(".card-title").textContent.toLowerCase(); 
-        const productCategory = product.getAttribute("data-category").toLowerCase(); 
-  
-        // Check if the product matches the search term and category filter
-        const matchesSearch = productName.includes(searchTerm);
-        const matchesCategory = selectedCategory === 'all' || productCategory.includes(selectedCategory);
-  
-        // Show or hide the product based on the matches
-        if (matchesSearch && matchesCategory) {
-          product.style.display = ""; 
-        } else {
-          product.style.display = "none"; 
-        }
-      });
-    }
-  
-    // Event listener for search input
-    searchInput.addEventListener("input", filterProducts);
-  
-    // Event listeners for category selection
-    categoryDropdown.addEventListener("click", function (e) {
-      if (e.target && e.target.matches("a.dropdown-item")) {
-        selectedCategory = e.target.getAttribute("data-category"); // Get selected category
-        categoryFilterBtn.textContent = "categories: " + (selectedCategory === 'all' ? 'All' : selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)); // Update button text
-        filterProducts(); // Apply filtering
+  const searchInput = document.getElementById("searchInput");
+  const categoryDropdown = document.getElementById("categoryDropdown");
+  const productItems = document.querySelectorAll(".product-item");
+  const categoryFilterBtn = document.getElementById("categoryFilterBtn");
+
+  let selectedCategory = 'all'; // Default to 'all' category
+
+  // Function to filter products based on search input and category selection
+  function filterProducts() {
+    const searchTerm = searchInput.value.toLowerCase(); // Get the search term in lowercase
+
+    productItems.forEach(function (product) {
+      const productName = product.querySelector(".card-title").textContent.toLowerCase(); 
+      const productCategory = product.getAttribute("data-category").toLowerCase(); 
+
+      // Check if the product matches the search term and category filter
+      const matchesSearch = productName.includes(searchTerm);
+      const matchesCategory = selectedCategory === 'all' || productCategory.includes(selectedCategory);
+
+      // Show or hide the product based on the matches
+      if (matchesSearch && matchesCategory) {
+        product.style.display = ""; 
+      } else {
+        product.style.display = "none"; 
       }
     });
-  });
-  
-  
-  // Function to add product to the shopping cart
-  function addToCart(productName, productPrice, productImg) {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const product = {
-      id: Date.now(),
-      name: productName,
-      price: parseFloat(productPrice),
-      quantity: 1,
-      img: productImg
-    };
-    
-    cart.push(product);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartDisplay();
   }
-  
-  // Event listener for "Order New" buttons
-  document.querySelectorAll('.btn-Order').forEach(button => {
-    button.addEventListener('click', function() {
-      const productName = this.getAttribute('data-name');
-      const productPrice = this.getAttribute('data-price');
-      const productImg = this.getAttribute('data-img');
-      
-      // Add product to the cart
-      addToCart(productName, productPrice, productImg);
-    });
-  });
-  
-  // Update cart display
-  function updateCartDisplay() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const cartTableBody = document.getElementById('cart-table-body');
-    const cartTotalElement = document.getElementById('cart-total');
-    const cartCountElement = document.getElementById('cart-count');
-    const cartTable = document.getElementById('cart-table');
-  
-    // Update cart count and display
-    const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-    cartCountElement.textContent = totalItems;
-    
-    if (totalItems === 0) {
-      cartTable.style.display = 'none';
-    } else {
-      cartTable.style.display = 'block';
-      displayCartItems(cart);
+
+  // Event listener for search input
+  searchInput.addEventListener("input", filterProducts);
+
+  // Event listeners for category selection
+  categoryDropdown.addEventListener("click", function (e) {
+    if (e.target && e.target.matches("a.dropdown-item")) {
+      selectedCategory = e.target.getAttribute("data-category"); // Get selected category
+      categoryFilterBtn.textContent = "categories: " + (selectedCategory === 'all' ? 'All' : selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)); // Update button text
+      filterProducts(); // Apply filtering
     }
+  });
+});
+
+
+// Function to add product to the shopping cart
+function addToCart(productName, productPrice, productImg) {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const product = {
+    id: Date.now(),
+    name: productName,
+    price: parseFloat(productPrice),
+    quantity: 1,
+    img: productImg
+  };
+  
+  cart.push(product);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartDisplay();
+}
+
+// Event listener for "Order New" buttons
+document.querySelectorAll('.btn-Order').forEach(button => {
+  button.addEventListener('click', function() {
+    const productName = this.getAttribute('data-name');
+    const productPrice = this.getAttribute('data-price');
+    const productImg = this.getAttribute('data-img');
+    
+    // Add product to the cart
+    addToCart(productName, productPrice, productImg);
+  });
+});
+
+// Update cart display
+function updateCartDisplay() {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const cartTableBody = document.getElementById('cart-table-body');
+  const cartTotalElement = document.getElementById('cart-total');
+  const cartCountElement = document.getElementById('cart-count');
+  const cartTable = document.getElementById('cart-table');
+
+  // Update cart count and display
+  const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+  cartCountElement.textContent = totalItems;
+  
+  if (totalItems === 0) {
+    cartTable.style.display = 'none';
+  } else {
+    cartTable.style.display = 'block';
+    displayCartItems(cart);
   }
+}
 
 
 // Function to display cart items
 function displayCartItems(cart) {
-    const cartTableBody = document.getElementById('cart-table-body');
-    const cartTotalElement = document.getElementById('cart-total');
-    
-    cartTableBody.innerHTML = '';
-    let total = 0;
-    
-    cart.forEach(product => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td><img src="${product.img}" alt="${product.name}" class="cart-item-image" style="width: 50px;"></td>
-        <td>${product.name}</td>
-        <td>$${product.price}</td>
-        <td><input type="number" class="quantity-input" value="${product.quantity}" data-id="${product.id}" min="1"></td>
-        <td><button class="remove-item" data-id="${product.id}">Remove</button></td>
-      `;
-      cartTableBody.appendChild(row);
-      total += product.price * product.quantity;
-    });
-    
-    cartTotalElement.textContent = total.toFixed(2);
-  }
+  const cartTableBody = document.getElementById('cart-table-body');
+  const cartTotalElement = document.getElementById('cart-total');
   
-  // Cart quantity change
-  document.getElementById('cart-table-body').addEventListener('input', function (e) {
-    if (e.target.classList.contains('quantity-input')) {
-      const productId = parseInt(e.target.getAttribute('data-id'));
-      const newQuantity = parseInt(e.target.value);
-      
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const product = cart.find(item => item.id === productId);
-      
-      if (product) {
-        product.quantity = newQuantity;
-        localStorage.setItem('cart', JSON.stringify(cart));
-        updateCartDisplay();
-      }
-    }
+  cartTableBody.innerHTML = '';
+  let total = 0;
+  
+  cart.forEach(product => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><img src="${product.img}" alt="${product.name}" class="cart-item-image" style="width: 50px;"></td>
+      <td>${product.name}</td>
+      <td>$${product.price}</td>
+      <td><input type="number" class="quantity-input" value="${product.quantity}" data-id="${product.id}" min="1"></td>
+      <td><button class="remove-item" data-id="${product.id}">Remove</button></td>
+    `;
+    cartTableBody.appendChild(row);
+    total += product.price * product.quantity;
   });
   
- 
+  cartTotalElement.textContent = total.toFixed(2);
+}
+
+// Cart quantity change
+document.getElementById('cart-table-body').addEventListener('input', function (e) {
+  if (e.target.classList.contains('quantity-input')) {
+    const productId = parseInt(e.target.getAttribute('data-id'));
+    const newQuantity = parseInt(e.target.value);
     
-  
-  // Cart Management Functions
-  function addToCart(productName, productPrice, productImg) {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const product = cart.find(item => item.id === productId);
     
-    // Check if product already exists in cart
-    const existingProduct = cart.find(item => item.name === productName);
-    
-    if (existingProduct) {
-        // If product exists, increment its quantity
-        existingProduct.quantity += 1;
-    } else {
-        // If product doesn't exist, add new product
-        const product = {
-            id: Date.now(),
-            name: productName,
-            price: parseFloat(productPrice),
-            quantity: 1,
-            img: productImg
-        };
-        cart.push(product);
+    if (product) {
+      product.quantity = newQuantity;
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartDisplay();
     }
+  }
+});
+
+// Remove product from cart
+document.getElementById('cart-table-body').addEventListener('click', function (e) {
+  if (e.target && e.target.classList.contains('remove-item')) {
+    const productId = parseInt(e.target.getAttribute('data-id'));
     
-    localStorage.setItem('cart', JSON.stringify(cart));
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const updatedCart = cart.filter(item => item.id !== productId);
+    
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
     updateCartDisplay();
   }
+});
+
+// Cart Management Functions
+function addToCart(productName, productPrice, productImg) {
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
   
-  //  recept
-   
-    // Cart management
-    let cart = [];
-    const cartCountElement = document.getElementById('cart-count');
-    const payNowButton = document.getElementById('PayMent');
-    let receiptModal;
-    const receiptContent = document.getElementById('receipt-content');
+  // Check if product already exists in cart
+  const existingProduct = cart.find(item => item.name === productName);
   
-    // Initialize the modal
-    try {
-        receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
-        console.log('Modal initialized successfully');
-    } catch (error) {
-        console.error('Error initializing modal:', error);
-    }
+  if (existingProduct) {
+      // If product exists, increment its quantity
+      existingProduct.quantity += 1;
+  } else {
+      // If product doesn't exist, add new product
+      const product = {
+          id: Date.now(),
+          name: productName,
+          price: parseFloat(productPrice),
+          quantity: 1,
+          img: productImg
+      };
+      cart.push(product);
+  }
   
-    // Load cart from localStorage
-    if (localStorage.getItem('cart')) {
-        cart = JSON.parse(localStorage.getItem('cart'));
-        console.log('Cart loaded from localStorage:', cart);
-        updateCartCount();
-    } else {
-        console.log('No cart data in localStorage');
-    }
-  
-    // Update cart count display
-    function updateCartCount() {
-        let itemCount = 0;
-        cart.forEach(item => {
-            itemCount += item.quantity;
-        });
-        cartCountElement.textContent = itemCount;
-        console.log('Cart count updated:', itemCount);
-    }
-  
-    // Add product to cart
-    document.querySelectorAll('.btn-Order').forEach(button => {
-        button.addEventListener('click', function() {
-            const name = this.getAttribute('data-name');
-            const price = parseFloat(this.getAttribute('data-price'));
-            const img = this.getAttribute('data-img');
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartDisplay();
+}
+
+//  recept
+ 
+  // Cart management
+  let cart = [];
+  const cartCountElement = document.getElementById('cart-count');
+  const payNowButton = document.getElementById('PayMent');
+  let receiptModal;
+  const receiptContent = document.getElementById('receipt-content');
+
+  // Initialize the modal
+  try {
+      receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
+      console.log('Modal initialized successfully');
+  } catch (error) {
+      console.error('Error initializing modal:', error);
+  }
+
+  // Load cart from localStorage
+  if (localStorage.getItem('cart')) {
+      cart = JSON.parse(localStorage.getItem('cart'));
+      console.log('Cart loaded from localStorage:', cart);
+      updateCartCount();
+  } else {
+      console.log('No cart data in localStorage');
+  }
+
+  // Update cart count display
+  function updateCartCount() {
+      let itemCount = 0;
+      cart.forEach(item => {
+          itemCount += item.quantity;
+      });
+      cartCountElement.textContent = itemCount;
+      console.log('Cart count updated:', itemCount);
+  }
+
+  // Add product to cart
+  document.querySelectorAll('.btn-Order').forEach(button => {
+
+    button.addEventListener('click', function() {
+      const name = this.getAttribute('data-name');
+      const price = parseFloat(this.getAttribute('data-price'));
+      const img = this.getAttribute('data-img');
 
 
-            const existingItem = cart.find(item => item.name === name);
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({ name, price, img, quantity: 1 });
-            }
-  
-            localStorage.setItem('cart', JSON.stringify(cart));
-            console.log('Product added to cart:', { name, price, img, quantity: existingItem ? existingItem.quantity : 1 });
-            updateCartCount();
-        });
-    });
-  
-  
-    // Pay Now button
-    payNowButton.addEventListener('click', function() {
-        // Generate receipt HTML directly from cart data
-        let totalPrice = 0;
-        const receiptItems = cart.map(item => {
-            const itemTotal = item.quantity * item.price; // Calculate total for each item
-            totalPrice += itemTotal; // Add to overall total
-            return `
-                <tr>
-                    <td>${item.name}</td>
-                    <td>+${item.quantity}</td>
-                    <td>$${item.price.toFixed(2)}</td>
-                    <td>$${itemTotal.toFixed(2)}</td>
-                    <td>${new Date().toISOString().slice(0, 10)}</td>
-                </tr>
-            `;
-        }).join('');
-  
-        // Show receipt even if cart is empty
-        receiptContent.innerHTML = `
-            <p class="action-text"><strong>Action:</strong> Ordered</p>
-            <div class="header-recept">
-                <img src="/views/assets/images/logo.png" alt="Logo">
-                <h2>Order Receipt</h2>
-            </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Quantity</th>
-                        <th>Price($)</th>
-                        <th>Total($)</th>
-                        <th>Timestamp</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${receiptItems || '<tr><td colspan="5">No items in cart</td></tr>'}
-                    <tr class="total-row">
-                        <td colspan="3"><strong>TOTAL PRICE</strong></td>
-                        <td colspan="2"><strong>$${totalPrice.toFixed(2)}</strong></td>
-                    </tr>
-                </tbody>
-            </table>
-        `;
-        console.log('Receipt content generated:', receiptContent.innerHTML);
-  
-        // Show the receipt modal
-        if (receiptModal) {
-            receiptModal.show();
-            console.log('Receipt modal shown');
-        } else {
-            console.error('Receipt modal not initialized');
-        }
-  
-        // Prepare order data for backend
-        const orderData = {
-            items: cart.map(item => ({
-                name: item.name,
-                price: item.price,
-                change_quantity: `+${item.quantity}`,
-                timestamp: new Date().toISOString()
-            })),
-            total: totalPrice
-        };
-        console.log('Order data prepared:', orderData);
+      const existingItem = cart.find(item => item.name === name);
+      if (existingItem) {
+          existingItem.quantity += 1;
+      } else {
+          cart.push({ name, price, img, quantity: 1 });
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      console.log('Product added to cart:', { name, price, img, quantity: existingItem ? existingItem.quantity : 1 });
+      updateCartCount();
+  });
+});
+
+
+// Pay Now button
+payNowButton.addEventListener('click', function() {
+  // Generate receipt HTML directly from cart data
+  let totalPrice = 0;
+  const receiptItems = cart.map(item => {
+      const itemTotal = item.quantity * item.price; // Calculate total for each item
+      totalPrice += itemTotal; // Add to overall total
+      return `
+          <tr>
+              <td>${item.name}</td>
+              <td>+${item.quantity}</td>
+              <td>$${item.price.toFixed(2)}</td>
+              <td>$${itemTotal.toFixed(2)}</td>
+              <td>${new Date().toISOString().slice(0, 10)}</td>
+          </tr>
+      `;
+  }).join('');
+
+  // Show receipt even if cart is empty
+  receiptContent.innerHTML = `
+      <p class="action-text"><strong>Action:</strong> Ordered</p>
+      <div class="header-recept">
+          <img src="/views/assets/images/logo.png" alt="Logo">
+          <h2>Order Receipt</h2>
+      </div>
+      <table class="table">
+          <thead>
+              <tr>
+                  <th>Name</th>
+                  <th>Quantity</th>
+                  <th>Price($)</th>
+                  <th>Total($)</th>
+                  <th>Timestamp</th>
+              </tr>
+          </thead>
+          <tbody>
+              ${receiptItems || '<tr><td colspan="5">No items in cart</td></tr>'}
+              <tr class="total-row">
+                  <td colspan="3"><strong>TOTAL PRICE</strong></td>
+                  <td colspan="2"><strong>$${totalPrice.toFixed(2)}</strong></td>
+              </tr>
+          </tbody>
+      </table>
+  `;
+  console.log('Receipt content generated:', receiptContent.innerHTML);
+
+  // Show the receipt modal
+  if (receiptModal) {
+      receiptModal.show();
+      console.log('Receipt modal shown');
+  } else {
+      console.error('Receipt modal not initialized');
+  }
+
+  // Prepare order data for backend
+  const orderData = {
+      items: cart.map(item => ({
+          name: item.name,
+          price: item.price,
+          change_quantity: `+${item.quantity}`,
+          timestamp: new Date().toISOString()
+      })),
+      total: totalPrice
+  };
+  console.log('Order data prepared:', orderData);
 
 
       // Send order data to backend
@@ -311,76 +322,6 @@ function displayCartItems(cart) {
         console.error('Fetch error:', error);
     });
 });
-
-
-//Save as PDF
-
-
-document.getElementById('confirm-receipt').addEventListener('click', function() {
-    saveAsPDF();
-    
-    // Clear cart and close modal after saving
-    cart = [];
-    localStorage.removeItem('cart');
-    updateCartCount();
-    receiptModal.hide();
-});
-
-// Function to save receipt as a styled PDF
-function saveAsPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    // Get current date and time
-    const now = new Date();
-    const dateStr = now.toLocaleDateString();
-    const timeStr = now.toLocaleTimeString();
-
-    // Style the Title
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(18);
-    doc.setTextColor(40, 40, 40);
-    doc.text("Target Coffee ", 105, 20, null, null, "center");
-    // logo image
-   
-    // Add Date and Time
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(60, 60, 60);
-    doc.text(`Date: ${dateStr}`, 20, 30);
-    doc.text(`Time: ${timeStr}`, 20, 38);
-
-    // Prepare Data for the Table
-    let totalPrice = 0;
-    const tableData = cart.map(item => {
-        const itemTotal = item.quantity * item.price;
-        totalPrice += itemTotal;
-        return [item.name, item.quantity, `$${item.price.toFixed(2)}`, `$${itemTotal.toFixed(2)}`];
-    });
-
-    // Add table with styles
-    doc.autoTable({
-        startY: 45,
-        head: [['Item', 'Quantity', 'Price', 'Total']],
-        body: tableData,
-        theme: 'grid', // Grid theme for table
-        headStyles: { fillColor: [100, 100, 255], textColor: 255, fontStyle: 'bold' }, // Blue header
-        alternateRowStyles: { fillColor: [240, 240, 240] }, // Light gray alternate rows
-        margin: { left: 20, right: 20 },
-        styles: { fontSize: 12, cellPadding: 5 },
-    });
-
-    // Add Total Price at the bottom
-    let finalY = doc.lastAutoTable.finalY + 10;
-    doc.setFontSize(14);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(0, 0, 0);
-    doc.text("TOTAL:", 130, finalY);
-    doc.text(`$${totalPrice.toFixed(2)}`, 170, finalY);
-
-    // Save the PDF
-    doc.save(`receipt_${now.getTime()}.pdf`);
-}
 //unctionality
 document.querySelectorAll('.dropbtn').forEach(button => {
     button.addEventListener('click', function() {
@@ -415,6 +356,150 @@ if (cart.length === 0) {
     alert('Error: Cannot save an empty receipt.');
     return;
 }
+
+// Save as HTML file
+saveAsHTML();
+
+// Clear cart and close modal after saving
+cart = [];
+localStorage.removeItem('cart');
+updateCartCount();
+receiptModal.hide();
 });
 
+// Function to save receipt as HTML
+function saveAsHTML() {
+// Get current date and time
+const now = new Date();
+const dateStr = now.toLocaleDateString();
+const timeStr = now.toLocaleTimeString();
 
+// Calculate total
+let totalPrice = 0;
+cart.forEach(item => {
+    totalPrice += item.quantity * item.price;
+});
+
+// Create HTML content with styling
+let htmlContent = `
+
+ 
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .receipt {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        .logo {
+            max-width: 150px;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background-color: #f8f8f8;
+        }
+        .total-row {
+            font-weight: bold;
+            background-color: #f8f8f8;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+        }
+        .timestamp {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+
+
+    <div class="receipt">
+    <div class="header">
+        <h1>Order Receipt</h1>
+    </div>
+    
+    <div class="timestamp">
+        <p><strong>Date:</strong> ${dateStr}</p>
+        <p><strong>Time:</strong> ${timeStr}</p>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+`;
+
+// Add each item to the HTML table
+cart.forEach(item => {
+const itemTotal = item.quantity * item.price;
+htmlContent += `
+            <tr>
+                <td>${item.name}</td>
+                <td>${item.quantity}</td>
+                <td>$${item.price.toFixed(2)}</td>
+                <td>$${itemTotal.toFixed(2)}</td>
+            </tr>
+`;
+});
+
+// Add total row and close the HTML
+htmlContent += `
+            <tr class="total-row">
+                <td colspan="3"><strong>TOTAL</strong></td>
+                <td><strong>$${totalPrice.toFixed(2)}</strong></td>
+            </tr>
+        </tbody>
+    </table>
+    
+ 
+</div>
+
+`;
+
+// Create a Blob with the HTML content
+const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8;' });
+
+// Create a download link and trigger it
+const link = document.createElement('a');
+const url = URL.createObjectURL(blob);
+link.setAttribute('href', url);
+link.setAttribute('download', `receipt_${now.getTime()}.html`);
+link.style.visibility = 'hidden';
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+
+}
