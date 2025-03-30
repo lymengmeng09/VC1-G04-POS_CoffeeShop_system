@@ -252,9 +252,6 @@ document.getElementById('cart-table-body').addEventListener('click', function(e)
         // Get the price of the product being removed
         const productPrice = parseFloat(row.children[2].textContent.replace('$', ''));
 
-            // Get the price of the product being removed
-            const productPrice = parseFloat(row.children[2].textContent.replace('$', ''));
-
             // Remove the row
             row.remove();
 
