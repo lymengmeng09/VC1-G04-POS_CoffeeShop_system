@@ -2,10 +2,10 @@ body {
   background-color: #f8f9fa;
   font-family: Arial, sans-serif;
 }
-/* .col-md-14{
+.col-md-14{
     margin-top: -40px;
 
-} */
+}
 a {
   color: #f8f9fa;
 }
@@ -32,7 +32,7 @@ hr {
   margin-top: 10px;
 }
 .btn-Order {
-  width: 100%;
+  width: 60%;
   padding: 5px;
   background-color: #4e3629;
   border: none;
@@ -48,6 +48,21 @@ hr {
   position: relative;
   top: -2px;
 }
+
+.product-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+
+}
+.image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+
+}
+
 
 .col-md-2-4 {
   width: 3%;
@@ -91,14 +106,20 @@ hr {
   color: #888;
 }
 .remove-item {
-  background-color: white;
-  color: red;
   border: none;
+  background: red;
+  font-size: 10px;
+  margin-left: 30%;
+  color: #fff;
+  padding: 5px 8px;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 22px;  
-  margin-left: 40px;
-  
 }
+
+.remove-item:hover {
+  background: darkred; /* Adds a hover effect */
+}
+
 .quantity-input {
   width: 50px;
 }
@@ -115,6 +136,7 @@ hr {
   position: absolute;
   top: -5px;
 }
+
 .card-order {
   flex: 1;
   background: white;
@@ -171,7 +193,10 @@ td:nth-child(3) {
   opacity: 1;
 }
 
-
+.img-fluid{
+  border-radius: 18px;
+   
+}
 @media print {
     body * {
         visibility: hidden;

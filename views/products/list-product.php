@@ -68,23 +68,17 @@
                             </button>
                         </div>
                     </div>
-                    <!-- Product Image -->
-                    <img src="<?= htmlspecialchars($product['image_url']) ?>" 
-                        alt="<?= htmlspecialchars($product['product_name']) ?>" 
-                        class="img-fluid mb-2" 
-                        onerror="this.src='/path/to/placeholder-image.jpg';">
-                    <div class="mt-2">
-                        <!-- Product Name and Price -->
-                        <h6 class="card-title fw-normal text-center mb-1" style="font-size: 0.9rem;">
-                            <?= htmlspecialchars($product['product_name']) ?>
+                    <div class="image-container">
+                        <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>" class="img-fluid mb-2 product-image">
+                        </div>
+                        <div class="mt-2">
+                        <h6 class="card-title text-center mb-1" style="font-size: 1.2em; font-weight:350;">
+                             <strong><?= htmlspecialchars($product['product_name']) ?></strong>
                         </h6>
                         <p class="text-success fw-bold mb-0">
                             $<?= number_format($product['price'], 2) ?>
                         </p>
-                        <!-- Order Button -->
-                        <button class="btn-Order" data-name="<?= htmlspecialchars($product['product_name']) ?>" 
-                            data-price="<?= number_format($product['price'], 2) ?>" 
-                            data-img="<?= htmlspecialchars($product['image_url']) ?>">
+                        <button class="btn-Order" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-price="<?= number_format($product['price'], 2) ?>" data-img="<?= htmlspecialchars($product['image_url']) ?>">
                             Order
                         </button>
                     </div>
@@ -94,6 +88,7 @@
     </div>
     <?php endforeach; ?>
 </div>
+
  
 <!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -124,6 +119,7 @@
         button.addEventListener('click', function () {
             const productId = this.dataset.id;
             const productName = this.dataset.name;
+
 
             // Set modal product name and update form action
             document.getElementById('modalProductName').textContent = productName;
@@ -170,7 +166,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-white" id="receiptModalLabel">Order Receipt</h5>
+                <h5 class="modal-title" id="receiptModalLabel">Order Receipt</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="receipt-content">
@@ -197,7 +193,7 @@ document.querySelectorAll('.dropbtn').forEach(button => {
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-white" id="receiptModalLabel">Order Receipt</h5>
+                <h5 class="modal-title" id="receiptModalLabel">Order Receipt</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="receipt-content">
@@ -220,28 +216,29 @@ document.querySelectorAll('.btn-Order').forEach(button => {
         const productPrice = this.getAttribute('data-price');
         const productImg = this.getAttribute('data-img');
 
-            // Create a new row in the cart table
-            const cartTableBody = document.getElementById('cart-table-body');
-            const row = document.createElement('tr');
+        // Create a new row in the cart table
+        const cartTableBody = document.getElementById('cart-table-body');
+        const row = document.createElement('tr');
 
-            row.innerHTML = `
+
+        row.innerHTML = `
             <td><img src="${productImg}" alt="${productName}" style="width: 50px;"></td>
             <td>${productName}</td>
             <td>$${productPrice}</td>
             <td><button class="btn btn-danger remove-item">Remove</button></td>
         `;
-            cartTableBody.appendChild(row);
+        cartTableBody.appendChild(row);
 
-            // Update the cart total
-            const cartTotal = document.getElementById('cart-total');
-            const currentTotal = parseFloat(cartTotal.textContent.replace('$', ''));
-            const newTotal = currentTotal + parseFloat(productPrice);
-            cartTotal.textContent = `$${newTotal.toFixed(2)}`;
+        // Update the cart total
+        const cartTotal = document.getElementById('cart-total');
+        const currentTotal = parseFloat(cartTotal.textContent.replace('$', ''));
+        const newTotal = currentTotal + parseFloat(productPrice);
+        cartTotal.textContent = `$${newTotal.toFixed(2)}`;
 
-            // Show the cart table
-            document.getElementById('cart-table').style.display = 'block';
-        });
+        // Show the cart table
+        document.getElementById('cart-table').style.display = 'block';
     });
+});
 
 // Removing an item from the cart
 document.getElementById('cart-table-body').addEventListener('click', function(e) {
@@ -262,12 +259,12 @@ document.getElementById('cart-table-body').addEventListener('click', function(e)
             cartTotal.textContent = `$${newTotal.toFixed(2)}`;
 
 
-            // If the cart is empty, hide the cart table
-            if (document.getElementById('cart-table-body').children.length === 0) {
-                document.getElementById('cart-table').style.display = 'none';
-            }
+        // If the cart is empty, hide the cart table
+        if (document.getElementById('cart-table-body').children.length === 0) {
+            document.getElementById('cart-table').style.display = 'none';
         }
-    });
+    }
+});
 
 // Cancel button event listener
 document.getElementById('clear-all').addEventListener('click', function() {
@@ -275,20 +272,15 @@ document.getElementById('clear-all').addEventListener('click', function() {
     const cartTableBody = document.getElementById('cart-table-body');
     cartTableBody.innerHTML = ''; // This removes all rows
 
-        // Reset the total
-        const cartTotal = document.getElementById('cart-total');
-        cartTotal.textContent = '0.00';
+    // Reset the total
+    const cartTotal = document.getElementById('cart-total');
+    cartTotal.textContent = '0.00';
 
     // Optionally hide the cart table after clearing
     const cartTable = document.getElementById('cart-table');
     cartTable.style.display = 'none'; // Hide the table
 });
 
-//search category
-document.addEventListener("DOMContentLoaded", function () {
-    const categoryButton = document.getElementById("btnGroupDrop1");
-    const categoryLinks = document.querySelectorAll(".dropdown-item");
-});
 
 //search category
 document.addEventListener("DOMContentLoaded", function () {
@@ -304,5 +296,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
 
 </script>
