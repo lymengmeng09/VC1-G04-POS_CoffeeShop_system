@@ -39,3 +39,23 @@ h5{
 .fw-medium{
     color: #44312B;
 }
+.edit{
+    color:#FFC107; 
+    padding-left:16px;
+}
+.edit:hover{
+    background-color: rgba(128, 128, 128, 0.048);
+}
+.edit-link {
+    color: inherit; /* or specify your default color */
+    transition: color 0.1s ease; /* smooth transition */
+}
+
+.edit-link:hover {
+    color: rgba(0, 0, 0, 0.767) !important;
+}
+
+/* If you want the icon to change color too */
+.edit-link:hover .bi-pencil-square {
+    color: rgba(0, 0, 0, 0.733) !important;
+}

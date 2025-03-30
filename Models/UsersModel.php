@@ -112,6 +112,7 @@ class UserModel {
     }
     
     public function updateUser($id, $data) {
+
         $stmt = $this->db->prepare("UPDATE users SET profile = :profile, name = :name, email = :email, role_id = :role_id WHERE id = :id");
         $result = $stmt->execute([
             'id' => $id,
@@ -137,4 +138,3 @@ class UserModel {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
-

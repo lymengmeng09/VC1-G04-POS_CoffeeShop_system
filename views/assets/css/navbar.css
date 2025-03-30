@@ -8,10 +8,14 @@
     background: #f8f8f8;
     padding: 10px;
 }
+.shop{
+  margin-left: 990px;
+  margin-bottom: 18px;
+}
 
 .navbar {
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    
+    position: sticky;
 }
 .navbar a i {
     transition: color 0.3s ease-in-out;

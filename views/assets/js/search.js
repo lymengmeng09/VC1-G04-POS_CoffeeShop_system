@@ -99,6 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+
 // Function to filter by role (client-side)
 function filterByRole(role) {
     let table = document.getElementById("user");
@@ -195,6 +196,7 @@ function filterByRole(role) {
             }
         }
     }
+
 
     // Show 'No records found' message if no matching results
     if (!found) {

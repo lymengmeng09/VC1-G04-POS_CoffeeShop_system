@@ -1,4 +1,5 @@
-  <div class="container">
+<div class="card">
+<div class="container">
   <?php
     if (isset($_SESSION['notification'])) {
         // Determine the alert type based on message content
@@ -37,42 +38,78 @@
                 </button>
             </div>
         </div>
-    <div class="products-section">
-      <h2 class="section-title"></h2>
-      <div class="products-grid">
-        <?php 
-        // Sort products by quantity in ascending order (lowest to highest)
-        usort($products, function($a, $b) {
-            return $a['quantity'] - $b['quantity'];
-        });
-        
-        foreach ($products as $product) : ?>
-          <div class="product-card <?= $product['quantity'] == 0 ? 'out-of-stock' : '' ?>" 
-               data-name="<?= htmlspecialchars(strtolower($product['name'])) ?>" 
-               data-price="<?= $product['price'] ?>" 
-               data-quantity="<?= $product['quantity'] ?>">
-            <div class="dropdown">
-              <button class="dropbtn">⋮</button>
-              <div class="dropdown-content">
-                <a href="/edit_product?id=<?= $product['id'] ?>">Edit</a>
-                <a href="/delete_product/<?= $product['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
-              </div>
-            </div>
-            <div class="product-image">
-              <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
-            </div>
-            <div class="product-info">
-              <h3 class="origin"><?= htmlspecialchars($product['name']) ?></h3>
-              <p class="price">Price: $<?= number_format($product['price'], 2) ?></p>
-              <p class="quantity">Quantity: <?= $product['quantity'] ?> <?= $product['quantity'] == 0 ? '(Out of Stock)' : '' ?></p>
-            </div>
+        <div class="products-section">
+  <h2 class="section-title">Products</h2>
+  <div class="products-grid">
+    <?php 
+    // Sort products by quantity in ascending order (lowest to highest)
+    usort($products, function($a, $b) {
+        return $a['quantity'] - $b['quantity'];
+    });
+
+    foreach ($products as $product) : ?>
+      <div class="product-card <?= $product['quantity'] == 0 ? 'out-of-stock' : '' ?>" 
+           data-name="<?= htmlspecialchars(strtolower($product['name'])) ?>" 
+           data-price="<?= $product['price'] ?>" 
+           data-quantity="<?= $product['quantity'] ?>">
+        <div class="dropdown">
+          <button class="dropbtn">⋮</button>
+          <div class="dropdown-content">
+            <a href="/edit_product?id=<?= $product['id'] ?>">Edit</a>
+            <!-- Delete button to trigger modal -->
+            <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal" 
+               onclick="setDeleteModal(<?= $product['id'] ?>, '<?= htmlspecialchars($product['name']) ?>')">Delete</a>
           </div>
-        <?php endforeach; ?>
+        </div>
+        <div class="product-image">
+          <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
+        </div>
+        <div class="product-info">
+          <h3 class="origin"><?= htmlspecialchars($product['name']) ?></h3>
+          <p class="price">Price: $<?= number_format($product['price'], 2) ?></p>
+          <p class="quantity">Quantity: <?= $product['quantity'] ?> <?= $product['quantity'] == 0 ? '(Out of Stock)' : '' ?></p>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Delete Product</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete <strong id="productName"></strong>?
+      </div>
+      <div class="modal-footer">
+        <form id="deleteForm" method="POST">
+          <input type="hidden" name="_method" value="DELETE">
+          <button type="submit" class="btn btn-danger" style = " margin-top:9%;">Delete</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </form>
       </div>
     </div>
+  </div>
+</div>
+
+<script>
+  function setDeleteModal(productId, productName) {
+    // Set product name in the modal
+    document.getElementById('productName').textContent = productName;
+
+    // Update the form action URL with the product ID
+    const deleteForm = document.getElementById('deleteForm');
+    deleteForm.action = `/delete_product/${productId}`;
+  }
+</script>
+
 
   <!-- Add New Product Modal -->
-<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+  <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -83,7 +120,7 @@
         <form method="POST" action="/add-product" enctype="multipart/form-data" id="addProductForm">
           <div id="add-product-entries">
             <div class="product-entry mb-3">
-              <h6>Product 1</h6>
+               
               <div class="row g-3 align-items-end">
                 <div class="col-md-3">
                   <label for="addName-0" class="form-label">Product Name</label>
@@ -111,13 +148,14 @@
               </div>
             </div>
           </div>
-          <button type="button" class="btn btn-secondary mb-3 " id="add-more-product">Add Another Product</button>
-          <button type="submit" class="btn btn-primary">Complete</button>
+          <button type="button" class="btn btn-warning text-white mb-3 " id="add-more-product">Add More</button>
+          <button type="submit" class=" btn-primary-add">Completed</button>
         </form>
       </div>
     </div>
   </div>
 </div>
+
 
 <!-- Update Existing Product Modal -->
 <div class="modal fade" id="updateProductModal" tabindex="-1" aria-labelledby="updateProductModalLabel" aria-hidden="true">
@@ -164,126 +202,88 @@
               </div>
             </div>
           </div>
-          <button type="button" class="btn btn-secondary mb-3" id="add-more">Add More</button>
-          <button type="submit" class="btn btn-success">Update All</button>
+          <button type="button" class="btn btn-warning text-white mb-3"id="add-more">Add More</button>
+          <button type="submit" class="btn btn-success" style=" margin-left: 60%; ,   background:green;">Completed</button>
+
+          
         </form>
       </div>
     </div>
   </div>
 </div>
     
- <!-- Receipt Modal -->
-<div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="receiptModalLabel">Recent Stock Receipt</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <?php if (isset($_SESSION['receipt'])): ?>
-                    <p><strong>Action: </strong><?= ucfirst($_SESSION['receipt']['action']) ?></p>
-                    <div id="receipt-content">
-                        <div class="header-recept">
-                            <img src="/views/assets/images/logo.png" alt="Logo">
-                            <h2>Stock Receipt</h2>
-                        </div>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Quantity</th>
-                                    <th>Price($)</th>
-                                    <th>Total($)</th>
-                                    <th>Timestamp</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php 
-                                // Set Cambodia timezone
-                                date_default_timezone_set('Asia/Phnom_Penh');
-                                
-                                $totalPrice = 0;
-                                foreach ($_SESSION['receipt']['items'] as $item): 
-                                    $changeQuantity = (float)str_replace('+', '', $item['change_quantity']);
-                                    $itemTotal = $changeQuantity * (float)$item['price'];
-                                    $totalPrice += $itemTotal;
-                                ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($item['name']) ?></td>
-                                    <td><?= htmlspecialchars($item['change_quantity']) ?></td>
-                                    <td><?= number_format($item['price'], 2) ?></td>
-                                    <td class="total-cell"><?= number_format($itemTotal, 2) ?></td>
-                                    <td>
-                                        <?= date('Y-m-d', strtotime($item['timestamp'])) ?> <!-- Show only Date -->
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                                <tr>
-                                    <td colspan="2"><strong>Total Price</strong></td>
-                                    <td colspan="2"><strong>$<?= number_format($totalPrice, 2) ?></strong></td>
-                                </tr>
-                            </tbody>
-                        </table>
+ 
+
+        <!-- Receipt Modal -->
+        <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-white" id="receiptModalLabel">Recent Stock Receipt</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                <?php else: ?>
-                    <p>No receipt available.</p>
-                <?php endif; ?>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" id="save-pdf">Confirm</button>
-            </div>
-        </div>
-    </div>
+                    <div class="modal-body">
+                        <?php if (isset($_SESSION['receipt'])): ?>
+                            <p><strong>Action: </strong><?= ucfirst($_SESSION['receipt']['action']) ?></p>
+                            <div id="receipt-content">
+                                <div class="header-recept">
+                                    <img src="/views/assets/images/logo.png" alt="Logo">
+                                    <h2>Stock Receipt</h2>
+                                </div>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Quantity</th>
+                                            <th>Price($)</th>
+                                            <th>Total($)</th>
+                                            <th>Timestamp</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        // Set Cambodia timezone
+                                        date_default_timezone_set('Asia/Phnom_Penh');
+
+                                        $totalPrice = 0;
+                                        foreach ($_SESSION['receipt']['items'] as $item):
+                                            $changeQuantity = (float)str_replace('+', '', $item['change_quantity']);
+                                            $itemTotal = $changeQuantity * (float)$item['price'];
+                                            $totalPrice += $itemTotal;
+                                        ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($item['name']) ?></td>
+                                                <td><?= htmlspecialchars($item['change_quantity']) ?></td>
+                                                <td><?= number_format($item['price'], 2) ?></td>
+                                                <td class="total-cell"><?= number_format($itemTotal, 2) ?></td>
+                                                <td>
+                                                    <?= date('Y-m-d', strtotime($item['timestamp'])) ?> <!-- Show only Date -->
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                        <tr>
+                                            <td colspan="2"><strong>Total Price</strong></td>
+                                            <td colspan="2"><strong>$<?= number_format($totalPrice, 2) ?></strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php else: ?>
+                            <p>No receipt available.</p>
+                        <?php endif; ?>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="save-pdf" style="padding: 10px 20px; font-size: 16px;   margin-right: 5%;">Save PDF</button>
+                    <button type="button" class="btn btn-primary" id="ok-button" style="padding: 10px 20px; font-size: 16px;   margin-left: 45%;">OK</button>
+
 </div>
 
-<!-- JavaScript for Dynamic Updates -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        updateTotals(); // Update totals dynamically
-        showCurrentDateTime(); // Display current Cambodia date and time
-    });
-
-    // Function to calculate totals dynamically
-    function updateTotals() {
-        let totalSum = 0;
-
-        // Select all total cells in the table
-        document.querySelectorAll(".total-cell").forEach(cell => {
-            let rowTotal = parseFloat(cell.textContent.replace(',', ''));
-            if (!isNaN(rowTotal)) {
-                totalSum += rowTotal;
-            }
-        });
-
-        // Update Grand Total
-        document.getElementById("grand-total").textContent = `$${totalSum.toFixed(2)}`;
-    }
-
-    // Function to show current Cambodia date and time
-    function showCurrentDateTime() {
-        function updateDateTime() {
-            let now = new Date();
-            let options = { 
-                weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit',
-                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
-                timeZone: 'Asia/Phnom_Penh' // Cambodia Timezone
-            };
-            let formattedDateTime = new Intl.DateTimeFormat('en-US', options).format(now);
-            
-            // Display the date-time (You need to add an element with ID 'current-datetime' in your HTML)
-            let dateTimeElement = document.getElementById("current-datetime");
-            if (dateTimeElement) {
-                dateTimeElement.textContent = formattedDateTime;
-            }
-        }
-
-        updateDateTime(); // Call initially
-        setInterval(updateDateTime, 1000); // Update every second
-    }
-</script>
-
+                </div>
+            </div>
+        </div>
  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 
   <!-- Inline script to pass PHP data to JavaScript -->
   <script>
@@ -291,4 +291,5 @@
     const hasReceipt = <?php echo json_encode(isset($_SESSION['receipt'])); ?>;
     const showReceipt = new URLSearchParams(window.location.search).get('showReceipt') === 'true';
   </script>
- 
+
+</div>

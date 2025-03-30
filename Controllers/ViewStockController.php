@@ -272,10 +272,12 @@ class ViewStockController extends BaseController{
         exit;
     }
 
-    public function destroy($id) {
-        $this->productModel->deleteProduct($id);
-        $this->redirect('/viewStock');
-    }
+        public function destroy($id) {
+            $this->productModel->deleteProduct($id);
+            $this->redirect('/viewStock');
+        }
+        
+    
 }
 ?>
 

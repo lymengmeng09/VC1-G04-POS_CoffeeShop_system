@@ -1137,7 +1137,9 @@
     padding: .4rem;
     border-radius: 50%
 }
-
+img{
+    object-fit: cover;
+}
 .navbar.navbar-header li.nav-icon .nav-link:hover {
     background-color: #e9ecef
 }
