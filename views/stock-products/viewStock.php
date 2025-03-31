@@ -278,7 +278,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-success" id="save-pdf" style="padding: 10px 20px; font-size: 16px;   margin-right: 5%;">Save PDF</button>
-            <button type="button" class="btn btn-danger" id="clear-receipt">Clear</button>
+            <button type="button" class="btn btn-primary" id="ok-button" data-bs-dismiss="modal" style="padding: 10px 20px; font-size: 16px; margin-left: 45%;">OK</button>
 
           </div>
 
