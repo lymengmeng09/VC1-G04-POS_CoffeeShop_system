@@ -55,12 +55,12 @@
             <div class="dropdown">
               <a href="#" class="text-secondary bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right:10px;">
               </a>
-              <ul class="dropdown-menu">
+              <ul class="dropdown-menu"> 
                 <!-- Edit Link -->
-                <li class="edit"><a href="/edit_product?id=<?= $product['id'] ?>" class="edit-link bi-pencil"> Edit</a></li>
+                <li class="edit"><a href="/edit_product?id=<?= $product['id'] ?>" class="edit-link bi-pencil">  </a></li>
                 <!-- Delete Button with Confirmation -->
                 <li>
-                  <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal" class="dropdown-item btn-delete bi-trash" onclick="setDeleteModal(<?= $product['id'] ?>, '<?= htmlspecialchars($product['name']) ?>')"> Delete</a>
+                  <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal" class="dropdown-item btn-delete bi-trash" onclick="setDeleteModal(<?= $product['id'] ?>, '<?= htmlspecialchars($product['name']) ?>')">  </a>
                 </li>
               </ul>
             </div>
@@ -278,7 +278,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-success" id="save-pdf" style="padding: 10px 20px; font-size: 16px;   margin-right: 5%;">Save PDF</button>
-            <button type="button" class="btn btn-primary" id="ok-button" style="padding: 10px 20px; font-size: 16px;   margin-left: 45%;">OK</button>
+            <button type="button" class="btn btn-danger" id="clear-receipt">Clear</button>
 
           </div>
 
