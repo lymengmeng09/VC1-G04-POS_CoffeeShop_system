@@ -765,14 +765,14 @@ Recept style
 }
 
 #receiptModal .modal-header {
-  background-color: #342e0efd;
-  color: white;
+  background-color: #462b23ad;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
 
 #receiptModal .modal-title {
   font-weight: bold;
+  color: #fff;
 }
 
 #receiptModal .btn-close {
