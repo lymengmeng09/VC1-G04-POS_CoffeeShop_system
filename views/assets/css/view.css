@@ -16,9 +16,6 @@ body {
   padding: 15px 20px;
   border-bottom: 1px solid #eee;
   background-color: white;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
 }
 
 .header h1 {
@@ -87,7 +84,7 @@ body {
 }
 
 .product-card {
-  
+ 
   border-radius: 12px;
   padding: 15px;
   display: flex;
@@ -764,17 +761,18 @@ Recept style
 #receiptModal .modal-content {
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  color: #fff;
 }
 
 #receiptModal .modal-header {
-  background-color: #007bff;
-  color: white;
+  background-color: #462b23ad;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
 
 #receiptModal .modal-title {
   font-weight: bold;
+  color: #fff;
 }
 
 #receiptModal .btn-close {
@@ -821,7 +819,7 @@ Recept style
 
 /* Total Price Row */
 #receiptModal .table tbody tr:last-child {
-  background: #007bff;
+  background: #462b23ad;
   color: white;
   font-size: 1.1em;
   font-weight: bold;
@@ -881,10 +879,8 @@ Recept style
 }
 
  
- 
 /* Add More Product Button */
 #add-more-product {
-  background: #6c757d;
   border: none;
   padding: 8px 15px;
   font-size: 14px;
@@ -892,9 +888,7 @@ Recept style
   transition: 0.3s;
 }
 
-#add-more-product:hover {
-  background: #5a6268;
-}
+
 
 /* Submit Button */
 .btn-primary {
@@ -903,13 +897,24 @@ Recept style
   padding: 8px 15px;
   font-size: 14px;
   border-radius: 5px;
+ 
 }
+.btn-primary-add{
+  margin-left: 75%;
+  background:green;
+  border: none;
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 5px;
+  color:#fff;
+}
+ 
 
 .btn-primary:hover {
   background: #0056b3;
 }
 
-
+ 
 .image-preview img {
   width: 80px; /* Adjust the width */
   height: 60px; /* Adjust the height */
@@ -918,6 +923,5 @@ Recept style
   border: 1px solid #ccc;
   margin-top: 4%; /* Optional: adds a subtle border */
 }
-
 
  

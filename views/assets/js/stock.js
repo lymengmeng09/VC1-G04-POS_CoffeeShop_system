@@ -109,11 +109,12 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
+
       const newEntry = document.createElement('div');
       newEntry.classList.add('product-entry', 'mb-3');
       newEntry.style.display = 'block'; // Ensure new entry is visible
       newEntry.innerHTML = `
-        <h6>Product ${addEntryCount + 1}</h6>
+       
         <div class="row g-3 align-items-end">
           <div class="col-md-3">
             <label for="addName-${addEntryCount}" class="form-label">Product Name</label>
@@ -156,53 +157,73 @@ document.addEventListener('DOMContentLoaded', function() {
   const addMoreButton = document.getElementById('add-more');
   if (addMoreButton) {
     addMoreButton.addEventListener('click', function() {
-      console.log('Add More (Update) clicked');
-      updateEntryCount++;
-      const productEntries = document.getElementById('product-entries');
-      if (!productEntries) {
-        console.error('product-entries container not found');
-        return;
-      }
-
-      const newEntry = document.createElement('div');
-      newEntry.classList.add('product-entry', 'mb-3');
-      newEntry.style.display = 'block'; // Ensure new entry is visible
-      newEntry.innerHTML = `
-        <div class="row g-3 align-items-end">
-          <div class="col-md-3">
-            <label for="updateProduct-${updateEntryCount}" class="form-label">Select Product</label>
-            <select class="form-control update-product" id="updateProduct-${updateEntryCount}" name="product_id[]" required>
-              <option value="">Select a product...</option>
-              ${getProductOptions()}
-            </select>
-          </div>
-          <div class="col-md-2">
-            <label for="updatePrice-${updateEntryCount}" class="form-label">Price</label>
-            <input type="number" step="0.01" class="form-control update-price" id="updatePrice-${updateEntryCount}" name="price[]" required>
-          </div>
-          <div class="col-md-2">
-            <label for="updateQuantity-${updateEntryCount}" class="form-label">Quantity</label>
-            <input type="number" class="form-control update-quantity" id="updateQuantity-${updateEntryCount}" name="quantity[]" required>
-          </div>
-          <div class="col-md-2">
-            <label for="totalPrice-${updateEntryCount}" class="form-label">Total Price</label>
-            <div class="input-group">
-              <span class="input-group-text">$</span>
-              <input type="text" class="form-control total-price" id="totalPrice-${updateEntryCount}" readonly>
-            </div>
-          </div>
-          <div class="col-md-2 text-center">
-            <i class="bi bi-trash remove-entry" style="cursor: pointer; font-size: 1.5rem; color: #dc3545;" title="Remove"></i>
-          </div>
-        </div>
-      `;
-      productEntries.appendChild(newEntry);
-      updateRemoveIcons('product-entries');
-      addDynamicEventListeners(newEntry);
-    });
-  } else {
-    console.error('add-more button not found');
+  console.log('Add More (Update) clicked');
+  updateEntryCount++;
+  const productEntries = document.getElementById('product-entries');
+  if (!productEntries) {
+    console.error('product-entries container not found');
+    return;
   }
+
+  // Get all currently selected product IDs
+  const selectedProductIds = Array.from(document.querySelectorAll('#product-entries .update-product'))
+    .map(select => select.value)
+    .filter(value => value !== '');
+
+  // Get the original product options and filter out selected ones
+  const initialSelect = document.querySelector('#updateProduct-0');
+  let productOptions = initialSelect ? initialSelect.innerHTML : '<option value="">No products available</option>';
+  if (selectedProductIds.length > 0) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(`<select>${productOptions}</select>`, 'text/html');
+    const options = doc.querySelectorAll('option');
+    productOptions = '<option value="">Select a product...</option>';
+    options.forEach(option => {
+      if (option.value && !selectedProductIds.includes(option.value)) {
+        productOptions += option.outerHTML;
+      }
+    });
+  }
+
+
+  const newEntry = document.createElement('div');
+  newEntry.classList.add('product-entry', 'mb-3');
+  newEntry.style.display = 'block'; // Ensure new entry is visible
+  newEntry.innerHTML = `
+    <div class="row g-3 align-items-end">
+      <div class="col-md-3">
+        <label for="updateProduct-${updateEntryCount}" class="form-label">Select Product</label>
+        <select class="form-control update-product" id="updateProduct-${updateEntryCount}" name="product_id[]" required>
+          ${productOptions}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label for="updatePrice-${updateEntryCount}" class="form-label">Price</label>
+        <input type="number" step="0.01" class="form-control update-price" id="updatePrice-${updateEntryCount}" name="price[]" required>
+      </div>
+      <div class="col-md-2">
+        <label for="updateQuantity-${updateEntryCount}" class="form-label">Quantity</label>
+        <input type="number" class="form-control update-quantity" id="updateQuantity-${updateEntryCount}" name="quantity[]" required>
+      </div>
+      <div class="col-md-2">
+        <label for="totalPrice-${updateEntryCount}" class="form-label">Total Price</label>
+        <div class="input-group">
+          <span class="input-group-text">$</span>
+          <input type="text" class="form-control total-price" id="totalPrice-${updateEntryCount}" readonly>
+        </div>
+      </div>
+      <div class="col-md-2 text-center">
+        <i class="bi bi-trash remove-entry" style="cursor: pointer; font-size: 1.5rem; color: #dc3545;" title="Remove"></i>
+      </div>
+    </div>
+  `;
+  productEntries.appendChild(newEntry);
+  updateRemoveIcons('product-entries');
+  addDynamicEventListeners(newEntry);
+
+  updateAllDropdowns(); // 🔥 Ensure dropdown updates dynamically
+});
+}
 
   // Handle remove icon clicks (event delegation for both modals)
   document.addEventListener('click', function(e) {
@@ -236,44 +257,98 @@ document.addEventListener('DOMContentLoaded', function() {
     const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
     receiptModal.show();
     window.history.replaceState({}, document.title, window.location.pathname);
-  }
+  } const savePdfButton = document.getElementById('save-pdf');
 
-  // Save as PDF
-  const savePdfButton = document.getElementById('save-pdf');
   if (savePdfButton) {
     savePdfButton.addEventListener('click', function() {
-      const element = document.getElementById('receipt-content');
-      if (typeof html2pdf !== 'undefined') {
-        html2pdf().from(element).save('stock_receipt_' + new Date().toISOString().slice(0, 10) + '.pdf')
-          .then(() => {
-            const receiptModal = bootstrap.Modal.getInstance(document.getElementById('receiptModal'));
-            receiptModal.hide();
-          });
+      const receiptElement = document.getElementById('receipt-content');
+      
+      if (receiptElement) {
+        html2pdf().set({
+          margin: 10,
+          filename: 'stock_receipt_' + new Date().toISOString().slice(0, 10) + '.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, logging: false },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        }).from(receiptElement).save().then(() => {
+          // Ensure Bootstrap Modal is closed after saving
+          const receiptModal = document.getElementById('receiptModal');
+          if (receiptModal) {
+            const modalInstance = bootstrap.Modal.getInstance(receiptModal);
+            if (modalInstance) modalInstance.hide();
+          }
+        });
       } else {
-        console.error('html2pdf library not loaded');
+        console.error('Error: #receipt-content not found.');
       }
     });
+  } else {
+    console.error('Error: Save PDF button not found.');
   }
+// Clear and hide receipt
+const clearHideButton = document.getElementById('clear-hide');
+if (clearHideButton) {
+  clearHideButton.addEventListener('click', function() {
+    fetch('/clearReceipt', {
+      method: 'GET',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    })
+    .then(response => response.text())
+    .then(() => {
+      const receiptModal = bootstrap.Modal.getInstance(document.getElementById('receiptModal'));
+      receiptModal.hide();
+    })
+    .catch(error => console.error('Error clearing receipt:', error));
+  });
+}
 
-  // Clear and hide receipt
-  const clearHideButton = document.getElementById('clear-hide');
-  if (clearHideButton) {
-    clearHideButton.addEventListener('click', function() {
-      fetch('/clearReceipt', {
-        method: 'GET',
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest'
+// Debug form submissions
+const addProductForm = document.getElementById('addProductForm');
+if (addProductForm) {
+  addProductForm.addEventListener('submit', function(e) {
+    console.log('Add Product Form submitted');
+    console.log(new FormData(this));
+  });
+}
+
+const updateProductForm = document.getElementById('updateProductForm');
+if (updateProductForm) {
+  updateProductForm.addEventListener('submit', function(e) {
+    console.log('Update Product Form submitted');
+    console.log(new FormData(this));
+  });
+}
+
+// Check for notification alert
+const alert = document.querySelector('.alert');
+
+if (alert) {
+console.log('Notification alert displayed:', alert.textContent.trim());
+
+// Hide alert after 2 seconds
+setTimeout(() => {
+  alert.style.display = 'none';
+}, 2000); // 2000ms = 2 seconds
+}
+///Clear 
+
+const okButton = document.getElementById('ok-button');
+const receiptModal = document.getElementById('receiptModal');
+
+if (okButton && receiptModal) {
+    okButton.addEventListener('click', function() {
+        const modalInstance = bootstrap.Modal.getInstance(receiptModal);
+        if (modalInstance) {
+            modalInstance.hide();
         }
-      })
-      .then(response => response.text())
-      .then(() => {
-        const receiptModal = bootstrap.Modal.getInstance(document.getElementById('receiptModal'));
-        receiptModal.hide();
-      })
-      .catch(error => console.error('Error clearing receipt:', error));
     });
-  }
-
+}
+// Initial update of remove icons for both modals
+updateRemoveIcons('add-product-entries');
+updateRemoveIcons('product-entries');
+});
   // Debug form submissions
   const addProductForm = document.getElementById('addProductForm');
   if (addProductForm) {
@@ -306,7 +381,7 @@ if (alert) {
   // Initial update of remove icons for both modals
   updateRemoveIcons('add-product-entries');
   updateRemoveIcons('product-entries');
-});
+
 
 // Research product function
 function researchProduct(query) {
@@ -334,6 +409,3 @@ function researchProduct(query) {
 
   console.log(`Found ${visibleCount} products matching "${query}"`);
 }
-
-
-//Add total recept 

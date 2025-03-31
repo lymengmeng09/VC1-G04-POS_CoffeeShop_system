@@ -17,7 +17,7 @@ class UserModel {
     
     public function getUsers() {
         $stmt = $this->db->prepare("
-        SELECT users.id, users.name, users.email, roles.role_name 
+        SELECT users.id, users.profile, users.name, users.email, roles.role_name 
         FROM users 
         LEFT JOIN roles ON users.role_id = roles.id
         ");
@@ -68,8 +68,9 @@ class UserModel {
             // Hash the password before storing
             $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
         
-            $stmt = $this->db->prepare("INSERT INTO users (name, email, password, role_id) VALUES (:name, :email, :password, :role_id)");
+            $stmt = $this->db->prepare("INSERT INTO users (profile, name, email, password, role_id) VALUES (:profile, :name, :email, :password, :role_id)");
             $result = $stmt->execute([
+                'profile'  => $data['profile'],
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => $hashedPassword,
@@ -96,12 +97,12 @@ class UserModel {
             }
             
             // Log other errors
-            error_log("Error creating user: " . $e->getMessage());
-            return [
-                'success' => false,
-                'error' => 'database_error',
-                'message' => 'An error occurred while creating the user.'
-            ];
+            // error_log("Error creating user: " . $e->getMessage());
+            // return [
+            //     'success' => false,
+            //     'error' => 'database_error',
+            //     'message' => 'An error occurred while creating the user.'
+            // ];
         }
     }
     
@@ -111,9 +112,11 @@ class UserModel {
     }
     
     public function updateUser($id, $data) {
-        $stmt = $this->db->prepare("UPDATE users SET name = :name, email = :email, role_id = :role_id WHERE id = :id");
+
+        $stmt = $this->db->prepare("UPDATE users SET profile = :profile, name = :name, email = :email, role_id = :role_id WHERE id = :id");
         $result = $stmt->execute([
             'id' => $id,
+            'profile'  => $data['profile'],
             'name' => $data['name'],
             'email' => $data['email'],
             'role_id' => $data['role_id']
@@ -135,4 +138,3 @@ class UserModel {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
-
