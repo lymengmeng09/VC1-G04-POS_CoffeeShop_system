@@ -156,18 +156,9 @@ a:hover {
   background-color: #ffe6e6; /* Light red background on hover */
 }
 .remove-item {
-  background: none;
+  color: red;
   border: none;
-  padding: 0;
-  cursor: pointer;
-}
-
-.remove-item:hover {
-  opacity: 0.7;
-}
-
-.remove-item i {
-  font-size: 1.2rem;
+  background-color: white;
 }
 
 .quantity-input {

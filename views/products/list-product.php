@@ -1,12 +1,11 @@
-<h4>Product Management</h4>
+<h5>Product Management</h5>
 <!-- Modified Search and Filter Section -->
 <div class="card mb-2">
     <div class="card-body">
         <form id="filterForm" method="GET" class="nav">
             <div class="col-md-4">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search products..." name="search"
-                        id="searchInput">
+                    <input type="text" class="form-control" placeholder="Search products..." name="search" id="searchInput">
                     <button class="btn" style="border:1px solid #D9D9D9;" type="submit">
                         <i class="fas fa-search"></i></button>
                 </div>
@@ -43,43 +42,49 @@
                 <div id="product-grid" class="col-lg-<?= isset($_GET['cart']) ? '9' : '12' ?>">
                     <div class="row">
                         <?php foreach ($products as $product): ?>
-                            <div class="col-6 mb-4 col-md-<?= isset($_GET['cart']) ? '4' : '3' ?>">
-                                <div class="card h-100">
-                                    <div class="text-center p-2">
-                                        <div class="product-entry">
-                                            <!-- Dropdown for Edit/Delete -->
-                                            <div class="dropdown">
-                                                <button class="dropbtn">⋮</button>
-                                                <div class="dropdown-content">
-                                                    <!-- Edit Link -->
-                                                    <a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>">Edit</a>
-                                                    <!-- Delete Button with Confirmation -->
-                                                    <button type="button" class="btn-delete"
+                            <div class="col-6 mb-4 col-md-<?= isset($_GET['cart']) ? '4' : '3' ?> product-item" data-category="<?= strtolower(str_replace(' ', '', $product['category'])) ?>">
+                                <div class="card h-100 pt-2" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 4px;">
+                                    <div class="text-center">
+                                        <!-- Dropdown for Edit/Delete -->
+                                        <div class="dropstart text-end">
+                                            <a href="#" class="text-secondary" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right:10px;">
+                                                <i class="bi bi-three-dots-vertical"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <!-- Edit Link -->
+                                                <li class="edit"><a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>" class="edit-link bi-pencil"> Edit</a></li>
+                                                <!-- Delete Button with Confirmation -->
+                                                <li><button type="button" class="dropdown-item btn-delete bi-trash"
                                                         data-id="<?= htmlspecialchars($product['product_id']) ?>"
                                                         data-name="<?= htmlspecialchars($product['product_name']) ?>"
                                                         data-bs-toggle="modal" data-bs-target="#deleteModal">
-
                                                         Delete
                                                     </button>
-                                                </div>
-                                            </div>
-                                            <!-- Product Image -->
-                                            <div class="image-container">
-                                                <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>" class="img-fluid mb-2 product-image">
-                                            </div>
-                                            <div class="mt-2">
-                                                <h6 class="card-title text-center mb-1" style="font-size: 1.1em; font-weight:350; color: rgba(101, 67, 33, 0.9);">
-                                                    <strong><?= htmlspecialchars($product['product_name']) ?></strong>
-                                                </h6>
-                                                <p class="text-success fw-bold mb-0">
-                                                    $<?= number_format($product['price'], 2) ?>
-                                                </p>
-                                                <button class="btn-Order" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-price="<?= number_format($product['price'], 2) ?>" data-img="<?= htmlspecialchars($product['image_url']) ?>">
-                                                    Order
-                                                </button>
-                                            </div>
-
+                                                </li>
+                                            </ul>
                                         </div>
+
+                                        <!-- Product Image -->
+                                        <div class="image-container">
+                                            <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>" class="img-fluid mb-2 product-image">
+                                        </div>
+                                        <div class="mt-2">
+                                            <h6 class="card-title text-center mb-1" style="font-size: 1.1em; font-weight:350; color: rgba(101, 67, 33, 0.9);">
+                                                <strong><?= htmlspecialchars($product['product_name']) ?></strong>
+                                            </h6>
+                                            <p class="text-success fw-bold mb-0">
+                                                $<?= number_format($product['price'], 2) ?>
+                                            </p>
+                                            <button class="btn-Order"
+                                                data-id="<?= htmlspecialchars($product['product_id']) ?>"
+                                                data-name="<?= htmlspecialchars($product['product_name']) ?>"
+                                                data-price="<?= number_format($product['price'], 2) ?>"
+                                                data-img="<?= htmlspecialchars($product['image_url']) ?>"
+                                                data-category="<?= htmlspecialchars($product['category']) ?>">
+                                                Order
+                                            </button>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -127,7 +132,6 @@
             </div>
         </div>
 
-
         <!-- Delete Confirmation Modal -->
         <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -142,43 +146,14 @@
                     <div class="modal-footer">
                         <form id="deleteForm" method="POST">
                             <input type="hidden" name="_method" value="DELETE">
-                            <button type="submit" class="btn btn-danger" style=" margin-top:9%;">Delete</button>
-
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                         </form>
                     </div>
 
                 </div>
             </div>
         </div>
-
-        <script>
-            // Handle Delete Confirmation Modal
-            document.querySelectorAll('.btn-delete').forEach(button => {
-                button.addEventListener('click', function() {
-                    const productId = this.dataset.id;
-                    const productName = this.dataset.name;
-
-
-                    // Set modal product name and update form action
-                    document.getElementById('modalProductName').textContent = productName;
-                    document.getElementById('deleteForm').action = `/products/delete/${productId}`;
-                });
-            });
-
-            // Handle Order Button
-            document.querySelectorAll('.btn-Order').forEach(button => {
-                button.addEventListener('click', function() {
-                    const productName = this.dataset.name;
-                    const productPrice = this.dataset.price;
-                    const productImg = this.dataset.img;
-
-                    alert(`Order placed for: ${productName}, Price: $${productPrice}`);
-                    // Add additional logic for order handling (e.g., add to cart or open order modal)
-                });
-            });
-        </script>
-
 
         <!-- Receipt Modal -->
         <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
