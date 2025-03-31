@@ -2,11 +2,14 @@
     display: flex;
     flex-direction: column; /* Stack items vertically */
 }
-
+body {
+  padding-top: 60px; /* Adjust according to the navbar height */
+}
 #sidebar {
     width: 100%;
     background: #f8f8f8;
     padding: 10px;
+    z-index: 1000;
 }
 .shop{
   margin-left: 990px;
@@ -15,7 +18,12 @@
 
 .navbar {
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    position: sticky;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    transition: top 0.3s;
 }
 .navbar a i {
     transition: color 0.3s ease-in-out;
