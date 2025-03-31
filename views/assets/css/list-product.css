@@ -2,19 +2,14 @@ body {
   background-color: #f8f9fa;
   font-family: Arial, sans-serif;
 }
-
 a {
   color: #f8f9fa;
 }
 a:hover {
   color: #f8f9fa;
 }
-.nav {
-  flex: 2;
-  display: flex;
-  padding-bottom: 30px;
-  margin-bottom: 30px;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.247);
+.category {
+  margin-left: 350px;
 }
 .shop a {
   color: black;
@@ -42,22 +37,22 @@ a:hover {
   top: -2px;
 }
 
-.col-md-2-4 {
-  width: 3%;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-  border-radius: 10px;
-  margin: 10px;
-  height: 270px;
+.image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+
+}
+
+.nav{
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.451);
 }
 .text-center img {
   height: 120px;
   object-fit: contain;
-
-}
-.coffee-grid{
-  display: flex;
-  flex-wrap: wrap;
+  margin: 10px 40px;
 }
 .btn-Order {
   background-color: #6f4f37;
@@ -65,6 +60,7 @@ a:hover {
   border: none;
   padding: 6px 14px;
   cursor: pointer;
+  width: 70%;
 }
 .btn-Order:hover {
   background-color: #4e3629;
@@ -79,7 +75,6 @@ a:hover {
   width: 50px;
   height: 50px;
   object-fit: contain;
-  border-radius: 5px;
   margin: 15px 0;
 }
 .empty-cart {
@@ -88,14 +83,11 @@ a:hover {
   color: #888;
 }
 .remove-item {
-  background-color: white;
   color: red;
   border: none;
-  cursor: pointer;
-  font-size: 22px;  
-  margin-left: 40px;
-  
+  background-color: white;
 }
+
 .quantity-input {
   width: 50px;
 }
@@ -155,7 +147,6 @@ td:nth-child(3) {
   display: block;
   opacity: 1;
 }
-
 
 @media print {
     body * {

@@ -1,6 +1,4 @@
-<div class="d-flex justify-content-between align-items-center mb-2">
-    <h5>Member management</h5>
-</div>
+<h5>Member management</h5>
 <div class="card">
     <div class="card-body">
 
@@ -32,9 +30,9 @@
                 </div>
                 <!-- Add User Button (only for admins) -->
                 <?php if (AccessControl::hasPermission('create_users')): ?>
-                <a href="/users/create" class="btn btn-primary">
-                    + Add User
-                </a>
+                    <a href="/users/create" class="btn btn-primary">
+                        + Add User
+                    </a>
                 <?php endif; ?>
             </div>
         </div>
@@ -47,7 +45,7 @@
                 <th>Email</th>
                 <th>Role</th>
                 <?php if (AccessControl::isAdmin()): ?>
-                <th>Action</th>
+                    <th>Action</th>
                 <?php endif; ?>
             </tr>
         </thead>
@@ -60,18 +58,18 @@
 
 
             if (!empty($filteredUsers)):
-                ?>
-            <?php foreach ($filteredUsers as $user): ?>
-            <tr>
-                <td></td>
-                <td class="py-2 "><img
-                        src="/<?= !empty($user['profile']) ? htmlspecialchars($user['profile']) : 'views/assets/images/profile.png' ?>"
-                        alt="" class="rounded-circle me-2" style="width: 40px; height:40px; object-fit: cover;">
-                    <span><?= htmlspecialchars($user['name']) ?></span>
-                </td>
-                <td style="color:rgb(106, 106, 106);"><?= htmlspecialchars($user['email']) ?></td>
-                <td style="color:rgb(17, 136, 51); "><?= htmlspecialchars($user['role_name']) ?></td>
-                <?php if (AccessControl::isAdmin()): ?>
+            ?>
+                <?php foreach ($filteredUsers as $user): ?>
+                    <tr>
+                        <td></td>
+                        <td class="py-2 "><img
+                                src="/<?= !empty($user['profile']) ? htmlspecialchars($user['profile']) : 'views/assets/images/profile.png' ?>"
+                                alt="" class="rounded-circle me-2" style="width: 40px; height:40px; object-fit: cover;">
+                            <span><?= htmlspecialchars($user['name']) ?></span>
+                        </td>
+                        <td style="color:rgb(106, 106, 106);"><?= htmlspecialchars($user['email']) ?></td>
+                        <td style="color:rgb(17, 136, 51); "><?= htmlspecialchars($user['role_name']) ?></td>
+                        <?php if (AccessControl::isAdmin()): ?>
                             <td class="text-center ps-0" style="padding-right: 10px;">
                                 <div class="btn-group dropend">
                                     <a href="#" class="text-secondary" id="dropdownMenuButton<?= $user['id'] ?>" data-bs-toggle="dropdown" aria-expanded="false">
@@ -107,12 +105,12 @@
                             </td>
                         <?php endif; ?>
 
-            </tr>
-            <?php endforeach; ?>
+                    </tr>
+                <?php endforeach; ?>
             <?php else: ?>
-            <tr>
-                <td colspan="6" id="noResultsMessage" style="display: none;">No records found</td>
-            </tr>
+                <tr>
+                    <td colspan="6" id="noResultsMessage" style="display: none;">No records found</td>
+                </tr>
             <?php endif; ?>
         </tbody>
     </table>
