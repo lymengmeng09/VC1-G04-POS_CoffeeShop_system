@@ -82,19 +82,11 @@ a:hover {
   color: #888;
 }
 .remove-item {
-  background: none;
+  color: red;
   border: none;
-  padding: 0;
-  cursor: pointer;
+  background-color: white;
 }
 
-.remove-item:hover {
-  opacity: 0.7;
-}
-
-.remove-item i {
-  font-size: 1.2rem;
-}
 .quantity-input {
   width: 50px;
 }

@@ -1,6 +1,4 @@
-<div class="d-flex justify-content-between align-items-center mb-2">
-    <h5>Member management</h5>
-</div>
+<h5>Member management</h5>
 <div class="card">
     <div class="card-body">
 

@@ -201,12 +201,12 @@ body {
   margin-left: 90%;
 }
 
-.dropbtn {
+/* .dropbtn {
   background: none;
   border: none;
   font-size: 20px;
   cursor: pointer;
-}
+} */
 
 .dropdown-content {
   display: none;
@@ -317,11 +317,6 @@ body {
   width: 100%;
   padding: 5px;
   font-size: 14px;
-}
-
-.btn-secondary {
-  margin-top: 15px;
-  background-color: #4a90e2;
 }
 
 @media (max-width: 480px) {
@@ -880,13 +875,13 @@ Recept style
 
  
 /* Add More Product Button */
-#add-more-product {
+/* #add-more-product {
   border: none;
   padding: 8px 15px;
   font-size: 14px;
   border-radius: 5px;
   transition: 0.3s;
-}
+} */
 
 
 
