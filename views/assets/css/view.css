@@ -760,14 +760,14 @@ Recept style
 }
 
 #receiptModal .modal-header {
-  background-color: #342e0efd;
-  color: white;
+  background-color: #462b23ad;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
 
 #receiptModal .modal-title {
   font-weight: bold;
+  color: #fff;
 }
 
 #receiptModal .btn-close {
@@ -871,42 +871,6 @@ Recept style
 
 .image-preview img:hover {
   transform: scale(1.1);
-}
-
- 
-/* Add More Product Button */
-/* #add-more-product {
-  border: none;
-  padding: 8px 15px;
-  font-size: 14px;
-  border-radius: 5px;
-  transition: 0.3s;
-} */
-
-
-
-/* Submit Button */
-.btn-primary {
-  background: #007bff;
-  border: none;
-  padding: 8px 15px;
-  font-size: 14px;
-  border-radius: 5px;
- 
-}
-.btn-primary-add{
-  margin-left: 75%;
-  background:green;
-  border: none;
-  padding: 6px 10px;
-  font-size: 14px;
-  border-radius: 5px;
-  color:#fff;
-}
- 
-
-.btn-primary:hover {
-  background: #0056b3;
 }
 
  

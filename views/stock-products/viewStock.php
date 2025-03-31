@@ -152,8 +152,8 @@
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn btn-outline-primary text-white mb-3 " id="add-more-product">Add More</button>
-              <button type="submit" class=" btn-primary-add">Completed</button>
+              <button type="button" class="btn btn-outline-primary mb-3 " id="add-more-product">Add More</button>
+              <button type="submit" class="btn btn-success">Completed</button>
             </form>
           </div>
         </div>
@@ -206,8 +206,8 @@
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn btn-warning text-white mb-3" id="add-more">Add More</button>
-              <button type="submit" class="btn btn-success" style=" margin-left: 60%; background:green;">Completed</button>
+              <button type="button" class="btn btn-outline-primary mb-3" id="add-more">Add More</button>
+              <button type="submit" class="btn btn-success">Completed</button>
 
 
             </form>
