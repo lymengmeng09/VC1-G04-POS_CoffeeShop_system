@@ -55,7 +55,8 @@
                                                 <li class="edit"><a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>" class="edit-link bi-pencil"> Edit</a></li>
                                                 <!-- Delete Button with Confirmation -->
                                                 <li><button type="button" class="dropdown-item btn-delete bi-trash"
-                                                        data-id="<?= htmlspecialchars($product['product_id']) ?>"
+
+                                                data-id="<?= htmlspecialchars($product['product_id']) ?>"
                                                         data-name="<?= htmlspecialchars($product['product_name']) ?>"
                                                         data-bs-toggle="modal" data-bs-target="#deleteModal">
                                                         Delete
@@ -109,28 +110,13 @@
                                         <button id="PayMent" class="btn btn-primary">Pay Now</button>
                                     </div>
                                 </div>
-                                <img src="<?= htmlspecialchars($product['image_url']) ?>"
-                                    alt="<?= htmlspecialchars($product['product_name']) ?>" class="img-fluid mb-2">
-                                <div class="mt-2">
-                                    <h6 class="card-title fw-normal text-center mb-1" style="font-size: 0.9rem;">
-                                        <?= htmlspecialchars($product['product_name']) ?>
-                                    </h6>
-                                    <p class="text-success fw-bold mb-0">
-                                        $<?= number_format($product['price'], 2) ?>
-                                    </p>
-                                    <button class="btn-Order"
-                                        data-name="<?= htmlspecialchars($product['product_name']) ?>"
-                                        data-price="<?= number_format($product['price'], 2) ?>"
-                                        data-img="<?= htmlspecialchars($product['image_url']) ?>">
-                                        Order New
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
 
         <!-- Delete Confirmation Modal -->
         <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -150,7 +136,6 @@
                             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                         </form>
                     </div>
-
                 </div>
             </div>
         </div>
