@@ -20,14 +20,14 @@ $user = $_SESSION['user'];
                         <i class="bi bi-gear me-1"></i> Manage Profile
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="manageProfileDropdown">
-                        <li>
-                            <a href="/edit-user?id=<?= htmlspecialchars($user['id']) ?>" class="drop">
-                                <i class="bi bi-pencil mx-3"></i>Edit Profile
+                        <li class="edit">
+                            <a href="/edit-user?id=<?= htmlspecialchars($user['id']) ?>" class="edit-link">
+                                <i class="bi bi-pencil"></i> Edit Profile
                             </a>
                         </li>
                         <li>
-                            <button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#resetPassword<?= $user['id'] ?>">
-                                <i class="bi bi-arrow-clockwise me-2"></i> Change Password
+                            <button class="dropdown-item btn-reset" type="button" data-bs-toggle="modal" data-bs-target="#resetPassword<?= $user['id'] ?>">
+                                <i class="bi bi-arrow-clockwise"></i> Change Password
                             </button>
                         </li>
                     </ul>

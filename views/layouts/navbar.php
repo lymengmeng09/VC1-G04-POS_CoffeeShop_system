@@ -91,13 +91,13 @@ $profilePath = !empty($user['profile']) ? '/' . ltrim($user['profile'], '/') : '
                     </li>
                     <li class="sidebar-item">
                         <a href="/products" class='sidebar-link'>
-                            <i class="bi bi-shop"></i>
+                            <i class="bi bi-cart-fill"></i>
                             <span>Order</span>
                         </a>
                     </li>
                     <li class="sidebar-item">
                         <a href="/viewStock" class='sidebar-link'>
-                            <i class="bi bi-cart-fill"></i>
+                            <i class="bi bi-shop"></i>
                             <span>Stock</span>
                         </a>
                     </li>
@@ -109,7 +109,7 @@ $profilePath = !empty($user['profile']) ? '/' . ltrim($user['profile'], '/') : '
                     </li>
                     <li class="sidebar-item">
                         <a href="/list-users" class='sidebar-link'>
-                            <i class="bi bi-grid-1x2-fill"></i>
+                        <i class="bi bi-person-circle"></i>
                             <span>Users</span>
                         </a>
                     </li>
