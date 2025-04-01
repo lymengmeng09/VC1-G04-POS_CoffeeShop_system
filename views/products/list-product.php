@@ -52,13 +52,13 @@
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <!-- Edit Link -->
-                                                <li class="edit"><a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>" class="edit-link bi-pencil"> Edit</a></li>
+                                                <li class="edit"><a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>" class="edit-link bi-pencil"></a></li>
                                                 <!-- Delete Button with Confirmation -->
                                                 <li><button type="button" class="dropdown-item btn-delete bi-trash"
                                                         data-id="<?= htmlspecialchars($product['product_id']) ?>"
                                                         data-name="<?= htmlspecialchars($product['product_name']) ?>"
                                                         data-bs-toggle="modal" data-bs-target="#deleteModal">
-                                                        Delete
+                                                   
                                                     </button>
                                                 </li>
                                             </ul>
