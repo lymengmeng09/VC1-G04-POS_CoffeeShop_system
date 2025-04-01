@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Add this to your existing JavaScript
 document.addEventListener('DOMContentLoaded', function() {
     // Get all dropdown items
-    const dropdownItems = document.querySelectorAll('.dropdown-menu .dropdown-item');
+    const dropdownItems = document.querySelectorAll('.menu-role .role-item');
     
     // Add click event listeners to each dropdown item
     dropdownItems.forEach(item => {
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const role = url.searchParams.get('role');
             
             // Update the dropdown button text
-            const dropdownButton = document.querySelector('.btn-group #btnGroupDrop1');
+            const dropdownButton = document.querySelector('.role-category #drop1');
             dropdownButton.textContent = 'Role: ' + (role === 'all' ? 'All' : role);
             
             // Apply the filter
@@ -150,7 +150,7 @@ function filterByRole(role) {
 }// Add this to your existing JavaScript
 document.addEventListener('DOMContentLoaded', function() {
     // Get all dropdown items
-    const dropdownItems = document.querySelectorAll('.dropdown-menu .dropdown-item');
+    const dropdownItems = document.querySelectorAll('.menu-role .role-item');
     
     // Add click event listeners to each dropdown item
     dropdownItems.forEach(item => {
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const role = url.searchParams.get('role');
             
             // Update the dropdown button text
-            const dropdownButton = document.querySelector('.btn-group #btnGroupDrop1');
+            const dropdownButton = document.querySelector('.role-category #drop1');
             dropdownButton.textContent = 'Role: ' + (role === 'all' ? 'All' : role);
             
             // Apply the filter
