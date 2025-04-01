@@ -882,5 +882,13 @@ Recept style
   border: 1px solid #ccc;
   margin-top: 4%; /* Optional: adds a subtle border */
 }
-
- 
+ #receipt-content h2{
+  color: #000000;
+  margin-left: 18%;
+ }
+ #add-more{
+  margin-top: 2%;
+ }
+ #add-more-product{
+  margin-top: 2%;
+ }

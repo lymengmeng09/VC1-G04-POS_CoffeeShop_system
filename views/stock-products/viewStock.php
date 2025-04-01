@@ -55,7 +55,7 @@
             <div class="dropdown">
               <a href="#" class="text-secondary bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right:10px;">
               </a>
-              <ul class="dropdown-menu">
+              <ul class="dropdown-menu" style="min-width: 120px; padding: 0.5rem 0;">
                 <!-- Edit Link -->
                 <li class="edit"><a href="/edit_product?id=<?= $product['id'] ?>" class="edit-link bi-pencil"> Edit</a></li>
                 <!-- Delete Button with Confirmation -->
@@ -152,8 +152,10 @@
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn btn-outline-primary mb-3 " id="add-more-product">Add More</button>
-              <button type="submit" class="btn btn-success">Completed</button>
+              <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-primary" id="add-more-product">Add More</button>
+                <button type="submit" class="btn btn-success">Completed</button>
+              </div>
             </form>
           </div>
         </div>
@@ -206,10 +208,10 @@
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn btn-outline-primary mb-3" id="add-more">Add More</button>
-              <button type="submit" class="btn btn-success">Completed</button>
-
-
+              <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-primary" id="add-more-product">Add More</button>
+                <button type="submit" class="btn btn-success">Completed</button>
+              </div>
             </form>
           </div>
         </div>
@@ -278,7 +280,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-success" id="save-pdf" style="padding: 10px 20px; font-size: 16px;   margin-right: 5%;">Save PDF</button>
-            <button type="button" class="btn btn-primary" id="ok-button" style="padding: 10px 20px; font-size: 16px;   margin-left: 45%;">OK</button>
+            <button type="button" class="btn btn-primary" id="ok-button" data-bs-dismiss="modal" style="padding: 10px 20px; font-size: 16px; margin-left: 45%;">OK</button>
 
           </div>
 
