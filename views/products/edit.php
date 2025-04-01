@@ -63,7 +63,7 @@
                     <?php foreach ($categories as $category): ?>
                         <option value="<?= htmlspecialchars($category['category_name']) ?>" 
                                 data-id="<?= htmlspecialchars($category['category_id']) ?>"
-                                <?= $product['category'] === $category['category_name'] ? 'selected' : '' ?>>
+                                <?= $product['category_id'] === $category['category_name'] ? 'selected' : '' ?>>
                             <?= htmlspecialchars($category['category_name']) ?>
                         </option>
                     <?php endforeach; ?>
