@@ -42,7 +42,7 @@
                 <div id="product-grid" class="col-lg-<?= isset($_GET['cart']) ? '9' : '12' ?>">
                     <div class="row">
                         <?php foreach ($products as $product): ?>
-                            <div class="col-6 mb-4 col-md-<?= isset($_GET['cart']) ? '4' : '3' ?> product-item" data-category="<?= strtolower(str_replace(' ', '', $product['category'])) ?>">
+                            <div class="col-6 mb-4 col-md-<?= isset($_GET['cart']) ? '4' : '3' ?> product-item" data-category="<?= strtolower(str_replace(' ', '', $product['category_id'])) ?>">
                                 <div class="card h-100 pt-2" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 4px;">
                                     <div class="text-center">
                                         <!-- Dropdown for Edit/Delete -->
@@ -81,7 +81,7 @@
                                                 data-name="<?= htmlspecialchars($product['product_name']) ?>"
                                                 data-price="<?= number_format($product['price'], 2) ?>"
                                                 data-img="<?= htmlspecialchars($product['image_url']) ?>"
-                                                data-category="<?= htmlspecialchars($product['category']) ?>">
+                                                data-category="<?= htmlspecialchars($product['category_id']) ?>">
                                                 Order
                                             </button>
                                         </div>

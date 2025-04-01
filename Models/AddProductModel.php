@@ -50,15 +50,13 @@ function updateProduct($data) {
         $query = "UPDATE products 
                   SET product_name = :product_name, 
                       price = :price, 
-                      image_url = :image_url, 
-                      category = :category, 
+                      image_url = :image_url,  
                       category_id = :category_id 
                   WHERE product_id = :product_id";
     } else {
         $query = "UPDATE products 
                   SET product_name = :product_name, 
-                      price = :price, 
-                      category = :category, 
+                      price = :price,  
                       category_id = :category_id 
                   WHERE product_id = :product_id";
     }
@@ -68,7 +66,6 @@ function updateProduct($data) {
     // Bind parameters
     $stmt->bindParam(':product_name', $data['product_name']);
     $stmt->bindParam(':price', $data['price']);
-    $stmt->bindParam(':category', $data['category']);
     $stmt->bindParam(':category_id', $data['category_id']);
     $stmt->bindParam(':product_id', $data['product_id']);
     
