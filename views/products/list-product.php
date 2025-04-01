@@ -75,7 +75,7 @@
                                                         data-id="<?= htmlspecialchars($product['product_id']) ?>"
                                                         data-name="<?= htmlspecialchars($product['product_name']) ?>"
                                                         data-bs-toggle="modal" data-bs-target="#deleteModal">
-                                                        Delete
+                                                   Delete
                                                     </button>
                                                 </li>
                                             </ul>
@@ -98,7 +98,7 @@
                                                 data-name="<?= htmlspecialchars($product['product_name']) ?>"
                                                 data-price="<?= number_format($product['price'], 2) ?>"
                                                 data-img="<?= htmlspecialchars($product['image_url']) ?>"
-                                                data-category="<?= htmlspecialchars($product['category']) ?>">
+                                                data-category="<?= htmlspecialchars($product['category_id']) ?>">
                                                 Order
                                             </button>
                                         </div>
