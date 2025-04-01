@@ -283,13 +283,13 @@
     width: 100%
 }
 
-.btn-group:not(.dropdown) .btn:not([class*=btn-]) {
+/* .btn-group:not(.dropdown) .btn:not([class*=btn-]) {
     border: 1px solid #dfe3e7
 }
 
 .btn-group>.btn {
     border-radius: .267rem
-}
+} */
 
 .buttons .btn {
     margin: 0 10px 10px 0
@@ -529,8 +529,9 @@
 }
 
 .form-group label {
-    color: rgba(35, 28, 99, .7);
-    font-weight: 600
+    color: #8F5D46;
+    font-weight: 600;
+    margin-bottom: 5px;
 }
 
 .form-group small {

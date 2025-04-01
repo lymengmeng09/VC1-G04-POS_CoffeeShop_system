@@ -3,8 +3,8 @@
 }
 
 .image-preview-box {
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     border: 2px dashed #ccc;
     border-radius: 4px;
     display: flex;

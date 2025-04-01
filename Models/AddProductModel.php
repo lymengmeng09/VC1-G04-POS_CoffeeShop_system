@@ -51,14 +51,12 @@ function updateProduct($data) {
                   SET product_name = :product_name, 
                       price = :price, 
                       image_url = :image_url, 
-                      category = :category, 
                       category_id = :category_id 
                   WHERE product_id = :product_id";
     } else {
         $query = "UPDATE products 
                   SET product_name = :product_name, 
                       price = :price, 
-                      category = :category, 
                       category_id = :category_id 
                   WHERE product_id = :product_id";
     }
