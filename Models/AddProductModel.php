@@ -94,7 +94,6 @@ class AddProductModel
         // Bind parameters
         $stmt->bindParam(':product_name', $data['product_name']);
         $stmt->bindParam(':price', $data['price']);
-        $stmt->bindParam(':category', $data['category']);
         $stmt->bindParam(':category_id', $data['category_id']);
         $stmt->bindParam(':product_id', $data['product_id']);
 
