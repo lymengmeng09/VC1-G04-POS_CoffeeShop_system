@@ -1,7 +1,6 @@
-<h3>Edit Product</h3>
-
-<div class="container mt-3">
-    <div class="card">
+<h5>Edit Product</h5>
+<div class="card">
+    <div class="card-body">
         <!-- Display success or error messages -->
         <?php if (isset($_SESSION['success'])): ?>
         <div class="alert alert-success">
@@ -64,7 +63,7 @@
                     <?php foreach ($categories as $category): ?>
                         <option value="<?= htmlspecialchars($category['category_name']) ?>" 
                                 data-id="<?= htmlspecialchars($category['category_id']) ?>"
-                                <?= $product['category'] === $category['category_name'] ? 'selected' : '' ?>>
+                                <?= $product['category_id'] === $category['category_name'] ? 'selected' : '' ?>>
                             <?= htmlspecialchars($category['category_name']) ?>
                         </option>
                     <?php endforeach; ?>
@@ -83,8 +82,8 @@
 
             <!-- Buttons -->
             <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-primary m-2">Update Product</button>
-                <button type="button" class="btn btn-secondary m-2"
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-outline-secondary"
                     onclick="window.location.href='/products'">Cancel</button>
             </div>
         </form>

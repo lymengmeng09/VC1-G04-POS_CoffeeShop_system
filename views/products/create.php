@@ -1,5 +1,4 @@
- <h4>Create Menu</h4>
-<div class="container mt-3">
+ <h5>Create Menu</h5>
     <div class="card">
            
         <div class="card-body">
@@ -26,7 +25,7 @@
                     <input type="text" class="form-control" id="productName" name="product_name" placeholder="Enter product name" required>
                 </div>
                 <div class="form-group">
-                    <label for="category_id" class="form-label">Category:</label>
+                    <label for="category_id">Category:</label>
                     <select name="category_id" class="form-control" required>
                         <option value="">Select a category</option>
                         <?php foreach ($categories as $category): ?>
@@ -45,11 +44,7 @@
             </form>
         </div>
     </div>
-</div>
 
-<style>
-    
-</style>
 
 <script>
     // Wait for the DOM to be fully loaded

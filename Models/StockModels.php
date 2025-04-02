@@ -62,15 +62,15 @@ class ProductModel {
         }
     }
 
-    public function updateProducts($id, $data) {
-        $stmt = $this->conn->prepare("UPDATE stocks SET name = :name, price = :price, quantity = :quantity WHERE id = :id");
-        return $stmt->execute([
-            'id' => $id,
-            'name' => $data['name'],
-            'price' => $data['price'],
-            'quantity' => $data['quantity'],
-        ]);
-    }
+        public function updateProducts($id, $data) {
+            $stmt = $this->conn->prepare("UPDATE stocks SET name = :name, price = :price, quantity = :quantity WHERE id = :id");
+            return $stmt->execute([
+                'id' => $id,
+                'name' => $data['name'],
+                'price' => $data['price'],
+                'quantity' => $data['quantity'],
+            ]);
+        }
 
     public function getTopSellingProducts($start_date = null, $end_date = null) {
         $query = "
