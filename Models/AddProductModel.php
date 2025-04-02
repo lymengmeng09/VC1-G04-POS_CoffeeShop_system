@@ -94,10 +94,8 @@ class AddProductModel
         // Bind parameters
         $stmt->bindParam(':product_name', $data['product_name']);
         $stmt->bindParam(':price', $data['price']);
-        $stmt->bindParam(':category', $data['category']);
         $stmt->bindParam(':category_id', $data['category_id']);
         $stmt->bindParam(':product_id', $data['product_id']);
-
         // Bind image_url only if it's included in the query
         if (!empty($data['image_url'])) {
             $stmt->bindParam(':image_url', $data['image_url']);

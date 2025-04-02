@@ -79,7 +79,7 @@
                                         <?php if (AccessControl::hasPermission('reset_password')): ?>
                                             <li>
                                                 <button type="button" class="dropdown-item btn-reset" data-bs-toggle="modal" data-bs-target="#resetPassword<?= $user['id'] ?>">
-                                                    <i class="bi bi-arrow-clockwise"></i> Reset Password
+                                                    <i class="bi bi-arrow-clockwise"></i> Change Password
                                                 </button>
                                             </li>
                                         <?php endif; ?>
