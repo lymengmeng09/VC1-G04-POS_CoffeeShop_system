@@ -16,7 +16,7 @@ $user = $_SESSION['user'] ?? ['profile' => 'views/assets/images/profile.png'];
         <?php endif; ?>
         <form action="/users/store" method="POST" id="userForm" class="needs-validation" novalidate enctype="multipart/form-data">
             <!-- Other form fields -->
-            <div class="mb-3">
+            <div class="form-group">
                 <label for="productImage">Profile Image</label>
                 <div class="image-upload-container">
                     <input type="file" class="file-input" id="productImage" name="profile_image" accept="image/*" required>
@@ -33,7 +33,7 @@ $user = $_SESSION['user'] ?? ['profile' => 'views/assets/images/profile.png'];
                     </div>
                 </div>
             </div>
-            <div class="mb-3">
+            <div class="form-group">
                 <label for="name" class="form-label">Name <span class="star">*</span></label>
                 <input type="text" class="form-control <?php echo isset($errors['name']) ? 'is-invalid' : ''; ?>"
                     id="name" name="name" placeholder="Enter your name" value="<?php echo htmlspecialchars($formData['name'] ?? ''); ?>" required>
@@ -41,7 +41,7 @@ $user = $_SESSION['user'] ?? ['profile' => 'views/assets/images/profile.png'];
                     <?php echo $errors['name'] ?? 'Name is required.'; ?>
                 </div>
             </div>
-            <div class="mb-3">
+            <div class="form-group">
                 <label for="email" class="form-label">Email <span class="star">*</span></label>
                 <input type="email" placeholder="Enter your email" class="form-control <?php echo isset($errors['email']) ? 'is-invalid' : ''; ?>"
                     id="email" name="email" value="<?php echo htmlspecialchars($formData['email'] ?? ''); ?>" required>
@@ -49,7 +49,7 @@ $user = $_SESSION['user'] ?? ['profile' => 'views/assets/images/profile.png'];
                     <?php echo $errors['email'] ?? 'Please provide a valid email address.'; ?>
                 </div>
             </div>
-            <div class="form-outline mb-3 position-relative">
+            <div class="form-outline form-group position-relative">
                 <label class="form-label" for="password">Password <span class="star">*</span></label>
                 <i class="fa fa-eye position-absolute toggle-password" id="togglePassword" style="cursor: pointer; right: 10px; transform: translateY(-50%);"></i>
                 <input type="password" name="password" id="password"
@@ -59,7 +59,7 @@ $user = $_SESSION['user'] ?? ['profile' => 'views/assets/images/profile.png'];
                     <?php echo $errors['password'] ?? 'Password must be at least 8 characters long.'; ?>
                 </div>
             </div>
-            <div class="form-outline mb-3 position-relative">
+            <div class="form-outline form-group position-relative">
                 <label class="form-label" for="confirm_password">Confirm Password <span class="star">*</span></label>
                 <i class="fa fa-eye position-absolute toggle-password" id="toggleConfirmPassword" style="cursor: pointer; right: 10px; transform: translateY(-50%);"></i>
                 <input type="password" name="confirm_password" id="confirm_password"
@@ -69,7 +69,7 @@ $user = $_SESSION['user'] ?? ['profile' => 'views/assets/images/profile.png'];
                     <?php echo $errors['confirm_password'] ?? 'Passwords do not match.'; ?>
                 </div>
             </div>
-            <div class="mb-3">
+            <div class="form-group">
                 <label for="role_id" class="form-label">Role <span class="star">*</span></label>
                 <select name="role_id" class="form-control <?php echo isset($errors['role_id']) ? 'is-invalid' : ''; ?>" required>
                     <option value="">Select a role</option>

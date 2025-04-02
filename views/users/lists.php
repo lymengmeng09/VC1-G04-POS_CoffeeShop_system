@@ -70,9 +70,9 @@
                         <td style="color:rgb(106, 106, 106);"><?= htmlspecialchars($user['email']) ?></td>
                         <td style="color:rgb(17, 136, 51); "><?= htmlspecialchars($user['role_name']) ?></td>
                         <?php if (AccessControl::isAdmin()): ?>
-                            <td class="text-center ps-0" style="padding-right: 10px;">
+                            <td>
                                 <div class="btn-group dropend">
-                                    <a href="#" class="text-secondary" id="dropdownMenuButton<?= $user['id'] ?>" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <a href="#" class="text-secondary" style="margin-left: 20px;" id="dropdownMenuButton<?= $user['id'] ?>" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="bi bi-three-dots-vertical"></i>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-start" style="padding-right: 30px;" aria-labelledby="dropdownMenuButton<?= $user['id'] ?>">
