@@ -92,7 +92,7 @@ $profilePath = !empty($user['profile']) ? '/' . ltrim($user['profile'], '/') : '
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="#" class='sidebar-link'>
+                        <a href="" class='sidebar-link'>
                             <i class="bi bi-file-earmark-medical-fill"></i>
                             <span>Report</span>
                         </a>
