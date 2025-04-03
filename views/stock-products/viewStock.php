@@ -55,12 +55,12 @@
             <div class="dropdown">
               <a href="#" class="text-secondary bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right:10px;">
               </a>
-              <ul class="dropdown-menu" style="min-width: 120px; padding: 0.5rem 0;">
+              <ul class="dropdown-menu"> 
                 <!-- Edit Link -->
-                <li class="edit"><a href="/edit_product?id=<?= $product['id'] ?>" class="edit-link bi-pencil"> Edit</a></li>
+                <li class="edit"><a href="/edit_product?id=<?= $product['id'] ?>" class="edit-link bi-pencil">  </a></li>
                 <!-- Delete Button with Confirmation -->
                 <li>
-                  <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal" class="dropdown-item btn-delete bi-trash" onclick="setDeleteModal(<?= $product['id'] ?>, '<?= htmlspecialchars($product['name']) ?>')"> Delete</a>
+                  <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal" class="dropdown-item btn-delete bi-trash" onclick="setDeleteModal(<?= $product['id'] ?>, '<?= htmlspecialchars($product['name']) ?>')">  </a>
                 </li>
               </ul>
             </div>
@@ -152,10 +152,8 @@
                   </div>
                 </div>
               </div>
-              <div class="d-flex justify-content-between">
-                <button type="button" class="btn btn-outline-primary" id="add-more-product">Add More</button>
-                <button type="submit" class="btn btn-success">Completed</button>
-              </div>
+              <button type="button" class="btn btn-outline-primary mb-3 " id="add-more-product">Add More</button>
+              <button type="submit" class="btn btn-success">Completed</button>
             </form>
           </div>
         </div>
@@ -163,60 +161,60 @@
     </div>
 
 
-      <!-- Update Existing Product Modal -->
-      <div class="modal fade" id="updateProductModal" tabindex="-1" aria-labelledby="updateProductModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="updateProductModalLabel">Update Existing Product</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <form method="POST" action="/update-stock" id="updateProductForm">
-                <div id="product-entries">
-                  <div class="product-entry mb-3">
-                    <div class="row g-3 align-items-end">
-                      <div class="col-md-3">
-                        <label for="updateProduct-0" class="form-label">Select Product</label>
-                        <select class="form-control update-product" id="updateProduct-0" name="product_id[]" required>
-                          <option value="">Select a product...</option>
-                          <?php foreach ($products as $product) : ?>
-                            <option value="<?= $product['id'] ?>" data-price="<?= $product['price'] ?>">
-                              <?= htmlspecialchars($product['name']) ?>
-                            </option>
-                          <?php endforeach; ?>
-                        </select>
+    <!-- Update Existing Product Modal -->
+    <div class="modal fade" id="updateProductModal" tabindex="-1" aria-labelledby="updateProductModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="updateProductModalLabel">Update Existing Product</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form method="POST" action="/update-stock" id="updateProductForm">
+              <div id="product-entries">
+                <div class="product-entry mb-3">
+                  <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                      <label for="updateProduct-0" class="form-label">Select Product</label>
+                      <select class="form-control update-product" id="updateProduct-0" name="product_id[]" required>
+                        <option value="">Select a product...</option>
+                        <?php foreach ($products as $product) : ?>
+                          <option value="<?= $product['id'] ?>" data-price="<?= $product['price'] ?>">
+                            <?= htmlspecialchars($product['name']) ?>
+                          </option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+                    <div class="col-md-2">
+                      <label for="updatePrice-0" class="form-label">Price</label>
+                      <input type="number" step="0.01" class="form-control update-price" id="updatePrice-0" name="price[]" required>
+                    </div>
+                    <div class="col-md-2">
+                      <label for="updateQuantity-0" class="form-label">Quantity</label>
+                      <input type="number" class="form-control update-quantity" id="updateQuantity-0" name="quantity[]" required>
+                    </div>
+                    <div class="col-md-2">
+                      <label for="totalPrice-0" class="form-label">Total Price</label>
+                      <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="text" class="form-control total-price" id="totalPrice-0" readonly>
                       </div>
-                      <div class="col-md-2">
-                        <label for="updatePrice-0" class="form-label">Price</label>
-                        <input type="number" step="0.01" class="form-control update-price" id="updatePrice-0" name="price[]" required>
-                      </div>
-                      <div class="col-md-2">
-                        <label for="updateQuantity-0" class="form-label">Quantity</label>
-                        <input type="number" class="form-control update-quantity" id="updateQuantity-0" name="quantity[]" required>
-                      </div>
-                      <div class="col-md-2">
-                        <label for="totalPrice-0" class="form-label">Total Price</label>
-                        <div class="input-group">
-                          <span class="input-group-text">$</span>
-                          <input type="text" class="form-control total-price" id="totalPrice-0" readonly>
-                        </div>
-                      </div>
-                      <div class="col-md-2 text-center">
-                        <i class="bi bi-trash remove-entry" style="cursor: pointer; font-size: 1.5rem; color: #dc3545; display: none;" title="Remove"></i>
-                      </div>
+                    </div>
+                    <div class="col-md-2 text-center">
+                      <i class="bi bi-trash remove-entry" style="cursor: pointer; font-size: 1.5rem; color: #dc3545; display: none;" title="Remove"></i>
                     </div>
                   </div>
                 </div>
-                <div class="d-flex justify-content-between">
-                  <button type="button" class="btn btn-outline-primary" id="add-more-product">Add More</button>
-                  <button type="submit" class="btn btn-success">Completed</button>
-                </div>
-              </form>
-            </div>
+              </div>
+              <button type="button" class="btn btn-outline-primary mb-3" id="add-more">Add More</button>
+              <button type="submit" class="btn btn-success">Completed</button>
+
+
+            </form>
           </div>
         </div>
       </div>
+    </div>
 
 
 
@@ -279,35 +277,15 @@
             <?php endif; ?>
           </div>
           <div class="modal-footer">
-          <button type="button" class="btn btn-success" id="save-pdf" 
-    style="padding: 10px 20px; font-size: 16px; margin-right: 5%;"  
-    onclick="savePDFAndRedirect()">Save PDF</button>
+            <button type="button" class="btn btn-success" id="save-pdf" style="padding: 10px 20px; font-size: 16px;   margin-right: 5%;">Save PDF</button>
+            <button type="button" class="btn btn-primary" id="ok-button" style="padding: 10px 20px; font-size: 16px;   margin-left: 45%;">OK</button>
 
-            <button type="button" class="btn btn-primary" id="ok-button" data-bs-dismiss="modal" style="padding: 10px 20px; font-size: 16px; margin-left: 45%;"  onclick="ConceldRedirect()">OK</button>
           </div>
-
 
         </div>
       </div>
     </div>
-  <script>
-    function savePDFAndRedirect() {
-    // Generate PDF (assuming you have an existing method for this)
-    console.log("Saving PDF...");
 
-    // Simulate PDF saving delay (if needed)
-    setTimeout(() => {
-        window.location.href = "/viewStock";  // Redirect to viewStock after saving
-    }, 400); // Adjust time as needed
-}
-   function ConceldRedirect (){
-    console.log("Canceling and redirecting...");
-    setTimeout(() => {
-        window.location.href = "/viewStock";  // Redirect to viewStock after saving
-    }, 200);
-   }
-
-  </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 

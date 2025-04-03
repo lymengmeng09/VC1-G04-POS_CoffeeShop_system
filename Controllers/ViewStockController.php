@@ -86,6 +86,7 @@ class ViewStockController extends BaseController{
                         throw new Exception("Failed to add product " . ($i + 1) . " to database");
                     }
 
+
                     $receiptItems[] = [
                         'name' => $name,
                         'change_quantity' => $quantity,
@@ -175,6 +176,7 @@ class ViewStockController extends BaseController{
                     if ($updatedQuantity < 0) {
                         throw new Exception("Cannot reduce quantity below 0 for product '{$product['name']}'. Current quantity is $existingQuantity.");
                     }
+
 
                     $result = $this->productModel->updateProduct($productId, $product['name'], (float)$newPrice, $updatedQuantity);
                     if (!$result) {
@@ -280,5 +282,3 @@ class ViewStockController extends BaseController{
     
 }
 ?>
-
-    

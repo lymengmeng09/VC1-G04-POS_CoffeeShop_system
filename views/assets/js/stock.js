@@ -152,12 +152,10 @@ document.addEventListener('DOMContentLoaded', function() {
     console.error('add-more-product button not found');
   }
 
- // Handle "Add More" for Update Existing Product modal
-let updateEntryCount = 0;
-const addMoreButton = document.getElementById('add-more-product'); // Fix the ID to match the button in the modal
+ // Handle "Add More" for Update Existing Product modallet updateEntryCount = 0;
+const addMoreButton = document.getElementById('add-more-product');
 if (addMoreButton) {
-    addMoreButton.addEventListener('click', function() {
-        console.log('Add More (Update) clicked');
+    addMoreButton.addEventListener('click', function () {
         updateEntryCount++;
         const productEntries = document.getElementById('product-entries');
         if (!productEntries) {
@@ -165,29 +163,8 @@ if (addMoreButton) {
             return;
         }
 
-        // Get all currently selected product IDs
-        const selectedProductIds = Array.from(document.querySelectorAll('#product-entries .update-product'))
-            .map(select => select.value)
-            .filter(value => value !== '');
-
-        // Get the original product options and filter out selected ones
-        const initialSelect = document.querySelector('#updateProduct-0');
-        let productOptions = initialSelect ? initialSelect.innerHTML : '<option value="">No products available</option>';
-        if (selectedProductIds.length > 0) {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(`<select>${productOptions}</select>`, 'text/html');
-            const options = doc.querySelectorAll('option');
-            productOptions = '<option value="">Select a product...</option>';
-            options.forEach(option => {
-                if (option.value && !selectedProductIds.includes(option.value)) {
-                    productOptions += option.outerHTML;
-                }
-            });
-        }
-
         const newEntry = document.createElement('div');
         newEntry.classList.add('product-entry', 'mb-3');
-        newEntry.style.display = 'block'; // Ensure new entry is visible
         newEntry.innerHTML = `
             <div class="row g-3 align-items-end">
                 <div class="col-md-3">
@@ -217,10 +194,8 @@ if (addMoreButton) {
             </div>
         `;
         productEntries.appendChild(newEntry);
-        updateRemoveIcons('product-entries');
         addDynamicEventListeners(newEntry);
-
-        updateAllDropdowns(); // Ensure dropdown updates dynamically
+        updateRemoveIcons('product-entries');
     });
 }
 
