@@ -55,7 +55,7 @@
             <div class="dropdown">
               <a href="#" class="text-secondary bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right:10px;">
               </a>
-              <ul class="dropdown-menu">
+              <ul class="dropdown-menu" style="min-width: 120px; padding: 0.5rem 0;">
                 <!-- Edit Link -->
                 <li class="edit"><a href="/edit_product?id=<?= $product['id'] ?>" class="edit-link bi-pencil"> Edit</a></li>
                 <!-- Delete Button with Confirmation -->
@@ -76,7 +76,6 @@
         <?php endforeach; ?>
       </div>
     </div>
-
 
     <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -125,8 +124,7 @@
               <div id="add-product-entries">
                 <div class="product-entry mb-3">
 
-
-                <div class="row g-3 align-items-end">
+                  <div class="row g-3 align-items-end">
                     <div class="col-md-3">
                       <label for="addName-0" class="form-label">Product Name</label>
                       <input type="text" class="form-control" id="addName-0" name="name[]" required>
@@ -154,8 +152,10 @@
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn btn-outline-primary mb-3 " id="add-more-product">Add More</button>
-              <button type="submit" class="btn btn-success" id="add-more-complet" >Completed</button>
+              <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-primary" id="add-more-product">Add More</button>
+                <button type="submit" class="btn btn-success">Completed</button>
+              </div>
             </form>
           </div>
         </div>
@@ -163,62 +163,65 @@
     </div>
 
 
-    <!-- Update Existing Product Modal -->
-    <div class="modal fade" id="updateProductModal" tabindex="-1" aria-labelledby="updateProductModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="updateProductModalLabel">Update Existing Product</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form method="POST" action="/update-stock" id="updateProductForm">
-              <div id="product-entries">
-                <div class="product-entry mb-3">
-                  <div class="row g-3 align-items-end">
-                    <div class="col-md-3">
-                      <label for="updateProduct-0" class="form-label">Select Product</label>
-                      <select class="form-control update-product" id="updateProduct-0" name="product_id[]" required>
-                        <option value="">Select a product...</option>
-                        <?php foreach ($products as $product) : ?>
-                          <option value="<?= $product['id'] ?>" data-price="<?= $product['price'] ?>">
-                            <?= htmlspecialchars($product['name']) ?>
-                          </option>
-                        <?php endforeach; ?>
-                      </select>
-                    </div>
-                    <div class="col-md-2">
-                      <label for="updatePrice-0" class="form-label">Price</label>
-                      <input type="number" step="0.01" class="form-control update-price" id="updatePrice-0" name="price[]" required>
-                    </div>
-                    <div class="col-md-2">
-                      <label for="updateQuantity-0" class="form-label">Quantity</label>
-                      <input type="number" class="form-control update-quantity" id="updateQuantity-0" name="quantity[]" required>
-                    </div>
-                    <div class="col-md-2">
-                      <label for="totalPrice-0" class="form-label">Total Price</label>
-                      <div class="input-group">
-                        <span class="input-group-text">$</span>
-                        <input type="text" class="form-control total-price" id="totalPrice-0" readonly>
+      <!-- Update Existing Product Modal -->
+      <div class="modal fade" id="updateProductModal" tabindex="-1" aria-labelledby="updateProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="updateProductModalLabel">Update Existing Product</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form method="POST" action="/update-stock" id="updateProductForm">
+                <div id="product-entries">
+                  <div class="product-entry mb-3">
+                    <div class="row g-3 align-items-end">
+                      <div class="col-md-3">
+                        <label for="updateProduct-0" class="form-label">Select Product</label>
+                        <select class="form-control update-product" id="updateProduct-0" name="product_id[]" required>
+                          <option value="">Select a product...</option>
+                          <?php foreach ($products as $product) : ?>
+                            <option value="<?= $product['id'] ?>" data-price="<?= $product['price'] ?>">
+                              <?= htmlspecialchars($product['name']) ?>
+                            </option>
+                          <?php endforeach; ?>
+                        </select>
                       </div>
-                    </div>
-                    <div class="col-md-2 text-center">
-                      <i class="bi bi-trash remove-entry" style="cursor: pointer; font-size: 1.5rem; color: #dc3545; display: none;" title="Remove"></i>
+                      <div class="col-md-2">
+                        <label for="updatePrice-0" class="form-label">Price</label>
+                        <input type="number" step="0.01" class="form-control update-price" id="updatePrice-0" name="price[]" required>
+                      </div>
+                      <div class="col-md-2">
+                        <label for="updateQuantity-0" class="form-label">Quantity</label>
+                        <input type="number" class="form-control update-quantity" id="updateQuantity-0" name="quantity[]" required>
+                      </div>
+                      <div class="col-md-2">
+                        <label for="totalPrice-0" class="form-label">Total Price</label>
+                        <div class="input-group">
+                          <span class="input-group-text">$</span>
+                          <input type="text" class="form-control total-price" id="totalPrice-0" readonly>
+                        </div>
+                      </div>
+                      <div class="col-md-2 text-center">
+                        <i class="bi bi-trash remove-entry" style="cursor: pointer; font-size: 1.5rem; color: #dc3545; display: none;" title="Remove"></i>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <button type="button" class="btn btn-outline-primary mb-3" id="add-more">Add More</button>
-              <button type="submit" class="btn btn-success"  id="add-more-complet">Completed</button>
-
-
-            </form>
+                <div class="d-flex justify-content-between">
+                  <button type="button" class="btn btn-outline-primary" id="add-more-product">Add More</button>
+                  <button type="submit" class="btn btn-success">Completed</button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-<!-- Receipt Modal -->
-<div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+
+
+
+    <!-- Receipt Modal -->
+    <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
