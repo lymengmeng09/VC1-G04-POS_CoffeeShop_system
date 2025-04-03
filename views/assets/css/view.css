@@ -32,7 +32,12 @@ body {
   
   
 }
-
+#add-more-product{
+  margin-top: 12px;
+}
+#add-more-complet{
+  margin-left: 68%;
+}
 .search-bar {
  
   display: flex;

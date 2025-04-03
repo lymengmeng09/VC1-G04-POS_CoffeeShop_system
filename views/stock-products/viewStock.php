@@ -55,12 +55,12 @@
             <div class="dropdown">
               <a href="#" class="text-secondary bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right:10px;">
               </a>
-              <ul class="dropdown-menu"> 
+              <ul class="dropdown-menu">
                 <!-- Edit Link -->
-                <li class="edit"><a href="/edit_product?id=<?= $product['id'] ?>" class="edit-link bi-pencil">  </a></li>
+                <li class="edit"><a href="/edit_product?id=<?= $product['id'] ?>" class="edit-link bi-pencil"> Edit</a></li>
                 <!-- Delete Button with Confirmation -->
                 <li>
-                  <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal" class="dropdown-item btn-delete bi-trash" onclick="setDeleteModal(<?= $product['id'] ?>, '<?= htmlspecialchars($product['name']) ?>')">  </a>
+                  <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal" class="dropdown-item btn-delete bi-trash" onclick="setDeleteModal(<?= $product['id'] ?>, '<?= htmlspecialchars($product['name']) ?>')"> Delete</a>
                 </li>
               </ul>
             </div>
@@ -76,6 +76,7 @@
         <?php endforeach; ?>
       </div>
     </div>
+
 
     <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -124,7 +125,8 @@
               <div id="add-product-entries">
                 <div class="product-entry mb-3">
 
-                  <div class="row g-3 align-items-end">
+
+                <div class="row g-3 align-items-end">
                     <div class="col-md-3">
                       <label for="addName-0" class="form-label">Product Name</label>
                       <input type="text" class="form-control" id="addName-0" name="name[]" required>
@@ -153,7 +155,7 @@
                 </div>
               </div>
               <button type="button" class="btn btn-outline-primary mb-3 " id="add-more-product">Add More</button>
-              <button type="submit" class="btn btn-success">Completed</button>
+              <button type="submit" class="btn btn-success" id="add-more-complet" >Completed</button>
             </form>
           </div>
         </div>
@@ -207,7 +209,7 @@
                 </div>
               </div>
               <button type="button" class="btn btn-outline-primary mb-3" id="add-more">Add More</button>
-              <button type="submit" class="btn btn-success">Completed</button>
+              <button type="submit" class="btn btn-success"  id="add-more-complet">Completed</button>
 
 
             </form>
@@ -215,11 +217,8 @@
         </div>
       </div>
     </div>
-
-
-
-    <!-- Receipt Modal -->
-    <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+<!-- Receipt Modal -->
+<div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -277,15 +276,35 @@
             <?php endif; ?>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-success" id="save-pdf" style="padding: 10px 20px; font-size: 16px;   margin-right: 5%;">Save PDF</button>
-            <button type="button" class="btn btn-primary" id="ok-button" style="padding: 10px 20px; font-size: 16px;   margin-left: 45%;">OK</button>
+          <button type="button" class="btn btn-success" id="save-pdf" 
+    style="padding: 10px 20px; font-size: 16px; margin-right: 5%;"  
+    onclick="savePDFAndRedirect()">Save PDF</button>
 
+            <button type="button" class="btn btn-primary" id="ok-button" data-bs-dismiss="modal" style="padding: 10px 20px; font-size: 16px; margin-left: 45%;"  onclick="ConceldRedirect()">OK</button>
           </div>
+
 
         </div>
       </div>
     </div>
+  <script>
+    function savePDFAndRedirect() {
+    // Generate PDF (assuming you have an existing method for this)
+    console.log("Saving PDF...");
 
+    // Simulate PDF saving delay (if needed)
+    setTimeout(() => {
+        window.location.href = "/viewStock";  // Redirect to viewStock after saving
+    }, 400); // Adjust time as needed
+}
+   function ConceldRedirect (){
+    console.log("Canceling and redirecting...");
+    setTimeout(() => {
+        window.location.href = "/viewStock";  // Redirect to viewStock after saving
+    }, 200);
+   }
+
+  </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 
