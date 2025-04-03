@@ -93,7 +93,25 @@
             </table>
         </div>
     </div>
-</div>
+  <script>
+    function savePDFAndRedirect() {
+    // Generate PDF (assuming you have an existing method for this)
+    console.log("Saving PDF...");
+
+    // Simulate PDF saving delay (if needed)
+    setTimeout(() => {
+        window.location.href = "/viewStock";  // Redirect to viewStock after saving
+    }, 400); // Adjust time as needed
+}
+   function ConceldRedirect (){
+    console.log("Canceling and redirecting...");
+    setTimeout(() => {
+        window.location.href = "/viewStock";  // Redirect to viewStock after saving
+    }, 200);
+   }
+
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 
 

@@ -21,6 +21,11 @@ document.addEventListener("DOMContentLoaded", function() {
   setupEventListeners();
   
   function setupEventListeners() {
+      // Product filtering
+      if (searchInput) {
+          searchInput.addEventListener("input", filterProducts);
+      }
+      
       // Order buttons
       document.querySelectorAll('.btn-Order').forEach(button => {
           button.addEventListener('click', function() {
@@ -96,11 +101,27 @@ document.addEventListener("DOMContentLoaded", function() {
           });
       });
       
-      // Category selection (keeping this for any other potential uses)
+      // Category selection
       document.querySelectorAll('.dropdown-item').forEach(item => {
           item.addEventListener('click', function() {
               document.getElementById('btnGroupDrop1').textContent = `Category: ${this.textContent}`;
+              filterProducts();
           });
+      });
+  }
+  
+  function filterProducts() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const selectedCategory = document.querySelector(".dropdown-item.active")?.dataset.category || 'all';
+      
+      productItems.forEach(function(product) {
+          const productName = product.querySelector(".card-title").textContent.toLowerCase();
+          const productCategory = product.dataset.category.toLowerCase();
+          
+          const matchesSearch = productName.includes(searchTerm);
+          const matchesCategory = selectedCategory === 'all' || productCategory.includes(selectedCategory);
+          
+          product.style.display = matchesSearch && matchesCategory ? "" : "none";
       });
   }
   
@@ -242,7 +263,6 @@ document.getElementById('clear-all').addEventListener('click', () => toggleCart(
       
       receiptModal.show();
   }
-  
   function saveAsPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();

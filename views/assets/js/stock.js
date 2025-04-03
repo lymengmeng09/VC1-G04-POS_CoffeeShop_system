@@ -259,6 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.history.replaceState({}, document.title, window.location.pathname);
   } const savePdfButton = document.getElementById('save-pdf');
 
+
   if (savePdfButton) {
     savePdfButton.addEventListener('click', function() {
       const receiptElement = document.getElementById('receipt-content');
@@ -389,6 +390,7 @@ function researchProduct(query) {
   let visibleCount = 0;
 
   query = query.trim().toLowerCase();
+
 
   productCards.forEach(card => {
     const name = card.dataset.name || '';

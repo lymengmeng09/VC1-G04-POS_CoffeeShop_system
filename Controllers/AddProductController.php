@@ -153,7 +153,6 @@ public function edit($id){
         }
 
         if ($this->model->updateProduct($data)) {
-            $_SESSION['success'] = 'Product updated successfully!';
             $this->redirect('/products');
         } else {
             $_SESSION['error'] = 'There was an issue updating the product.';
@@ -166,21 +165,8 @@ public function edit($id){
 
 public function destroy($id)
 {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        try {
-            if ($this->model->deleteProduct($id)) {
-                $_SESSION['success'] = 'Product deleted successfully!';
-            } else {
-                $_SESSION['error'] = 'There was an issue deleting the product.';
-            }
-        } catch (PDOException $e) {
-            $_SESSION['error'] = 'Cannot delete product. It may be referenced in other records.';
-        }
-        $this->redirect('/products');
-    } else {
-        $_SESSION['error'] = 'Invalid request method.';
-        $this->redirect('/products');
-    }
+    $this->model->deleteProduct($id);
+    $this->redirect('/products');
 }
 
     
