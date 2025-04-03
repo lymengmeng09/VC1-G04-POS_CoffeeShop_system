@@ -7,6 +7,7 @@ require_once "Controllers/LoginController.php";
 require_once "Controllers/ListUserController.php";
 require_once "Controllers/AddProductController.php";
 require_once "Controllers/ViewStockController.php";
+require_once "Controllers/PurchaseController.php";
  
 require_once "Middleware/AuthMiddleware.php";
 
@@ -65,6 +66,12 @@ $route->post("/products/store", [AddProductController::class, 'store']);
 $route->get("/products/edit/{id}", [AddProductController::class, 'edit']);
 $route->post("/products/update/{id}", [AddProductController::class, 'update']);
 $route->post("/products/delete/{id}", [AddProductController::class, 'destroy']);
+
+
+// Purchase history routes
+$route->get("/purchase-history", [PurchaseController::class, 'index']);
+$route->get("/purchase-history/download", [PurchaseController::class, 'downloadPDF']);
+  
 
  
 $route->route();

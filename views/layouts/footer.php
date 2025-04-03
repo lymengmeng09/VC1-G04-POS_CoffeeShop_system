@@ -16,6 +16,7 @@
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script> -->
     <script src="/views/assets/js/navbar.js"></script>
+    <script src="/views/assets/js/purchase.js"></script>
 </body>
 
 </html>
