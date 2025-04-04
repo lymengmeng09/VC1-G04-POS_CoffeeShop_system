@@ -44,9 +44,8 @@ class ProductModel {
 
     public function updateProducts($id, $data) {
         try {
-            $this->conn->beginTransaction(); // Start transaction
+            $this->conn->beginTransaction();
     
-            // Update stock details
             $stmt = $this->conn->prepare("UPDATE stocks SET name = :name, price = :price, quantity = :quantity WHERE id = :id");
             $stmt->execute([
                 'id' => $id,
@@ -55,13 +54,15 @@ class ProductModel {
                 'quantity' => $data['quantity'],
             ]);
     
-            $this->conn->commit(); // Commit transaction
+            $this->conn->commit();
             return true;
         } catch (PDOException $e) {
-            $this->conn->rollBack(); // Rollback if there's an error
+            $this->conn->rollBack();
+            error_log("Update failed: " . $e->getMessage() . " | Data: " . json_encode($data));
             throw new Exception("Error: " . $e->getMessage());
         }
     }
+
     
     public function getTopSellingProducts($start_date = null, $end_date = null) {
         $query = "
