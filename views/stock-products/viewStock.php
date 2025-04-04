@@ -38,18 +38,16 @@
             </button>
         </div>
     </div>
-
     <div class="products-section container mt-4">
-
         <div class="table-responsive">
             <table class="table table-hover align-middle table-bordered">
-                <thead class=" text-light">
+                <thead class="text-white">
                     <tr>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Stock</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                        <th class="text-white">Product</th>
+                        <th class="text-white">Price</th>
+                        <th class="text-white">Stock</th>
+                        <th class="text-white">Status</th>
+                        <th class="text-white">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -57,8 +55,7 @@
                     <tr>
                         <td class="d-flex align-items-center">
                             <img src="<?= htmlspecialchars($product['image']) ?>"
-                                alt="<?= htmlspecialchars($product['name']) ?>" class="rounded-circle me-2 border"
-                                width="50" height="50">
+                                alt="<?= htmlspecialchars($product['name']) ?>" class="me-2" width="50" height="50">
                             <span class="fw-bold"> <?= htmlspecialchars($product['name']) ?> </span>
                         </td>
                         <td class="fw-semibold text-primary">$<?= number_format($product['price'], 2) ?></td>
@@ -68,7 +65,7 @@
                                 <?= $product['quantity'] == 0 ? 'Out of Stock' : 'In Stock' ?>
                             </span>
                         </td>
-                        <td class="text-canter m-l">
+                        <td class="text-center m-l">
                             <div class="dropdown">
                                 <a href="#" class="text-secondary bi-three-dots-vertical" data-bs-toggle="dropdown"
                                     aria-expanded="false" style="margin-right:10px;">
@@ -93,25 +90,28 @@
             </table>
         </div>
     </div>
-  <script>
-    function savePDFAndRedirect() {
+</div>
+</div>
+</div>
+<script>
+function savePDFAndRedirect() {
     // Generate PDF (assuming you have an existing method for this)
     console.log("Saving PDF...");
 
     // Simulate PDF saving delay (if needed)
     setTimeout(() => {
-        window.location.href = "/viewStock";  // Redirect to viewStock after saving
+        window.location.href = "/viewStock"; // Redirect to viewStock after saving
     }, 400); // Adjust time as needed
 }
-   function ConceldRedirect (){
+
+function ConceldRedirect() {
     console.log("Canceling and redirecting...");
     setTimeout(() => {
-        window.location.href = "/viewStock";  // Redirect to viewStock after saving
+        window.location.href = "/viewStock"; // Redirect to viewStock after saving
     }, 200);
-   }
-
-  </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 
 
