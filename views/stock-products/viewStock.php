@@ -150,8 +150,10 @@
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn btn-outline-primary mb-3" id="add-more-product">Add More</button>
-              <button type="submit" class="btn btn-success" id="add-more-complet">Completed</button>
+              <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-primary" id="add-more-product">Add More</button>
+                <button type="submit" class="btn btn-success">Completed</button>
+              </div>
             </form>
           </div>
         </div>
@@ -196,9 +198,6 @@
                         <span class="input-group-text">$</span>
                         <input type="text" class="form-control total-price" id="totalPrice-0" readonly>
                       </div>
-                    </div>
-                    <div class="col-md-2 text-center">
-                      <i class="bi bi-trash remove-entry" style="cursor: pointer; font-size: 1.5rem; color: #dc3545; display: none;" title="Remove"></i>
                     </div>
                   </div>
                 </div>
