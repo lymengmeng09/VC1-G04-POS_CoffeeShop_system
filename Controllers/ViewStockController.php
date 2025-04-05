@@ -278,7 +278,7 @@ class ViewStockController extends BaseController{
             $this->productModel->deleteProduct($id);
             $this->redirect('/viewStock');
         }
+     
         
-    
 }
 ?>

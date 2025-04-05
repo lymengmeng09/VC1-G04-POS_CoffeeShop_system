@@ -1,22 +1,150 @@
+<?php
+// Start session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Handle Add Product
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
+    $names = $_POST['name'];
+    $prices = $_POST['price'];
+    $quantities = $_POST['quantity'];
+    $images = $_FILES['image'];
+
+    for ($i = 0; $i < count($names); $i++) {
+        $imagePath = $images['name'][$i] ? htmlspecialchars($images['name'][$i]) : 'No image';
+        $message = "🆕 <b>New Product Added</b>\n" .
+                   "Name: {$names[$i]}\n" .
+                   "Price: \${$prices[$i]}\n" .
+                   "Quantity: {$quantities[$i]}\n" .
+                   "Image: {$imagePath}\n" .
+                   "Timestamp: " . date('Y-m-d H:i:s');
+
+        // Send to human Telegram chat
+        $humanResult = sendTelegramMessage($message, '6461561884');
+        
+        // Send to chatbot group/channel
+        $chatbotResult = sendTelegramMessage($message, '-1009876543210'); // Replace with your actual chatbot chat ID
+        
+        // Enhanced notification with detailed error info
+        if ($chatbotResult && json_decode($chatbotResult, true)['ok']) {
+            $_SESSION['notification'] = "Product '{$names[$i]}' added and notified via chatbot successfully!";
+        } else {
+            $errorResponse = $chatbotResult ? json_decode($chatbotResult, true) : ['description' => 'cURL execution failed'];
+            $_SESSION['notification'] = "Product '{$names[$i]}' added but chatbot notification failed: " . $errorResponse['description'];
+        }
+    }
+}
+
+// Handle Update Stock
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
+    $productIds = $_POST['product_id'];
+    $prices = $_POST['price'];
+    $quantities = $_POST['quantity'];
+
+    foreach ($productIds as $i => $id) {
+        $productName = isset($products[$i]['name']) ? $products[$i]['name'] : "Product ID $id";
+        $message = "🔄 <b>Product Updated</b>\n" .
+                   "Name: {$productName}\n" .
+                   "New Price: \${$prices[$i]}\n" .
+                   "New Quantity: {$quantities[$i]}\n" .
+                   "Product ID: {$id}\n" .
+                   "Timestamp: " . date('Y-m-d H:i:s');
+
+        // Send to human Telegram chat
+        $humanResult = sendTelegramMessage($message, '6461561884');
+        
+        // Send to chatbot group/channel
+        $chatbotResult = sendTelegramMessage($message, '-1009876543210'); // Replace with your actual chatbot chat ID
+        
+        // Enhanced notification with detailed error info
+        if ($chatbotResult && json_decode($chatbotResult, true)['ok']) {
+            $_SESSION['notification'] = "Product '{$productName}' updated and notified via chatbot successfully!";
+        } else {
+            $errorResponse = $chatbotResult ? json_decode($chatbotResult, true) : ['description' => 'cURL execution failed'];
+            $_SESSION['notification'] = "Product '{$productName}' updated but chatbot notification failed: " . $errorResponse['description'];
+        }
+    }
+}
+
+// Enhanced Telegram message sending function with detailed debugging
+function sendTelegramMessage($message, $chatId = '6461561884') {
+    $botToken = '7898878636:AAFtwwPFcVSIi256SkNUaKitGDS5eaOhq1o'; // Replace with your actual bot token
+    $url = "https://api.telegram.org/bot{$botToken}/sendMessage";
+
+    $data = [
+        'chat_id' => $chatId,
+        'text' => $message,
+        'parse_mode' => 'HTML',
+        'disable_web_page_preview' => true
+    ];
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded']);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+    curl_setopt($ch, CURLOPT_VERBOSE, true); // Enable verbose output for debugging
+    $verbose = fopen('php://temp', 'w+');
+    curl_setopt($ch, CURLOPT_STDERR, $verbose);
+
+    $result = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+    if ($result === false) {
+        $error = curl_error($ch);
+        rewind($verbose);
+        $verboseLog = stream_get_contents($verbose);
+        error_log("cURL Error for chat $chatId: $error (HTTP Code: $httpCode)\nVerbose: $verboseLog");
+    } else {
+        $response = json_decode($result, true);
+        if (!$response['ok']) {
+            rewind($verbose);
+            $verboseLog = stream_get_contents($verbose);
+            error_log("Telegram API Error for chat $chatId: " . $response['description'] . " (HTTP Code: $httpCode)\nVerbose: $verboseLog");
+        } else {
+            error_log("Telegram Message Sent Successfully to chat $chatId (HTTP Code: $httpCode)");
+        }
+    }
+
+    fclose($verbose);
+    curl_close($ch);
+    return $result;
+}
+?>
+
+<!-- Updated HTML to show test result -->
 <div class="card">
   <div class="container">
     <?php
+    // Display regular notification
     if (isset($_SESSION['notification'])) {
-      // Determine the alert type based on message content
       $notification = $_SESSION['notification'];
       $alertClass = (stripos($notification, 'successfully') !== false) ? 'alert-success' : 'alert-warning';
-
       echo '<div class="alert ' . $alertClass . ' alert-dismissible fade show" role="alert">';
       echo $notification;
       echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
       echo '</div>';
       unset($_SESSION['notification']);
     }
+
+    // Display test result
+    if (isset($_SESSION['test_result'])) {
+      $testResult = $_SESSION['test_result'];
+      $testClass = $testResult['ok'] ? 'alert-success' : 'alert-danger';
+      echo '<div class="alert ' . $testClass . ' alert-dismissible fade show" role="alert">';
+      echo 'Test Message Result: ' . ($testResult['ok'] ? 'Success' : 'Failed - ' . $testResult['description']);
+      echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+      echo '</div>';
+      unset($_SESSION['test_result']);
+    }
     ?>
 
+    <!-- Rest of your HTML remains unchanged -->
     <div class="header d-flex justify-content-between align-items-center my-4">
       <h1>Stock Products</h1>
-
     </div>
 
     <div class="notification-dropdown" id="notificationDropdown" style="display: none;">
@@ -28,21 +156,17 @@
         <input type="text" class="form-control search-input" style='background:rgba(190, 190, 190, 0.11);' placeholder="Search products...">
       </div>
       <div class="action-buttons mt-2">
-        <!-- Existing Button -->
         <button class="btn btn-primary me-4" data-bs-toggle="modal" data-bs-target="#updateProductModal">
           <i class="bi bi-upload"></i> Existing
         </button>
-        <!-- New Button -->
         <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal">
           <i class="bi bi-plus-circle"></i> New
         </button>
       </div>
     </div>
     <div class="products-section">
-      <!-- <h2 class="section-title">Products</h2> -->
       <div class="products-grid">
         <?php
-        // Sort products by quantity in ascending order (lowest to highest)
         usort($products, function ($a, $b) {
           return $a['quantity'] - $b['quantity'];
         });
@@ -53,15 +177,10 @@
             data-price="<?= $product['price'] ?>"
             data-quantity="<?= $product['quantity'] ?>">
             <div class="dropdown">
-              <a href="#" class="text-secondary bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right:10px;">
-              </a>
+              <a href="#" class="text-secondary bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right:10px;"></a>
               <ul class="dropdown-menu">
-                <!-- Edit Link -->
                 <li class="edit"><a href="/edit_product?id=<?= $product['id'] ?>" class="edit-link bi-pencil"> Edit</a></li>
-                <!-- Delete Button with Confirmation -->
-                <li>
-                  <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal" class="dropdown-item btn-delete bi-trash" onclick="setDeleteModal(<?= $product['id'] ?>, '<?= htmlspecialchars($product['name']) ?>')"> Delete</a>
-                </li>
+                <li><a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal" class="dropdown-item btn-delete bi-trash" onclick="setDeleteModal(<?= $product['id'] ?>, '<?= htmlspecialchars($product['name']) ?>')"> Delete</a></li>
               </ul>
             </div>
             <div class="product-image">
@@ -76,7 +195,6 @@
         <?php endforeach; ?>
       </div>
     </div>
-
 
     <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -102,15 +220,11 @@
 
     <script>
       function setDeleteModal(productId, productName) {
-        // Set product name in the modal
         document.getElementById('productName').textContent = productName;
-
-        // Update the form action URL with the product ID
         const deleteForm = document.getElementById('deleteForm');
         deleteForm.action = `/delete_product/${productId}`;
       }
     </script>
-
 
     <!-- Add New Product Modal -->
     <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
@@ -124,9 +238,7 @@
             <form method="POST" action="/add-product" enctype="multipart/form-data" id="addProductForm">
               <div id="add-product-entries">
                 <div class="product-entry mb-3">
-
-
-                <div class="row g-3 align-items-end">
+                  <div class="row g-3 align-items-end">
                     <div class="col-md-3">
                       <label for="addName-0" class="form-label">Product Name</label>
                       <input type="text" class="form-control" id="addName-0" name="name[]" required>
@@ -145,7 +257,8 @@
                       <div class="image-preview mt-2" id="preview-addImage-0" style="display: none;">
                         <img src="" alt="Image Preview" style="max-width: 100px; max-height: 100px;">
                         <button type="button" class="btn btn-sm btn-danger cancel-upload mt-1" data-input-id="addImage-0">
-                          </i> cancel </button>
+                          <i class="bi bi-x"></i> Cancel
+                        </button>
                       </div>
                     </div>
                     <div class="col-md-2 text-center">
@@ -154,14 +267,13 @@
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn btn-outline-primary mb-3 " id="add-more-product">Add More</button>
-              <button type="submit" class="btn btn-success" id="add-more-complet" >Completed</button>
+              <button type="button" class="btn btn-outline-primary mb-3" id="add-more-product">Add More</button>
+              <button type="submit" class="btn btn-success" id="add-more-complet">Completed</button>
             </form>
           </div>
         </div>
       </div>
     </div>
-
 
     <!-- Update Existing Product Modal -->
     <div class="modal fade" id="updateProductModal" tabindex="-1" aria-labelledby="updateProductModalLabel" aria-hidden="true">
@@ -209,16 +321,15 @@
                 </div>
               </div>
               <button type="button" class="btn btn-outline-primary mb-3" id="add-more">Add More</button>
-              <button type="submit" class="btn btn-success"  id="add-more-complet">Completed</button>
-
-
+              <button type="submit" class="btn btn-success" id="add-more-complet">Completed</button>
             </form>
           </div>
         </div>
       </div>
     </div>
-<!-- Receipt Modal -->
-<div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+
+    <!-- Receipt Modal -->
+    <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -245,9 +356,7 @@
                   </thead>
                   <tbody>
                     <?php
-                    // Set Cambodia timezone
                     date_default_timezone_set('Asia/Phnom_Penh');
-
                     $totalPrice = 0;
                     foreach ($_SESSION['receipt']['items'] as $item):
                       $changeQuantity = (float)str_replace('+', '', $item['change_quantity']);
@@ -259,9 +368,7 @@
                         <td><?= htmlspecialchars($item['change_quantity']) ?></td>
                         <td><?= number_format($item['price'], 2) ?></td>
                         <td class="total-cell"><?= number_format($itemTotal, 2) ?></td>
-                        <td>
-                          <?= date('Y-m-d', strtotime($item['timestamp'])) ?> <!-- Show only Date -->
-                        </td>
+                        <td><?= date('Y-m-d', strtotime($item['timestamp'])) ?></td>
                       </tr>
                     <?php endforeach; ?>
                     <tr>
@@ -276,43 +383,33 @@
             <?php endif; ?>
           </div>
           <div class="modal-footer">
-          <button type="button" class="btn btn-success" id="save-pdf" 
-    style="padding: 10px 20px; font-size: 16px; margin-right: 5%;"  
-    onclick="savePDFAndRedirect()">Save PDF</button>
-
-            <button type="button" class="btn btn-primary" id="ok-button" data-bs-dismiss="modal" style="padding: 10px 20px; font-size: 16px; margin-left: 45%;"  onclick="ConceldRedirect()">OK</button>
+            <button type="button" class="btn btn-success" id="save-pdf" style="padding: 10px 20px; font-size: 16px; margin-right: 5%;" onclick="savePDFAndRedirect()">Save PDF</button>
+            <button type="button" class="btn btn-primary" id="ok-button" data-bs-dismiss="modal" style="padding: 10px 20px; font-size: 16px; margin-left: 45%;" onclick="ConceldRedirect()">OK</button>
           </div>
-
-
         </div>
       </div>
     </div>
-  <script>
-    function savePDFAndRedirect() {
-    // Generate PDF (assuming you have an existing method for this)
-    console.log("Saving PDF...");
 
-    // Simulate PDF saving delay (if needed)
-    setTimeout(() => {
-        window.location.href = "/viewStock";  // Redirect to viewStock after saving
-    }, 400); // Adjust time as needed
-}
-   function ConceldRedirect (){
-    console.log("Canceling and redirecting...");
-    setTimeout(() => {
-        window.location.href = "/viewStock";  // Redirect to viewStock after saving
-    }, 200);
-   }
+    <script>
+      function savePDFAndRedirect() {
+        console.log("Saving PDF...");
+        setTimeout(() => {
+            window.location.href = "/viewStock";
+        }, 400);
+      }
 
-  </script>
+      function ConceldRedirect() {
+        console.log("Canceling and redirecting...");
+        setTimeout(() => {
+            window.location.href = "/viewStock";
+        }, 200);
+      }
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-
-    <!-- Inline script to pass PHP data to JavaScript -->
     <script>
-      // Pass PHP variables to JavaScript
       const hasReceipt = <?php echo json_encode(isset($_SESSION['receipt'])); ?>;
       const showReceipt = new URLSearchParams(window.location.search).get('showReceipt') === 'true';
     </script>
-
   </div>
+</div>
