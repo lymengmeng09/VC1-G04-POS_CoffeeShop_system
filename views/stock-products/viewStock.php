@@ -1,121 +1,4 @@
-<?php
-// Start session if not already started
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// Handle Add Product
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
-    $names = $_POST['name'];
-    $prices = $_POST['price'];
-    $quantities = $_POST['quantity'];
-    $images = $_FILES['image'];
-
-    for ($i = 0; $i < count($names); $i++) {
-        $imagePath = $images['name'][$i] ? htmlspecialchars($images['name'][$i]) : 'No image';
-        $message = "🆕 <b>New Product Added</b>\n" .
-                   "Name: {$names[$i]}\n" .
-                   "Price: \${$prices[$i]}\n" .
-                   "Quantity: {$quantities[$i]}\n" .
-                   "Image: {$imagePath}\n" .
-                   "Timestamp: " . date('Y-m-d H:i:s');
-
-        // Send to human Telegram chat
-        $humanResult = sendTelegramMessage($message, '6461561884');
-        
-        // Send to chatbot group/channel
-        $chatbotResult = sendTelegramMessage($message, '-1009876543210'); // Replace with your actual chatbot chat ID
-        
-        // Enhanced notification with detailed error info
-        if ($chatbotResult && json_decode($chatbotResult, true)['ok']) {
-            $_SESSION['notification'] = "Product '{$names[$i]}' added and notified via chatbot successfully!";
-        } else {
-            $errorResponse = $chatbotResult ? json_decode($chatbotResult, true) : ['description' => 'cURL execution failed'];
-            $_SESSION['notification'] = "Product '{$names[$i]}' added but chatbot notification failed: " . $errorResponse['description'];
-        }
-    }
-}
-
-// Handle Update Stock
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
-    $productIds = $_POST['product_id'];
-    $prices = $_POST['price'];
-    $quantities = $_POST['quantity'];
-
-    foreach ($productIds as $i => $id) {
-        $productName = isset($products[$i]['name']) ? $products[$i]['name'] : "Product ID $id";
-        $message = "🔄 <b>Product Updated</b>\n" .
-                   "Name: {$productName}\n" .
-                   "New Price: \${$prices[$i]}\n" .
-                   "New Quantity: {$quantities[$i]}\n" .
-                   "Product ID: {$id}\n" .
-                   "Timestamp: " . date('Y-m-d H:i:s');
-
-        // Send to human Telegram chat
-        $humanResult = sendTelegramMessage($message, '6461561884');
-        
-        // Send to chatbot group/channel
-        $chatbotResult = sendTelegramMessage($message, '-1009876543210'); // Replace with your actual chatbot chat ID
-        
-        // Enhanced notification with detailed error info
-        if ($chatbotResult && json_decode($chatbotResult, true)['ok']) {
-            $_SESSION['notification'] = "Product '{$productName}' updated and notified via chatbot successfully!";
-        } else {
-            $errorResponse = $chatbotResult ? json_decode($chatbotResult, true) : ['description' => 'cURL execution failed'];
-            $_SESSION['notification'] = "Product '{$productName}' updated but chatbot notification failed: " . $errorResponse['description'];
-        }
-    }
-}
-
-// Enhanced Telegram message sending function with detailed debugging
-function sendTelegramMessage($message, $chatId = '6461561884') {
-    $botToken = '7898878636:AAFtwwPFcVSIi256SkNUaKitGDS5eaOhq1o'; // Replace with your actual bot token
-    $url = "https://api.telegram.org/bot{$botToken}/sendMessage";
-
-    $data = [
-        'chat_id' => $chatId,
-        'text' => $message,
-        'parse_mode' => 'HTML',
-        'disable_web_page_preview' => true
-    ];
-
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded']);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-    curl_setopt($ch, CURLOPT_VERBOSE, true); // Enable verbose output for debugging
-    $verbose = fopen('php://temp', 'w+');
-    curl_setopt($ch, CURLOPT_STDERR, $verbose);
-
-    $result = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-    if ($result === false) {
-        $error = curl_error($ch);
-        rewind($verbose);
-        $verboseLog = stream_get_contents($verbose);
-        error_log("cURL Error for chat $chatId: $error (HTTP Code: $httpCode)\nVerbose: $verboseLog");
-    } else {
-        $response = json_decode($result, true);
-        if (!$response['ok']) {
-            rewind($verbose);
-            $verboseLog = stream_get_contents($verbose);
-            error_log("Telegram API Error for chat $chatId: " . $response['description'] . " (HTTP Code: $httpCode)\nVerbose: $verboseLog");
-        } else {
-            error_log("Telegram Message Sent Successfully to chat $chatId (HTTP Code: $httpCode)");
-        }
-    }
-
-    fclose($verbose);
-    curl_close($ch);
-    return $result;
-}
-?>
-
-<!-- Updated HTML to show test result -->
+ 
 <div class="card">
   <div class="container">
     <?php
@@ -327,7 +210,31 @@ function sendTelegramMessage($message, $chatId = '6461561884') {
         </div>
       </div>
     </div>
+<script>
+  
+  function savePDFAndStoreReceipt() {
+    html2pdf().from(document.getElementById('receipt-content')).save('receipt.pdf');
 
+    setTimeout(() => {
+        const receipt = <?php echo json_encode($_SESSION['receipt'] ?? []); ?>;
+
+        fetch('/store-receipt', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(receipt)
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+            window.location.href = '/viewStock';
+        })
+        .catch(err => console.error('Receipt store failed:', err));
+    }, 500);
+}
+
+</script>
     <!-- Receipt Modal -->
     <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
       <div class="modal-dialog">
