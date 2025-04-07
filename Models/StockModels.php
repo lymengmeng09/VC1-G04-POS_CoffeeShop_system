@@ -62,20 +62,21 @@ class ProductModel {
             if (!$product) {
                 throw new Exception("Product not found");
             }
-
+    
             $quantityChange = $quantity - $product['quantity'];
-
+    
             $query = "UPDATE " . $this->table . " SET name = :name, price = :price, quantity = :quantity WHERE id = :id";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(":id", $id, PDO::PARAM_INT);
             $stmt->bindParam(":name", $name, PDO::PARAM_STR);
             $stmt->bindParam(":price", $price, PDO::PARAM_STR);
             $stmt->bindParam(":quantity", $quantity, PDO::PARAM_INT);
-
+    
             if (!$stmt->execute()) {
                 throw new Exception('Database error: ' . implode(', ', $stmt->errorInfo()));
             }
-
+    
+            // Log the purchase if quantity increased
             if ($quantityChange > 0) {
                 $this->recordPurchase('update_product', [
                     [
@@ -86,8 +87,19 @@ class ProductModel {
                     ]
                 ]);
             }
-
-            return true;
+    
+            // Check for low stock or out of stock
+            $notifications = [];
+            if ($quantity == 0) {
+                $notifications[] = "Product '$name' is now Out of Stock.";
+            } elseif ($quantity > 0 && $quantity < 5) {
+                $notifications[] = "Product '$name' is Low on Stock (Quantity: $quantity).";
+            }
+    
+            return [
+                'success' => true,
+                'notifications' => $notifications
+            ];
         } catch (Exception $e) {
             throw new Exception('Failed to update product: ' . $e->getMessage());
         }
@@ -131,11 +143,32 @@ class ProductModel {
 
     public function deleteProduct($id) {
         try {
+            // Start a transaction
+            $this->conn->beginTransaction();
+    
+            // Delete related records from purchase_items
+            $query = "DELETE FROM purchase_items WHERE product_id = :id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            // Optionally, delete from other dependent tables (e.g., order_items)
+            $query = "DELETE FROM order_items WHERE product_id = :id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            // Now delete the product from stocks
             $query = "DELETE FROM " . $this->table . " WHERE id = :id";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
+    
+            // Commit the transaction
+            $this->conn->commit();
         } catch (PDOException $e) {
+            // Roll back the transaction on error
+            $this->conn->rollBack();
             error_log("Error deleting product: " . $e->getMessage());
             throw new Exception("Failed to delete product: " . $e->getMessage());
         }

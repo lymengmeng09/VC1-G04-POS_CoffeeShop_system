@@ -11,7 +11,10 @@ require_once "Controllers/PurchaseController.php";
 
  
 require_once "Middleware/AuthMiddleware.php";
+require_once "Helpers/LanguageHelper.php";
 
+// Initialize language system
+LanguageHelper::init();
 
 $route = new Router();
 
