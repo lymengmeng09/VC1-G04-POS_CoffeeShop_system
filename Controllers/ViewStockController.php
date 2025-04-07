@@ -1,18 +1,19 @@
 <?php
 require "Models/StockModels.php";
 
-class ViewStockController extends BaseController{
+class ViewStockController extends BaseController {
     private $productModel;
     private $uploadDir = "uploads/";
+
     public function __construct() {
         $this->productModel = new ProductModel();
         if (!file_exists($this->uploadDir)) {
             mkdir($this->uploadDir, 0777, true);
         }
     }
+
     public function index() {
         $this->view('stock-products/viewStock', ['products' => $this->productModel->getAllProducts()]);
-       
     }
 
     public function add() {
@@ -21,42 +22,48 @@ class ViewStockController extends BaseController{
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
                 }
-
+    
+                // Log incoming data for debugging
                 error_log("Received POST request to /add-product");
                 error_log("POST data: " . json_encode($_POST));
                 error_log("FILES data: " . json_encode($_FILES));
-
+    
+                // Collect form data
                 $names = $_POST['name'] ?? [];
                 $prices = $_POST['price'] ?? [];
                 $quantities = $_POST['quantity'] ?? [];
                 $files = $_FILES['image'] ?? [];
-
-                if (empty($names) || empty($prices) || empty($quantities)) {
-                    throw new Exception('All fields are required for at least one product');
+    
+                if (empty($names) || empty($prices) || empty($quantities) || empty($files['name'])) {
+                    throw new Exception('All fields (name, price, quantity, image) are required for at least one product');
                 }
-
+    
+                if (count($names) !== count($prices) || count($names) !== count($quantities) || count($names) !== count($files['name'])) {
+                    throw new Exception('Mismatch in number of fields submitted');
+                }
+    
                 $receiptItems = [];
                 $timestamp = date('Y-m-d H:i:s');
-
+    
+                // Process each product
                 for ($i = 0; $i < count($names); $i++) {
                     $name = trim($names[$i] ?? '');
                     $price = $prices[$i] ?? '';
                     $quantity = $quantities[$i] ?? '';
-
-                    error_log("Processing product $i: name=$name, price=$price, quantity=$quantity");
-
-                    if (empty($name) || empty($price) || empty($quantity)) {
+    
+                    if (empty($name) || $price === '' || $quantity === '') {
                         throw new Exception("All fields are required for product " . ($i + 1));
                     }
-
+    
                     if (!is_numeric($price) || $price <= 0) {
                         throw new Exception("Price must be a positive number for product " . ($i + 1));
                     }
-
+    
                     if (!is_numeric($quantity) || $quantity < 0 || floor($quantity) != $quantity) {
                         throw new Exception("Quantity must be a non-negative integer for product " . ($i + 1));
                     }
-
+    
+                    // Handle image upload
                     $image = null;
                     if (isset($files['name'][$i]) && $files['error'][$i] == UPLOAD_ERR_OK) {
                         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
@@ -64,28 +71,41 @@ class ViewStockController extends BaseController{
                         if (!in_array($fileType, $allowedTypes)) {
                             throw new Exception("Only JPEG, PNG, and GIF images are allowed for product " . ($i + 1));
                         }
-
-                        $maxFileSize = 5 * 1024 * 1024;
+    
+                        $maxFileSize = 5 * 1024 * 1024;  // 5MB
                         if ($files['size'][$i] > $maxFileSize) {
                             throw new Exception("Image size must not exceed 5MB for product " . ($i + 1));
                         }
-
+    
                         $imageName = basename($files['name'][$i]);
                         $targetFile = $this->uploadDir . uniqid() . '_' . $imageName;
                         if (!move_uploaded_file($files['tmp_name'][$i], $targetFile)) {
                             throw new Exception("Failed to upload image for product " . ($i + 1));
                         }
                         $image = $targetFile;
-                    } else {
-                        throw new Exception("Image upload is required for product " . ($i + 1));
                     }
-
-                    error_log("Adding product $i to database");
+    
+                    // Add product to the database
                     $result = $this->productModel->addProduct($name, (float)$price, (int)$quantity, $image);
                     if (!$result) {
                         throw new Exception("Failed to add product " . ($i + 1) . " to database");
                     }
+    
+                    // Send the product data to the chatbot with icon
+                    $productDetails = "📦 New product added:\n" .
+                                      "Name: $name\n" .
+                                      "Price: $$price\n" .
+                                      "Quantity: $quantity\n" .
+                                      "Image: " . ($image ? $image : 'No image');
+                    $this->sendToTelegram($productDetails);
+    
+                    // Store receipt data
 
+                    error_log("Adding product $i to database");
+                    $product_id = $this->productModel->addProduct($name, (float)$price, (int)$quantity, $image);
+                    if (!$product_id) {
+                        throw new Exception("Failed to add product " . ($i + 1) . " to database");
+                    }
 
                     $receiptItems[] = [
                         'name' => $name,
@@ -94,9 +114,8 @@ class ViewStockController extends BaseController{
                         'timestamp' => $timestamp
                     ];
                 }
-
-                error_log("All products added successfully");
-
+    
+                // Store receipt data in session
                 $_SESSION['receipt'] = [
                     'items' => $receiptItems,
                     'action' => 'added'
@@ -104,6 +123,7 @@ class ViewStockController extends BaseController{
                 $_SESSION['notification'] = 'Products added successfully';
                 header("Location: /viewStock?showReceipt=true");
                 exit;
+    
             } catch (Exception $e) {
                 error_log("Error in add(): " . $e->getMessage());
                 $_SESSION['notification'] = 'Error adding products: ' . $e->getMessage();
@@ -111,16 +131,68 @@ class ViewStockController extends BaseController{
                 exit;
             }
         }
-
+    
+        // Session start for GET requests
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-        error_log("Invalid request method for /add-product");
         $_SESSION['notification'] = 'Invalid request method';
         header("Location: /viewStock");
         exit;
     }
-
+    public function update() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                if (session_status() === PHP_SESSION_NONE) {
+                    session_start();
+                }
+    
+                error_log("Received POST request to /update_product");
+                error_log("POST data: " . json_encode($_POST));
+    
+                $id = htmlspecialchars($_POST['id']);
+                $data = [
+                    'name' => htmlspecialchars($_POST['name']),
+                    'price' => floatval($_POST['price']),
+                    'quantity' => intval($_POST['quantity'])
+                ];
+    
+                $product = $this->productModel->getProductById($id);
+                if (!$product) {
+                    throw new Exception("Product not found.");
+                }
+    
+                // Update the product and get the result
+                $result = $this->productModel->updateProduct($id, $data['name'], $data['price'], $data['quantity']);
+                if (!$result['success']) {
+                    throw new Exception("Failed to update product.");
+                }
+    
+                error_log("Product updated with ID: $id");
+    
+                // Notify via Telegram for the update
+                $this->notifyStockChange($id, "Updated");
+    
+                // Prepare notifications
+                $notifications = ["Product '{$data['name']}' updated successfully."];
+                if (!empty($result['notifications'])) {
+                    $notifications = array_merge($notifications, $result['notifications']);
+                    // Send low stock or out of stock notifications to Telegram
+                    foreach ($result['notifications'] as $notification) {
+                        $this->sendToTelegram($notification);
+                    }
+                }
+    
+                $_SESSION['notification'] = implode(' ', $notifications);
+                $this->redirect('/viewStock');
+            } catch (Exception $e) {
+                error_log("Error in update(): " . $e->getMessage());
+                $_SESSION['notification'] = "Error updating product: " . $e->getMessage();
+                $this->redirect('/viewStock');
+            }
+        }
+    }
+    // Keeping updateStock() as is since it’s not in your routes but might be used elsewhere
     public function updateStock() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             try {
@@ -171,19 +243,23 @@ class ViewStockController extends BaseController{
                     }
 
                     $existingQuantity = (int)$product['quantity'];
-                    $updatedQuantity = $existingQuantity + (int)$newQuantity;
+                    $quantityChange = (int)$newQuantity; // The change in quantity (can be negative)
+                    $updatedQuantity = $existingQuantity + $quantityChange;
 
                     if ($updatedQuantity < 0) {
                         throw new Exception("Cannot reduce quantity below 0 for product '{$product['name']}'. Current quantity is $existingQuantity.");
                     }
-
 
                     $result = $this->productModel->updateProduct($productId, $product['name'], (float)$newPrice, $updatedQuantity);
                     if (!$result) {
                         throw new Exception("Failed to update product '{$product['name']}' in database");
                     }
 
+                    error_log("Product updated with ID: $productId");
+                    $this->notifyStockChange($productId, "Updated");
+
                     $changeQuantity = $newQuantity > 0 ? "+$newQuantity" : $newQuantity;
+                    $changeQuantity = $quantityChange > 0 ? "+$quantityChange" : $quantityChange;
                     $receiptItems[] = [
                         'name' => $product['name'],
                         'change_quantity' => $changeQuantity,
@@ -231,13 +307,6 @@ class ViewStockController extends BaseController{
         exit;
     }
 
-    public function dashboard() {
-        $startDate = isset($_POST['start_date']) ? $_POST['start_date'] : null;
-        $endDate = isset($_POST['end_date']) ? $_POST['end_date'] : null;
-        $topProducts = $this->productModel->getTopSellingProducts($startDate, $endDate);
-        include "views/dashboard.php";
-    }
-
     public function edit() {
         $id = $_GET['id'];
         $product = $this->productModel->getProductById($id);
@@ -246,25 +315,38 @@ class ViewStockController extends BaseController{
         }
         $this->view('stock-products/edit_product', ['product' => $product]);
     }
-    
-    public function update() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = htmlspecialchars($_POST['id']);
-            $data = [
-                'name' => htmlspecialchars($_POST['name']),
-                'price' => floatval($_POST['price']),
-                'quantity' => intval($_POST['quantity'])
-            ];
-            
-            $product = $this->productModel->getProductById($id);
-            if (!$product) {
-                die("Product not found.");
-            }
-            
-            $this->productModel->updateProducts($id, $data);
-            $this->redirect('/viewStock');
-        }
+
+    public function destroy($id) {
+        $this->productModel->deleteProduct($id);
+        $this->redirect('/viewStock');
     }
+
+    public function dashboard() {
+        $startDate = isset($_POST['start_date']) ? $_POST['start_date'] : null;
+        $endDate = isset($_POST['end_date']) ? $_POST['end_date'] : null;
+        $topProducts = $this->productModel->getTopSellingProducts($startDate, $endDate);
+        include "views/dashboard.php";
+    }
+
+    // public function update() {
+    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    //         $id = htmlspecialchars($_POST['id']);
+    //         $data = [
+    //             'name' => htmlspecialchars($_POST['name']),
+    //             'price' => floatval($_POST['price']),
+    //             'quantity' => intval($_POST['quantity'])
+    //         ];
+
+    //         $product = $this->productModel->getProductById($id);
+    //         if (!$product) {
+    //             die("Product not found.");
+    //         }
+
+    //         $this->productModel->updateProduct($id, $data['name'], $data['price'], $data['quantity']);
+    //         $this->redirect('/viewStock');
+    //     }
+    // }
+
     public function clearReceipt() {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -274,11 +356,79 @@ class ViewStockController extends BaseController{
         exit;
     }
 
-        public function destroy($id) {
-            $this->productModel->deleteProduct($id);
-            $this->redirect('/viewStock');
+    public function viewReceipts() {
+        $stmt = $this->productModel->conn->query("SELECT * FROM receipts ORDER BY timestamp DESC");
+        $receipts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $this->view('stock-products/receipts', ['receipts' => $receipts]);
+    }
+
+    private function sendToTelegram($message) {
+        $telegramBotToken = '7898878636:AAFtwwPFcVSIi256SkNUaKitGDS5eaOhq1o'; // Replace with your bot token
+        $chatId = '6461561884'; // Replace with your chat ID
+
+        error_log("Attempting to send Telegram message: " . substr($message, 0, 50));
+        
+        $url = "https://api.telegram.org/bot{$telegramBotToken}/sendMessage";
+        $params = [
+            'chat_id' => $chatId,
+            'text' => $message,
+            'parse_mode' => 'HTML'
+        ];
+        
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        
+        curl_close($ch);
+        
+        if ($response === false || $httpCode !== 200) {
+            error_log("Telegram API Error: " . ($error ?: "HTTP $httpCode") . " - Response: " . $response);
+            return false;
         }
         
-    
+        $result = json_decode($response, true);
+        if (!$result['ok']) {
+            error_log("Telegram API Failed: " . $result['description'] . " - Response: " . json_encode($result));
+            return false;
+        }
+        
+        error_log("Telegram message sent successfully");
+        return true;
+    }
+
+    private function notifyStockChange($productId, $action) {
+        try {
+            error_log("Notifying stock change for product ID: $productId, Action: $action");
+            $product = $this->productModel->getProductById($productId);
+            if (!$product) {
+                error_log("Product not found for ID: $productId");
+                return;
+            }
+            
+            $timestamp = date('m/d/Y h:i A', time());
+            $message = "📦 <b>Stock $action</b>\n" .
+                      "Time: {$timestamp}\n" .
+                      "Name: " . htmlspecialchars($product['name']) . "\n" .
+                      "Price: $" . number_format($product['price'], 2) . "\n" .
+                      "Quantity: " . $product['quantity'];
+            
+            $success = $this->sendToTelegram($message);
+            if (!$success) {
+                error_log("Failed to send Telegram message for product: " . $product['name']);
+            } else {
+                error_log("Telegram notification sent for product: " . $product['name']);
+            }
+        } catch (Exception $e) {
+            error_log("Error in notifyStockChange: " . $e->getMessage());
+        }
+    }
 }
 ?>
+ 

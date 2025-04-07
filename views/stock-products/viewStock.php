@@ -1,3 +1,4 @@
+ 
 <div class="card">
     <!-- <div class="container"> -->
     <?php
@@ -12,10 +13,32 @@
             echo '</div>';
             unset($_SESSION['notification']);
         }
-        ?>
+    // Display regular notification
+    if (isset($_SESSION['notification'])) {
+      $notification = $_SESSION['notification'];
+      $alertClass = (stripos($notification, 'successfully') !== false) ? 'alert-success' : 'alert-warning';
+      echo '<div class="alert ' . $alertClass . ' alert-dismissible fade show" role="alert">';
+      echo $notification;
+      echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+      echo '</div>';
+      unset($_SESSION['notification']);
+    }
 
+    // Display test result
+    if (isset($_SESSION['test_result'])) {
+      $testResult = $_SESSION['test_result'];
+      $testClass = $testResult['ok'] ? 'alert-success' : 'alert-danger';
+      echo '<div class="alert ' . $testClass . ' alert-dismissible fade show" role="alert">';
+      echo 'Test Message Result: ' . ($testResult['ok'] ? 'Success' : 'Failed - ' . $testResult['description']);
+      echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+      echo '</div>';
+      unset($_SESSION['test_result']);
+    }
+    ?>
+
+    <!-- Rest of your HTML remains unchanged -->
     <div class="header d-flex justify-content-between align-items-center my-4">
-        <h1>Stock Products</h1>
+      <h1>Stock Products</h1>
     </div>
 
     <div class="notification-dropdown" id="notificationDropdown" style="display: none;">
@@ -348,4 +371,28 @@ const hasReceipt = <?php echo json_encode(isset($_SESSION['receipt'])); ?>;
 const showReceipt = new URLSearchParams(window.location.search).get('showReceipt') === 'true';
 </script>
 </div>
+</div>
+
+    <script>
+      function savePDFAndRedirect() {
+        console.log("Saving PDF...");
+        setTimeout(() => {
+            window.location.href = "/viewStock";
+        }, 400);
+      }
+
+      function ConceldRedirect() {
+        console.log("Canceling and redirecting...");
+        setTimeout(() => {
+            window.location.href = "/viewStock";
+        }, 200);
+      }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script>
+      const hasReceipt = <?php echo json_encode(isset($_SESSION['receipt'])); ?>;
+      const showReceipt = new URLSearchParams(window.location.search).get('showReceipt') === 'true';
+    </script>
+  </div>
 </div>

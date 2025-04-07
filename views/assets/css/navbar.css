@@ -11,11 +11,13 @@ body {
     margin-top: 20px;
     z-index: 1000;
 }
-.shop{
-  margin-left: 990px;
-  margin-bottom: 18px;
+/* .shop{
+ margin-right: 20px;
+} */
+.profile{
+  margin-right: 20%;
+  margin-bottom: 3px;
 }
-
 .navbar {
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
     position: fixed;
@@ -38,10 +40,30 @@ body {
 .avatar-img {
     width: 50px;
     height: 50px;
-    
 }
 .drop{
   color: rgba(53, 53, 53, 0.778);
   margin-right: 10px;
   text-decoration: none;
+}
+.profile .dropstart .dropdown-menu{
+  margin-top: 45px;
+  min-width: 125px
+}
+.navbar-brand{
+  width: 100px; 
+  height: auto;
+}
+
+@media (max-width: 991.98px) {
+  .navbar{
+    height: 80px;
+  }
+  .profile{
+    margin-right: 10%;
+    margin-bottom: 12px;
+  }
+  .navbar-brand{
+    width: 80px; 
+  }
 }
