@@ -146,27 +146,44 @@ class ViewStockController extends BaseController {
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
                 }
-
+    
                 error_log("Received POST request to /update_product");
                 error_log("POST data: " . json_encode($_POST));
-
+    
                 $id = htmlspecialchars($_POST['id']);
                 $data = [
                     'name' => htmlspecialchars($_POST['name']),
                     'price' => floatval($_POST['price']),
                     'quantity' => intval($_POST['quantity'])
                 ];
-
+    
                 $product = $this->productModel->getProductById($id);
                 if (!$product) {
                     throw new Exception("Product not found.");
                 }
-
-                $this->productModel->updateProducts($id, $data);
+    
+                // Update the product and get the result
+                $result = $this->productModel->updateProduct($id, $data['name'], $data['price'], $data['quantity']);
+                if (!$result['success']) {
+                    throw new Exception("Failed to update product.");
+                }
+    
                 error_log("Product updated with ID: $id");
+    
+                // Notify via Telegram for the update
                 $this->notifyStockChange($id, "Updated");
-
-                $_SESSION['notification'] = "Product '{$data['name']}' updated successfully.";
+    
+                // Prepare notifications
+                $notifications = ["Product '{$data['name']}' updated successfully."];
+                if (!empty($result['notifications'])) {
+                    $notifications = array_merge($notifications, $result['notifications']);
+                    // Send low stock or out of stock notifications to Telegram
+                    foreach ($result['notifications'] as $notification) {
+                        $this->sendToTelegram($notification);
+                    }
+                }
+    
+                $_SESSION['notification'] = implode(' ', $notifications);
                 $this->redirect('/viewStock');
             } catch (Exception $e) {
                 error_log("Error in update(): " . $e->getMessage());
@@ -175,7 +192,6 @@ class ViewStockController extends BaseController {
             }
         }
     }
-
     // Keeping updateStock() as is since it’s not in your routes but might be used elsewhere
     public function updateStock() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
