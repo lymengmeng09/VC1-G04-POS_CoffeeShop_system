@@ -1,18 +1,19 @@
 <?php
 require "Models/StockModels.php";
 
-class ViewStockController extends BaseController{
+class ViewStockController extends BaseController {
     private $productModel;
     private $uploadDir = "uploads/";
+
     public function __construct() {
         $this->productModel = new ProductModel();
         if (!file_exists($this->uploadDir)) {
             mkdir($this->uploadDir, 0777, true);
         }
     }
+
     public function index() {
         $this->view('stock-products/viewStock', ['products' => $this->productModel->getAllProducts()]);
-       
     }
 
     public function add() {
@@ -81,11 +82,10 @@ class ViewStockController extends BaseController{
                     }
 
                     error_log("Adding product $i to database");
-                    $result = $this->productModel->addProduct($name, (float)$price, (int)$quantity, $image);
-                    if (!$result) {
+                    $product_id = $this->productModel->addProduct($name, (float)$price, (int)$quantity, $image);
+                    if (!$product_id) {
                         throw new Exception("Failed to add product " . ($i + 1) . " to database");
                     }
-
 
                     $receiptItems[] = [
                         'name' => $name,
@@ -171,19 +171,19 @@ class ViewStockController extends BaseController{
                     }
 
                     $existingQuantity = (int)$product['quantity'];
-                    $updatedQuantity = $existingQuantity + (int)$newQuantity;
+                    $quantityChange = (int)$newQuantity; // The change in quantity (can be negative)
+                    $updatedQuantity = $existingQuantity + $quantityChange;
 
                     if ($updatedQuantity < 0) {
                         throw new Exception("Cannot reduce quantity below 0 for product '{$product['name']}'. Current quantity is $existingQuantity.");
                     }
-
 
                     $result = $this->productModel->updateProduct($productId, $product['name'], (float)$newPrice, $updatedQuantity);
                     if (!$result) {
                         throw new Exception("Failed to update product '{$product['name']}' in database");
                     }
 
-                    $changeQuantity = $newQuantity > 0 ? "+$newQuantity" : $newQuantity;
+                    $changeQuantity = $quantityChange > 0 ? "+$quantityChange" : $quantityChange;
                     $receiptItems[] = [
                         'name' => $product['name'],
                         'change_quantity' => $changeQuantity,
@@ -246,7 +246,7 @@ class ViewStockController extends BaseController{
         }
         $this->view('stock-products/edit_product', ['product' => $product]);
     }
-    
+
     public function update() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = htmlspecialchars($_POST['id']);
@@ -255,16 +255,17 @@ class ViewStockController extends BaseController{
                 'price' => floatval($_POST['price']),
                 'quantity' => intval($_POST['quantity'])
             ];
-            
+
             $product = $this->productModel->getProductById($id);
             if (!$product) {
                 die("Product not found.");
             }
-            
-            $this->productModel->updateProducts($id, $data);
+
+            $this->productModel->updateProduct($id, $data['name'], $data['price'], $data['quantity']);
             $this->redirect('/viewStock');
         }
     }
+
     public function clearReceipt() {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -274,11 +275,8 @@ class ViewStockController extends BaseController{
         exit;
     }
 
-        public function destroy($id) {
-            $this->productModel->deleteProduct($id);
-            $this->redirect('/viewStock');
-        }
-        
-    
+    public function destroy($id) {
+        $this->productModel->deleteProduct($id);
+        $this->redirect('/viewStock');
+    }
 }
-?>
