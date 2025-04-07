@@ -1,13 +1,6 @@
 <!-- Order History Content -->
 <div class="order-history-content mt-4 p-3 bg-white rounded shadow-sm">
     <h2 class="mb-4">Order History</h2>
-
-    <!-- Tabs -->
-    <ul class="nav nav-tabs mb-4">
-        <li class="nav-item">
-            <a class="nav-link active" href="#">All Orders</a>
-        </li>
-    </ul>
 <!-- Date Filter -->
 <div class="date-filter d-flex justify-content-end mb-4 gap-2">
     <div class="date-input">
