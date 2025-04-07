@@ -9,7 +9,10 @@ require_once "Controllers/AddProductController.php";
 require_once "Controllers/ViewStockController.php";
  
 require_once "Middleware/AuthMiddleware.php";
+require_once "Helpers/LanguageHelper.php";
 
+// Initialize language system
+LanguageHelper::init();
 
 $route = new Router();
 

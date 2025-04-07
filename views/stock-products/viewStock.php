@@ -25,7 +25,7 @@
 
     <div class="search-section mt-2">
       <div class="search-bar">
-        <input type="text" class="form-control search-input" style='background:rgba(190, 190, 190, 0.11);' placeholder="Search products...">
+        <input type="text" class="form-control search-input" style='background:rgba(190, 190, 190, 0.11);' placeholder="<?php echo __('search_products_placeholder'); ?>">
       </div>
       <div class="action-buttons mt-2">
         <!-- Existing Button -->
