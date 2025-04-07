@@ -26,22 +26,50 @@
   <link rel="stylesheet" href="/views/assets/css/Dashboard.css">
   <link rel="stylesheet" href="/views/assets/css/navbar.css">
   <link rel="stylesheet" href="/views/assets/css/create.css">
-  <link href="https://fonts.googleapis.com/css2?family=Hanuman:wght@400;700&display=swap" rel="stylesheet">
-  
-  <!-- Fallback Khmer font (Dangrek) -->
-  <link href="https://fonts.googleapis.com/css2?family=Dangrek&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Odor+Mean+Chey&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Siemreap&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/views/assets/css/purchase.css">
- 
 </head>
 <style>
-    
-    /* Khmer language specific styling */
-    html[lang="km"] * {
-      font-family: 'Siemreap', sans-serif;
-      line-height: 1.6; /* Better readability for Khmer */
-    }
-    
-  </style>
+  html[lang="km"] * {
+    font-family: 'Siemreap', sans-serif;
+    line-height: 1.6;
+  }
+  
+  /* Fix for icon alignment in different languages */
+  .dropdown-item, .edit-link {
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+  .dropdown-item i, .edit-link i, .btn i {
+    display: inline-flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 20px !important; /* Fixed width for icon container */
+    height: 20px !important; /* Fixed height for icon container */
+    margin-right: 8px !important;
+  }
+  
+  /* Fix for button with icon alignment */
+  .btn-outline-secondary {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  /* Fix for dropdown toggle icon spacing */
+  .dropdown-toggle::after {
+    margin-left: 8px !important;
+  }
+  
+  /* Ensure consistent spacing in navbar icons */
+  .navbar .btn i, .navbar .dropdown-item i {
+    margin-right: 8px !important;
+  }
+  
+  /* Fix for language switcher icon alignment */
+  .language-switcher .btn i {
+    margin-right: 5px !important;
+  }
+</style>
 <body>

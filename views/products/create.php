@@ -14,7 +14,7 @@
                                     <polyline points="17 8 12 3 7 8"></polyline>
                                     <line x1="12" y1="3" x2="12" y2="15"></line>
                                 </svg>
-                                <p>Upload Image</p>
+                                <p><?php echo __('upload_image'); ?></p>
                             </div>
                             <img id="imagePreview" src="#" alt="Product Image Preview" style="display: none; max-width: 100%; max-height: 100%;">
                         </div>
@@ -38,8 +38,8 @@
                     <input type="number" class="form-control" id="price" name="price" placeholder="Enter price" required step="0.01">
                 </div>
                 <div class="btu-save-cancel d-flex gap-2 mt-3">
-                    <button type="submit" class="btn btn-success">Submit</button>
-                    <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/products'">Cancel</button>
+                    <button type="submit" class="btn btn-success"><?php echo __('submit'); ?></button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/products'"><?php echo __('cancel'); ?></button>
                 </div>
             </form>
         </div>

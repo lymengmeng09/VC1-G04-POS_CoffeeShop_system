@@ -9,7 +9,7 @@
                     <div class="image-upload-container">
                         <input type="file" class="file-input" id="profileImage" name="profile_image" accept="image/*">
                         <div class="image-preview-box" id="uploadBox" onclick="triggerFileInput()">
-                            <img id="imagePreview" src="/<?= htmlspecialchars($user['profile']) ?>" alt="<?php echo __('profile_image_preview'); ?>" style="max-width: 100%; max-height: 100%;">
+                            <img id="imagePreview" src="/<?= htmlspecialchars($user['profile']) ?>" onerror="this.src='/views/assets/images/profile.png'" alt="<?php echo __('profile_image_preview'); ?>" style="max-width: 100%; max-height: 100%;">
                         </div>
                     </div>
                 </div>

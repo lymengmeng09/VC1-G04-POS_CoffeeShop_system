@@ -48,7 +48,7 @@ body {
 }
 .profile .dropstart .dropdown-menu{
   margin-top: 45px;
-  min-width: 125px
+  min-width: 150px
 }
 .navbar-brand{
   width: 100px; 
@@ -66,4 +66,77 @@ body {
   .navbar-brand{
     width: 80px; 
   }
+}
+.shop {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.shop a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+}
+
+.shop i.fas, .shop i.bi {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.count_cart {
+  position: absolute !important;
+  top: -10px !important;
+  right: -8px !important;
+  background-color: #dc3545 !important;
+  color: white !important;
+  border-radius: 50% !important;
+  width: 18px !important;
+  height: 18px !important;
+  font-size: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: bold !important;
+}
+/* Fix for dropdown menu items with icons */
+.dropdown-menu .drop {
+  display: flex !important;
+  align-items: center !important;
+  padding: 0.5rem 1rem !important;
+  text-decoration: none !important;
+  color: #212529 !important;
+}
+
+.dropdown-menu .drop:hover {
+  background-color: #f8f9fa !important;
+}
+
+.dropdown-menu .drop i {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 20px !important;
+  height: 20px !important;
+  margin-right: 10px !important;
+  /* Remove the ms-3 class from the HTML and use this fixed margin instead */
+  margin-left: 0 !important;
+}
+
+.dropdown-menu .drop span {
+  display: inline-block !important;
+}
+.lang{
+  width: 20px;
+  margin-right: 10px;
+  margin-bottom: 3px;
+}
+.dropdown-toggle::after {
+  border-top-color: #000 !important; /* Black caret */
+  /* OR use your theme color */
+  border-top-color: var(--bs-primary) !important;
 }

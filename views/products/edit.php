@@ -1,4 +1,4 @@
-<h5>Edit Product</h5>
+<h5><?php echo __('edit_product'); ?></h5>
 <div class="card">
     <div class="card-body">
         <!-- Display success or error messages -->
