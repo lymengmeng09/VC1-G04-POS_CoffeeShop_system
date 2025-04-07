@@ -125,7 +125,7 @@
                                     <div class="cart-total">Total: $<span id="cart-total">0.00</span></div>
                                     <div class="btn_cart">
                                         <button id="clear-all" class="btn btn-outline-secondary">Cancel</button>
-                                        <button id="PayMent" class="btn btn-primary">Pay Now</button>
+                                        <button id="PayMent" class="btn btn-primary">Pay Now</a></button>
                                     </div>
                                 </div>
                             </div>
@@ -134,6 +134,7 @@
                 </div>
             </div>
         </div>
+    
 
 
         <!-- Delete Confirmation Modal -->
@@ -171,7 +172,9 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success" id="confirm-receipt">Confirm</button>
-                    </div>
+                    <button type="button" class="btn btn-primary" id="ok-button" data-bs-dismiss="modal" style="padding: 10px 20px; font-size: 16px; margin-left: 45%;" onclick="ConceldRedirect()">OK</button>
+                        
+                        </div>
                 </div>
             </div>
         </div>
