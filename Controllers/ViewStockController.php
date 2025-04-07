@@ -86,6 +86,7 @@ class ViewStockController extends BaseController {
                     }
     
                     // Add product to the database
+
                     $result = $this->productModel->addProduct($name, (float)$price, (int)$quantity, $image);
                     if (!$result) {
                         throw new Exception("Failed to add product " . ($i + 1) . " to database");
@@ -146,26 +147,27 @@ class ViewStockController extends BaseController {
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
                 }
-
+    
                 error_log("Received POST request to /update_product");
                 error_log("POST data: " . json_encode($_POST));
-
+    
                 $id = htmlspecialchars($_POST['id']);
                 $data = [
                     'name' => htmlspecialchars($_POST['name']),
                     'price' => floatval($_POST['price']),
                     'quantity' => intval($_POST['quantity'])
                 ];
-
+    
                 $product = $this->productModel->getProductById($id);
                 if (!$product) {
                     throw new Exception("Product not found.");
                 }
-
-                $this->productModel->updateProducts($id, $data);
+    
+                // Changed from updateProducts to updateProduct with individual parameters
+                $this->productModel->updateProduct($id, $data['name'], $data['price'], $data['quantity']);
                 error_log("Product updated with ID: $id");
                 $this->notifyStockChange($id, "Updated");
-
+    
                 $_SESSION['notification'] = "Product '{$data['name']}' updated successfully.";
                 $this->redirect('/viewStock');
             } catch (Exception $e) {
@@ -183,6 +185,7 @@ class ViewStockController extends BaseController {
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
                 }
+
 
                 error_log("Received POST request to /update-stock");
                 error_log("POST data: " . json_encode($_POST));
@@ -262,6 +265,7 @@ class ViewStockController extends BaseController {
                     'items' => $receiptItems,
                     'action' => 'updated'
                 ];
+
 
                 $notification = [];
                 if (!empty($successMessages)) {
@@ -350,6 +354,7 @@ class ViewStockController extends BaseController {
         $telegramBotToken = '7898878636:AAFtwwPFcVSIi256SkNUaKitGDS5eaOhq1o'; // Replace with your bot token
         $chatId = '6461561884'; // Replace with your chat ID
 
+
         error_log("Attempting to send Telegram message: " . substr($message, 0, 50));
         
         $url = "https://api.telegram.org/bot{$telegramBotToken}/sendMessage";
@@ -415,4 +420,3 @@ class ViewStockController extends BaseController {
     }
 }
 ?>
- 
