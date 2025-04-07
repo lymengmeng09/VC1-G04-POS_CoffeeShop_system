@@ -300,6 +300,7 @@ class ViewStockController extends BaseController {
                     session_start();
                 }
 
+
                 error_log("Received POST request to /update-stock");
                 error_log("POST data: " . json_encode($_POST));
 
@@ -378,6 +379,7 @@ class ViewStockController extends BaseController {
                     'items' => $receiptItems,
                     'action' => 'updated'
                 ];
+
 
                 $notification = [];
                 if (!empty($successMessages)) {
