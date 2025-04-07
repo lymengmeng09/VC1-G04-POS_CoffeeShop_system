@@ -15,3 +15,9 @@ form{
   display: flex;
   align-items: center;
 }
+
+
+/* order Style */
+ .card-body{
+  width: 90%;
+ }

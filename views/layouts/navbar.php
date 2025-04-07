@@ -51,9 +51,11 @@ $currentLang = LanguageHelper::getCurrentLang();
 
             <div class="shop me-3">
                 <a href="javascript:void(0)" id="cart-icon">
-                    <i class="bi bi-cart-fill" style="font-size: 24px;"></i>
+                    <i class="bi bi-cart-fill" style="font-size: 28px;"></i>
                     <span class="count_cart" id="cart-count">0</span>
+                    <a href="/views/products/list-product.php"></a>
                 </a>
+               
             </div>
 
             <!-- Avatar Dropdown -->
@@ -118,6 +120,11 @@ $currentLang = LanguageHelper::getCurrentLang();
                             <span><?php echo __('stock'); ?></span>
                         </a>
                     </li>
+                    <li class="sidebar-item">
+                        <a href="/order-history" class="sidebar-link" aria-label="View Order History">
+                            <i class="bi bi-cart-fill"></i>
+                            <span>History</span>
+                        </a>
                     <li class="sidebar-item">
                         <a href="/purchase-history" class='sidebar-link'>
                             <i class="bi bi-file-earmark-medical-fill"></i>

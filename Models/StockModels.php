@@ -16,7 +16,7 @@ class ProductModel {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
+    
     public function getProductById($id) {
         $query = "SELECT * FROM " . $this->table . " WHERE id = :id";
         $stmt = $this->conn->prepare($query);
@@ -40,7 +40,6 @@ class ProductModel {
 
             $product_id = $this->conn->lastInsertId();
 
-            // Log the purchase
             $this->recordPurchase('new_product', [
                 [
                     'product_id' => $product_id,
@@ -106,6 +105,21 @@ class ProductModel {
         }
     }
 
+    public function updateProducts($id, $data) {
+        try {
+            $query = "UPDATE " . $this->table . " SET name = :name, price = :price, quantity = :quantity WHERE id = :id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+            $stmt->bindParam(":name", $data['name'], PDO::PARAM_STR);
+            $stmt->bindParam(":price", $data['price'], PDO::PARAM_STR);
+            $stmt->bindParam(":quantity", $data['quantity'], PDO::PARAM_INT);
+            return $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Error updating product: " . $e->getMessage());
+            throw new Exception('Failed to update product: ' . $e->getMessage());
+        }
+    }
+
     public function getTopSellingProducts($start_date = null, $end_date = null) {
         $query = "
             SELECT s.name AS product_name, SUM(oi.quantity) AS total_sold
@@ -164,13 +178,11 @@ class ProductModel {
         try {
             $this->conn->beginTransaction();
 
-            // Calculate total amount
             $total_amount = 0;
             foreach ($items as $item) {
                 $total_amount += $item['quantity'] * $item['price'];
             }
 
-            // Insert into purchases table
             $query = "INSERT INTO purchases (purchase_date, total_amount, status) VALUES (:purchase_date, :total_amount, :status)";
             $stmt = $this->conn->prepare($query);
             $purchase_date = date('Y-m-d');
@@ -180,7 +192,6 @@ class ProductModel {
             $stmt->execute();
             $purchase_id = $this->conn->lastInsertId();
 
-            // Insert into purchase_items table (without product_name)
             $query = "INSERT INTO purchase_items (purchase_id, product_id, quantity, unit_price, total_price) 
                       VALUES (:purchase_id, :product_id, :quantity, :unit_price, :total_price)";
             $stmt = $this->conn->prepare($query);
@@ -216,6 +227,79 @@ class ProductModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-
+    public function storeReceiptData($items, $action) {
+        try {
+            $this->conn->beginTransaction();
     
+            $stmt = $this->conn->prepare("INSERT INTO receipts (action, timestamp) VALUES (?, ?)");
+            $timestamp = date('Y-m-d H:i:s');
+            $stmt->execute([$action, $timestamp]);
+            $receipt_id = $this->conn->lastInsertId();
+    
+            foreach ($items as $item) {
+                $stmtPurchase = $this->conn->prepare("INSERT INTO purchases (receipt_id, product_name, price, change_quantity, timestamp) VALUES (?, ?, ?, ?, ?)");
+                $stmtPurchase->execute([
+                    $receipt_id,
+                    $item['name'],
+                    $item['price'],
+                    $item['change_quantity'],
+                    $item['timestamp']
+                ]);
+    
+                $stmtItem = $this->conn->prepare("INSERT INTO purchase_items (purchase_id, product_name, price, quantity) VALUES (?, ?, ?, ?)");
+                $stmtItem->execute([
+                    $receipt_id,
+                    $item['name'],
+                    $item['price'],
+                    $item['change_quantity']
+                ]);
+            }
+    
+            $this->conn->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->conn->rollBack();
+            error_log("Failed to store receipt: " . $e->getMessage());
+            return false;
+        }
+    }
+    public function addTelegramUser($chatId) {
+        try {
+            $query = "INSERT IGNORE INTO telegram_users (chat_id) VALUES (:chat_id)";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':chat_id', $chatId, PDO::PARAM_STR);
+            $success = $stmt->execute();
+            error_log("addTelegramUser: Chat ID $chatId " . ($success ? "added successfully" : "failed to add"));
+            return $success;
+        } catch (Exception $e) {
+            error_log("Error adding Telegram user: " . $e->getMessage());
+            throw new Exception('Failed to add Telegram user: ' . $e->getMessage());
+        }
+    }
+
+    public function getAllTelegramUsers() {
+        try {
+            $query = "SELECT chat_id FROM telegram_users WHERE is_active = 1";
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            $users = $stmt->fetchAll(PDO::FETCH_COLUMN);
+            error_log("getAllTelegramUsers: Retrieved " . count($users) . " active users: " . implode(', ', $users));
+            return $users;
+        } catch (Exception $e) {
+            error_log("Error fetching Telegram users: " . $e->getMessage());
+            throw new Exception('Failed to fetch Telegram users: ' . $e->getMessage());
+        }
+    }
+
+    public function getAllReceipts() {
+        try {
+            $query = "SELECT * FROM receipts ORDER BY timestamp DESC";
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log("Error fetching receipts: " . $e->getMessage());
+            throw new Exception('Failed to fetch receipts: ' . $e->getMessage());
+        }
+    }
 }
