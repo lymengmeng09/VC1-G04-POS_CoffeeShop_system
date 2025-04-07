@@ -12,19 +12,19 @@
             </div>
             <div class="col-md-6 text-end">
                 <!-- Role Filter Dropdown -->
-                <div class="btn-group me-2">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-outline-primary dropdown-toggle"
+                <div class="btn-group role-category me-2">
+                    <button id="drop1" type="button" class="btn btn-outline-primary dropdown-toggle"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         Role: <?= htmlspecialchars(ucfirst($_GET['role'] ?? 'all')) ?>
                     </button>
-                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <li><a class="dropdown-item" href="?role=all&status=<?= $_GET['status'] ?? 'all' ?>">All
+                    <ul class="dropdown-menu menu-role" aria-labelledby="drop1">
+                        <li><a class="dropdown-item role-item" href="?role=all&status=<?= $_GET['status'] ?? 'all' ?>">All
                                 Roles</a></li>
-                        <li><a class="dropdown-item" href="?role=Admin&status=<?= $_GET['status'] ?? 'all' ?>">Admin</a>
+                        <li><a class="dropdown-item role-item" href="?role=Admin&status=<?= $_GET['status'] ?? 'all' ?>">Admin</a>
                         </li>
-                        <li><a class="dropdown-item" href="?role=Staff&status=<?= $_GET['status'] ?? 'all' ?>">Staff</a>
+                        <li><a class="dropdown-item role-item" href="?role=Staff&status=<?= $_GET['status'] ?? 'all' ?>">Staff</a>
                         </li>
-                        <li><a class="dropdown-item"
+                        <li><a class="dropdown-item role-item"
                                 href="?role=Customer&status=<?= $_GET['status'] ?? 'all' ?>">Customer</a></li>
                     </ul>
                 </div>
@@ -70,16 +70,16 @@
                         <td style="color:rgb(106, 106, 106);"><?= htmlspecialchars($user['email']) ?></td>
                         <td style="color:rgb(17, 136, 51); "><?= htmlspecialchars($user['role_name']) ?></td>
                         <?php if (AccessControl::isAdmin()): ?>
-                            <td class="text-center ps-0" style="padding-right: 10px;">
+                            <td>
                                 <div class="btn-group dropend">
-                                    <a href="#" class="text-secondary" id="dropdownMenuButton<?= $user['id'] ?>" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <a href="#" class="text-secondary" style="margin-left: 20px;" id="dropdownMenuButton<?= $user['id'] ?>" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="bi bi-three-dots-vertical"></i>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-start" style="padding-right: 30px;" aria-labelledby="dropdownMenuButton<?= $user['id'] ?>">
                                         <?php if (AccessControl::hasPermission('reset_password')): ?>
                                             <li>
                                                 <button type="button" class="dropdown-item btn-reset" data-bs-toggle="modal" data-bs-target="#resetPassword<?= $user['id'] ?>">
-                                                    <i class="bi bi-arrow-clockwise"></i> Reset Password
+                                                    <i class="bi bi-arrow-clockwise"></i> Change Password
                                                 </button>
                                             </li>
                                         <?php endif; ?>

@@ -5,30 +5,39 @@ body {
 a {
   color: #f8f9fa;
 }
+
 a:hover {
   color: #f8f9fa;
 }
 .category {
   margin-left: 350px;
 }
+
 .shop a {
   color: black;
 }
+
 .shop {
   margin-left: 15px;
   font-size: 30px;
   margin-top: 10px;
 }
+
 .btn-Order {
   width: 60%;
   padding: 5px;
   background-color: #4e3629;
   border: none;
-  border-radius: 5px;
-  color: whitesmoke;
-  font-weight: bold;
-  margin: 5px 0;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
 }
+
+.btn-Order:hover {
+  background-color: #4E3629;
+}
+
 .dot {
   color: #198754;
   font-size: 24px;
@@ -49,21 +58,24 @@ a:hover {
   margin-bottom: 20px;
   border-bottom: 1px solid rgba(128, 128, 128, 0.451);
 }
+
 .text-center img {
   height: 120px;
   object-fit: contain;
   margin: 10px 40px;
 }
+
 .btn-Order {
-  background-color: #6f4f37;
+  background-color: #6F4F37;
   color: white;
   border: none;
   padding: 6px 14px;
-  cursor: pointer;
 }
+
 .btn-Order:hover {
-  background-color: #4e3629;
+  background-color: #4E3629;
 }
+
 .shop {
   display: flex;
   justify-content: center;
@@ -76,10 +88,71 @@ a:hover {
   object-fit: contain;
   margin: 15px 0;
 }
+
+.product-entry img:hover {
+  opacity: 0.9;
+}
+
 .empty-cart {
   text-align: center;
   font-size: 1.2rem;
   color: #888;
+}
+/* Dropdown Button */
+.dropbtn {
+  background-color: transparent;
+  border: none;
+  font-size: 1.5rem;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.dropbtn:hover {
+  color: #3498db; /* Hover effect for the button */
+}
+
+/* Dropdown Content */
+.dropdown-content {
+  display: none; /* Hidden by default */
+  position: absolute;
+  right: 0;
+  background-color: #fff;
+  min-width: 120px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Dropdown Items */
+.dropdown-content a, .dropdown-content button {
+  color: #333;
+  padding: 10px 15px;
+  text-decoration: none;
+  display: block;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-content a:hover, .dropdown-content button:hover {
+  background-color: #f1f1f1;
+}
+
+/* Optional: Style for the Delete button to make it more distinct */
+.dropdown-content button {
+  color: #e74c3c; /* Red color for Delete */
+}
+
+.dropdown-content button:hover {
+  background-color: #ffe6e6; /* Light red background on hover */
 }
 .remove-item {
   color: red;
@@ -90,10 +163,26 @@ a:hover {
 .quantity-input {
   width: 50px;
 }
+
 .cart-total {
   font-size: 1.2rem;
   font-weight: bold;
 }
+
+.product-item .card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 220px;
+  /* Adjust based on your design */
+}
+
+.product-item .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
 .count_cart {
   background-color: rgb(233, 63, 63);
   color: white;
@@ -107,38 +196,33 @@ a:hover {
 .cart-total {
   margin-top: 20px;
 }
+
+#PayMent {
+  height: 40px;
+  width: 100px;
+}
+
 .quantity-input {
   margin-left: 30px;
 }
+
 td:nth-child(2) {
   font-size: 14px;
   padding: 0 15px;
 }
+
 td:nth-child(3) {
   font-size: 14px;
   padding: 0 10px;
 }
-.total{
-    display: flex;
-    flex-direction: column;
-}
-.btn_cart{
-    margin-top: 20px;
-    display: flex;
-    justify-content:space-between;
-    align-items: center;
-}
-#clear-all{
-    margin-top: -2px;
-}
 
-@media (max-width: 767.98px) {
+@media (max-width: 768px) {
   .coffee-grid .col-6 {
     width: 50%;
   }
 }
 .modal {
-  display: none; /* Ensure it's visible when triggered */
+  display: none; 
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
 }
@@ -146,6 +230,7 @@ td:nth-child(3) {
   display: block;
   opacity: 1;
 }
+
 
 @media print {
     body * {

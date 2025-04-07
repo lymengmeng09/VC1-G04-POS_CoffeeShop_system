@@ -185,6 +185,10 @@
     .card-body.px-3.py-4-5 .row {
         flex-direction: column;
         text-align: center;
+        
+    }
+    #chart-profile-visit{
+        height: 40vh;
     }
     
     .card-body.px-3.py-4-5 .col-md-4,

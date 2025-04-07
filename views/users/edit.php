@@ -15,19 +15,19 @@
                 </div>
 
                 <!-- Name Field -->
-                <div class="mb-3">
+                <div class="form-group">
                     <label for="name" class="form-label">Name</label>
                     <input type="text" class="form-control" id="name" name="name" value="<?= htmlspecialchars($user['name']) ?>" required>
                 </div>
 
                 <!-- Email Field -->
-                <div class="mb-3">
+                <div class="form-group">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
                 </div>
                 <?php if (AccessControl::isAdmin()): ?>
                     <!-- Role Selection Dropdown (visible to admins) -->
-                    <div class="mb-3">
+                    <div class="form-group">
                         <label for="role_id" class="form-label">Role:</label>
                         <select name="role_id" class="form-control" required>
                             <option value="">Select a role</option>

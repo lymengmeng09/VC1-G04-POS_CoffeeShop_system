@@ -1,22 +1,33 @@
+ 
 <div class="card">
   <div class="container">
     <?php
+    // Display regular notification
     if (isset($_SESSION['notification'])) {
-      // Determine the alert type based on message content
       $notification = $_SESSION['notification'];
       $alertClass = (stripos($notification, 'successfully') !== false) ? 'alert-success' : 'alert-warning';
-
       echo '<div class="alert ' . $alertClass . ' alert-dismissible fade show" role="alert">';
       echo $notification;
       echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
       echo '</div>';
       unset($_SESSION['notification']);
     }
+
+    // Display test result
+    if (isset($_SESSION['test_result'])) {
+      $testResult = $_SESSION['test_result'];
+      $testClass = $testResult['ok'] ? 'alert-success' : 'alert-danger';
+      echo '<div class="alert ' . $testClass . ' alert-dismissible fade show" role="alert">';
+      echo 'Test Message Result: ' . ($testResult['ok'] ? 'Success' : 'Failed - ' . $testResult['description']);
+      echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+      echo '</div>';
+      unset($_SESSION['test_result']);
+    }
     ?>
 
+    <!-- Rest of your HTML remains unchanged -->
     <div class="header d-flex justify-content-between align-items-center my-4">
       <h1>Stock Products</h1>
-
     </div>
 
     <div class="notification-dropdown" id="notificationDropdown" style="display: none;">
@@ -28,21 +39,17 @@
         <input type="text" class="form-control search-input" style='background:rgba(190, 190, 190, 0.11);' placeholder="Search products...">
       </div>
       <div class="action-buttons mt-2">
-        <!-- Existing Button -->
         <button class="btn btn-primary me-4" data-bs-toggle="modal" data-bs-target="#updateProductModal">
           <i class="bi bi-upload"></i> Existing
         </button>
-        <!-- New Button -->
         <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal">
           <i class="bi bi-plus-circle"></i> New
         </button>
       </div>
     </div>
     <div class="products-section">
-      <!-- <h2 class="section-title">Products</h2> -->
       <div class="products-grid">
         <?php
-        // Sort products by quantity in ascending order (lowest to highest)
         usort($products, function ($a, $b) {
           return $a['quantity'] - $b['quantity'];
         });
@@ -53,15 +60,10 @@
             data-price="<?= $product['price'] ?>"
             data-quantity="<?= $product['quantity'] ?>">
             <div class="dropdown">
-              <a href="#" class="text-secondary bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right:10px;">
-              </a>
-              <ul class="dropdown-menu"> 
-                <!-- Edit Link -->
-                <li class="edit"><a href="/edit_product?id=<?= $product['id'] ?>" class="edit-link bi-pencil">  </a></li>
-                <!-- Delete Button with Confirmation -->
-                <li>
-                  <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal" class="dropdown-item btn-delete bi-trash" onclick="setDeleteModal(<?= $product['id'] ?>, '<?= htmlspecialchars($product['name']) ?>')">  </a>
-                </li>
+              <a href="#" class="text-secondary bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right:10px;"></a>
+              <ul class="dropdown-menu">
+                <li class="edit"><a href="/edit_product?id=<?= $product['id'] ?>" class="edit-link bi-pencil"> Edit</a></li>
+                <li><a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal" class="dropdown-item btn-delete bi-trash" onclick="setDeleteModal(<?= $product['id'] ?>, '<?= htmlspecialchars($product['name']) ?>')"> Delete</a></li>
               </ul>
             </div>
             <div class="product-image">
@@ -101,15 +103,11 @@
 
     <script>
       function setDeleteModal(productId, productName) {
-        // Set product name in the modal
         document.getElementById('productName').textContent = productName;
-
-        // Update the form action URL with the product ID
         const deleteForm = document.getElementById('deleteForm');
         deleteForm.action = `/delete_product/${productId}`;
       }
     </script>
-
 
     <!-- Add New Product Modal -->
     <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
@@ -123,7 +121,6 @@
             <form method="POST" action="/add-product" enctype="multipart/form-data" id="addProductForm">
               <div id="add-product-entries">
                 <div class="product-entry mb-3">
-
                   <div class="row g-3 align-items-end">
                     <div class="col-md-3">
                       <label for="addName-0" class="form-label">Product Name</label>
@@ -143,7 +140,8 @@
                       <div class="image-preview mt-2" id="preview-addImage-0" style="display: none;">
                         <img src="" alt="Image Preview" style="max-width: 100px; max-height: 100px;">
                         <button type="button" class="btn btn-sm btn-danger cancel-upload mt-1" data-input-id="addImage-0">
-                          </i> cancel </button>
+                          <i class="bi bi-x"></i> Cancel
+                        </button>
                       </div>
                     </div>
                     <div class="col-md-2 text-center">
@@ -152,14 +150,15 @@
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn btn-outline-primary mb-3 " id="add-more-product">Add More</button>
-              <button type="submit" class="btn btn-success">Completed</button>
+              <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-primary" id="add-more-product">Add More</button>
+                <button type="submit" class="btn btn-success">Completed</button>
+              </div>
             </form>
           </div>
         </div>
       </div>
     </div>
-
 
     <!-- Update Existing Product Modal -->
     <div class="modal fade" id="updateProductModal" tabindex="-1" aria-labelledby="updateProductModalLabel" aria-hidden="true">
@@ -200,24 +199,41 @@
                         <input type="text" class="form-control total-price" id="totalPrice-0" readonly>
                       </div>
                     </div>
-                    <div class="col-md-2 text-center">
-                      <i class="bi bi-trash remove-entry" style="cursor: pointer; font-size: 1.5rem; color: #dc3545; display: none;" title="Remove"></i>
-                    </div>
                   </div>
                 </div>
               </div>
               <button type="button" class="btn btn-outline-primary mb-3" id="add-more">Add More</button>
-              <button type="submit" class="btn btn-success">Completed</button>
-
-
+              <button type="submit" class="btn btn-success" id="add-more-complet">Completed</button>
             </form>
           </div>
         </div>
       </div>
     </div>
+<script>
+  
+  function savePDFAndStoreReceipt() {
+    html2pdf().from(document.getElementById('receipt-content')).save('receipt.pdf');
 
+    setTimeout(() => {
+        const receipt = <?php echo json_encode($_SESSION['receipt'] ?? []); ?>;
 
+        fetch('/store-receipt', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(receipt)
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+            window.location.href = '/viewStock';
+        })
+        .catch(err => console.error('Receipt store failed:', err));
+    }, 500);
+}
 
+</script>
     <!-- Receipt Modal -->
     <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -246,9 +262,7 @@
                   </thead>
                   <tbody>
                     <?php
-                    // Set Cambodia timezone
                     date_default_timezone_set('Asia/Phnom_Penh');
-
                     $totalPrice = 0;
                     foreach ($_SESSION['receipt']['items'] as $item):
                       $changeQuantity = (float)str_replace('+', '', $item['change_quantity']);
@@ -260,9 +274,7 @@
                         <td><?= htmlspecialchars($item['change_quantity']) ?></td>
                         <td><?= number_format($item['price'], 2) ?></td>
                         <td class="total-cell"><?= number_format($itemTotal, 2) ?></td>
-                        <td>
-                          <?= date('Y-m-d', strtotime($item['timestamp'])) ?> <!-- Show only Date -->
-                        </td>
+                        <td><?= date('Y-m-d', strtotime($item['timestamp'])) ?></td>
                       </tr>
                     <?php endforeach; ?>
                     <tr>
@@ -277,23 +289,33 @@
             <?php endif; ?>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-success" id="save-pdf" style="padding: 10px 20px; font-size: 16px;   margin-right: 5%;">Save PDF</button>
-            <button type="button" class="btn btn-primary" id="ok-button" data-bs-dismiss="modal" style="padding: 10px 20px; font-size: 16px; margin-left: 45%;">OK</button>
-
+            <button type="button" class="btn btn-success" id="save-pdf" style="padding: 10px 20px; font-size: 16px; margin-right: 5%;" onclick="savePDFAndRedirect()">Save PDF</button>
+            <button type="button" class="btn btn-primary" id="ok-button" data-bs-dismiss="modal" style="padding: 10px 20px; font-size: 16px; margin-left: 45%;" onclick="ConceldRedirect()">OK</button>
           </div>
-
         </div>
       </div>
     </div>
 
+    <script>
+      function savePDFAndRedirect() {
+        console.log("Saving PDF...");
+        setTimeout(() => {
+            window.location.href = "/viewStock";
+        }, 400);
+      }
+
+      function ConceldRedirect() {
+        console.log("Canceling and redirecting...");
+        setTimeout(() => {
+            window.location.href = "/viewStock";
+        }, 200);
+      }
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-
-    <!-- Inline script to pass PHP data to JavaScript -->
     <script>
-      // Pass PHP variables to JavaScript
       const hasReceipt = <?php echo json_encode(isset($_SESSION['receipt'])); ?>;
       const showReceipt = new URLSearchParams(window.location.search).get('showReceipt') === 'true';
     </script>
-
   </div>
+</div>

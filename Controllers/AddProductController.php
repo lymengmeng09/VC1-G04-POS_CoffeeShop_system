@@ -28,11 +28,23 @@ class AddProductController extends BaseController
         }
     }
     function index()
-    {
-        $products = $this->model->getProducts();
-        $this->view('products/list-product', ['products' => $products]);
-    }
-
+{
+    // Get the selected category from query parameters
+    $category_id = $_GET['category'] ?? 'all';
+    
+    // Get products (filtered by category if specified)
+    $products = $this->model->getProductsByCategory($category_id);
+    
+    // Get all categories for the dropdown
+    $categories = $this->model->getCategories();
+    
+    // Pass both products and categories to the view
+    $this->view('products/list-product', [
+        'products' => $products,
+        'categories' => $categories,
+        'selected_category' => $category_id
+    ]);
+}
     // Function to display the product creation form
     function create()
     {
@@ -141,7 +153,6 @@ public function edit($id){
         }
 
         if ($this->model->updateProduct($data)) {
-            $_SESSION['success'] = 'Product updated successfully!';
             $this->redirect('/products');
         } else {
             $_SESSION['error'] = 'There was an issue updating the product.';
@@ -154,21 +165,8 @@ public function edit($id){
 
 public function destroy($id)
 {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        try {
-            if ($this->model->deleteProduct($id)) {
-                $_SESSION['success'] = 'Product deleted successfully!';
-            } else {
-                $_SESSION['error'] = 'There was an issue deleting the product.';
-            }
-        } catch (PDOException $e) {
-            $_SESSION['error'] = 'Cannot delete product. It may be referenced in other records.';
-        }
-        $this->redirect('/products');
-    } else {
-        $_SESSION['error'] = 'Invalid request method.';
-        $this->redirect('/products');
-    }
+    $this->model->deleteProduct($id);
+    $this->redirect('/products');
 }
 
     

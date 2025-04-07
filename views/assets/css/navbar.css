@@ -2,26 +2,34 @@
   display: flex;
   flex-direction: column; /* Stack items vertically */
 }
-
+body {
+  padding-top: 60px; /* Adjust according to the navbar height */
+}
 #sidebar {
   width: 100%;
   background: #f8f8f8;
-  padding: 10px;
+  margin-top: 20px;
+  z-index: 1000;
 }
-.shop{
-margin-left: 990px;
-margin-bottom: 18px;
+.shop {
+  margin-left: 990px;
+  margin-bottom: 18px;
 }
 
 .navbar {
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  position: sticky;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: top 0.3s;
 }
 .navbar a i {
   transition: color 0.3s ease-in-out;
 }
 .navbar a i:hover {
-  color: #007bff;
+  color: #4a2c2a;
 }
 .badge-notification {
   font-size: 0.75rem;
@@ -32,8 +40,31 @@ margin-bottom: 18px;
   height: 50px;
   
 }
-.drop{
-color: rgba(53, 53, 53, 0.778);
-margin-right: 10px;
-text-decoration: none;
+.drop {
+  color: rgba(53, 53, 53, 0.778);
+  margin-right: 10px;
+  text-decoration: none;
 }
+
+@media only screen and (max-width: 767px) {
+  #sidebar {
+    margin-top: 490px;
+    position: fixed;
+    transition: all 0.3s ease;
+    z-index: 1000;
+  }
+  #sidebar.active .sidebar-wrapper {
+    background: none;
+  }
+  .logo a img {
+    display: none;
+  }
+  .sidebar-menu span {
+    display: none;
+  }
+  .sidebar-menu .menu {
+    display: flex;
+    padding: 12px;
+  }
+}
+

@@ -23,11 +23,12 @@ $profilePath = !empty($user['profile']) ? '/' . ltrim($user['profile'], '/') : '
             <div class="d-flex align-items-center">
                 <!-- Notification Bell -->
                 <div class="position-relative me-3">
-                    <button
-                        class="btn btn-link p-0 text-dark"
+                    <button 
+                        class="btn btn-link p-0 text-dark" 
                         type="button"
                         data-bs-toggle="dropdown"
-                        aria-expanded="false">
+                        aria-expanded="false"
+                    >
                         <i class="fas fa-bell" style="font-size: 1.6rem;"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             3
@@ -43,21 +44,25 @@ $profilePath = !empty($user['profile']) ? '/' . ltrim($user['profile'], '/') : '
 
                 <!-- Avatar Dropdown -->
                 <div class="dropdown">
-                    <button
-                        class="btn btn-link p-0"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        <img
-                            src="<?= htmlspecialchars($profilePath) ?>"
-                            alt="Profile picture"
-                            class="rounded-circle border avatar-img"
-                            onerror="this.src='/views/assets/images/profile.png'"
-                            style="width: 40px; height: 40px;" />
+                    <button 
+                        class="btn btn-link p-0" 
+                        type="button" 
+                        data-bs-toggle="dropdown" 
+                        aria-expanded="false"
+                    >
+                    <img 
+                        src="<?= htmlspecialchars($profilePath) ?>" 
+                        alt="Profile picture" 
+                        class="rounded-circle border avatar-img"
+                        onerror="this.src='/views/assets/images/profile.png'"
+                        style="width: 40px; height: 40px;"
+                    />
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a href="/view-profile" class="drop"><i class="bi bi-person ms-3"></i> <span>My profile</span></a></li>
-                        <li><a href="/login/logout" class="drop"><i class="bi bi-box-arrow-in-left ms-3"></i> <span>Logout</span></a></li>
+                        <li><a href="/view-profile" class="drop"><i class="bi bi-person ms-3"></i> <span>My
+                                    profile</span></a></li>
+                        <li><a href="/login/logout" class="drop"><i class="bi bi-box-arrow-in-left ms-3"></i>
+                                <span>Logout</span></a></li>
                     </ul>
                 </div>
             </div>
@@ -70,7 +75,8 @@ $profilePath = !empty($user['profile']) ? '/' . ltrim($user['profile'], '/') : '
             <div class="sidebar-header">
                 <div class="d-flex justify-content-between">
                     <div class="logo">
-                        <a href="index.html"><img src="/views/assets/images/logo.png" alt="Logo" style="width: 150px; height: auto; margin-left: 45px;" srcset=""></a>
+                        <a href="index.html"><img src="/views/assets/images/logo.png" alt="Logo"
+                                style="width: 150px; height: auto; margin-left: 45px;" srcset=""></a>
                     </div>
                     <div class="toggler">
                         <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -88,25 +94,25 @@ $profilePath = !empty($user['profile']) ? '/' . ltrim($user['profile'], '/') : '
                     </li>
                     <li class="sidebar-item">
                         <a href="/products" class='sidebar-link'>
-                            <i class="bi bi-shop"></i>
+                            <i class="bi bi-cart-fill"></i>
                             <span>Order</span>
                         </a>
                     </li>
                     <li class="sidebar-item">
                         <a href="/viewStock" class='sidebar-link'>
-                            <i class="bi bi-cart-fill"></i>
+                            <i class="bi bi-shop"></i>
                             <span>Stock</span>
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="#" class='sidebar-link'>
+                        <a href="/purchase-history" class='sidebar-link'>
                             <i class="bi bi-file-earmark-medical-fill"></i>
                             <span>Report</span>
                         </a>
                     </li>
                     <li class="sidebar-item">
                         <a href="/list-users" class='sidebar-link'>
-                            <i class="bi bi-grid-1x2-fill"></i>
+                        <i class="bi bi-person-circle"></i>
                             <span>Users</span>
                         </a>
                     </li>
@@ -116,4 +122,3 @@ $profilePath = !empty($user['profile']) ? '/' . ltrim($user['profile'], '/') : '
         </div>
     </div>
     <div id="main">
-        
