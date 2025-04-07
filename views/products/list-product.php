@@ -123,8 +123,8 @@
                                 <div class="d-flex justify-content-between total" id="btn">
                                     <div class="cart-total"><?php echo __('total'); ?>: $<span id="cart-total">0.00</span></div>
                                     <div class="btn_cart">
-                                        <button id="clear-all" class="btn btn-outline-secondary"><?php echo __('cancel'); ?></button>
-                                        <button id="PayMent" class="btn btn-primary"><?php echo __('pay_now'); ?></button>
+                                        <button id="clear-all" class="btn btn-outline-secondary">Cancel</button>
+                                        <button id="PayMent" class="btn btn-primary">Pay Now</button>
                                     </div>
                                 </div>
                             </div>
@@ -133,6 +133,7 @@
                 </div>
             </div>
         </div>
+    
 
 
         <!-- Delete Confirmation Modal -->
@@ -169,7 +170,24 @@
                         <!-- Receipt details will be inserted here dynamically -->
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="confirm-receipt"><?php echo __('confirm'); ?></button>
+                        <button type="button" class="btn btn-success" id="confirm-receipt">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Receipt Modal -->
+        <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="receiptModalLabel">Order Receipt</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="receipt-content">
+                        <!-- Receipt details will be inserted here dynamically -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="confirm-receipt">Confirm</button>
                     </div>
                 </div>
             </div>

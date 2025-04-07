@@ -32,9 +32,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Dangrek&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Odor+Mean+Chey&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Siemreap&display=swap" rel="stylesheet">
-   <!-- Include jsPDF and jsPDF-AutoTable -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+  <link rel="stylesheet" href="/views/assets/css/purchase.css">
  
 </head>
 <style>
