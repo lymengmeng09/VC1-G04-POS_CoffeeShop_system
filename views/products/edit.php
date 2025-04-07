@@ -1,4 +1,4 @@
-<h5>Edit Product</h5>
+<h5><?php echo __('edit_product'); ?></h5>
 <div class="card">
     <div class="card-body">
         <!-- Display success or error messages -->
@@ -25,7 +25,7 @@
 
             <!-- Product Image -->
             <div class="form-group mb-3">
-                <label for="productImage">Product Image</label>
+                <label for="productImage"><?php echo __('Product image'); ?></label>
                 <div class="image-upload-container">
                     <input type="file" class="file-input" id="productImage" name="image_url" accept="image/*">
                     <div class="image-preview-box" id="uploadBox" onclick="triggerFileInput()">
@@ -51,14 +51,14 @@
 
             <!-- Product Name -->
             <div class="form-group mb-3">
-                <label for="productName">Product Name</label>
+                <label for="productName"><?php echo __('product_name'); ?></label>
                 <input type="text" class="form-control" id="productName" name="product_name"
                     value="<?= htmlspecialchars($product['product_name']) ?>" placeholder="Enter product name" required>
             </div>
 
             <!-- Category -->
             <div class="form-group mb-3">
-                <label for="category">Category</label>
+                <label for="category"><?php echo __('category'); ?></label>
                 <select class="form-control" id="category" name="category" required onchange="updateCategoryId(this)">
                     <?php foreach ($categories as $category): ?>
                         <option value="<?= htmlspecialchars($category['category_name']) ?>" 
@@ -74,7 +74,7 @@
 
             <!-- Price -->
             <div class="form-group mb-3">
-                <label for="price">Price</label>
+                <label for="price"><?php echo __('price'); ?></label>
                 <input type="number" class="form-control" id="price" name="price"
                     value="<?= htmlspecialchars($product['price']) ?>" placeholder="Enter price" required step="0.01"
                     min="0">
@@ -82,9 +82,9 @@
 
             <!-- Buttons -->
             <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary"><?php echo __('save'); ?></button>
                 <button type="button" class="btn btn-outline-secondary"
-                    onclick="window.location.href='/products'">Cancel</button>
+                    onclick="window.location.href='/products'"><?php echo __('cancel'); ?></button>
             </div>
         </form>
     </div>

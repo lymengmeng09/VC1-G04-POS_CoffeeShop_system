@@ -11,11 +11,13 @@ body {
   margin-top: 20px;
   z-index: 1000;
 }
-.shop {
-  margin-left: 990px;
-  margin-bottom: 18px;
+/* .shop{
+ margin-right: 20px;
+} */
+.profile{
+  margin-right: 20%;
+  margin-bottom: 3px;
 }
-
 .navbar {
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
   position: fixed;
@@ -26,7 +28,18 @@ body {
   transition: top 0.3s;
 }
 .navbar a i {
-  transition: color 0.3s ease-in-out;
+    transition: color 0.3s ease-in-out;
+  }
+  .navbar a i:hover {
+    color:  #4A2C2A;
+  }
+  .badge-notification {
+    font-size: 0.75rem;
+    font-weight: bold;
+  }
+.avatar-img {
+    width: 50px;
+    height: 50px;
 }
 .navbar a i:hover {
   color: #4a2c2a;
@@ -68,3 +81,97 @@ body {
   }
 }
 
+.profile .dropstart .dropdown-menu{
+  margin-top: 45px;
+  min-width: 150px
+}
+.navbar-brand{
+  width: 100px; 
+  height: auto;
+}
+
+@media (max-width: 991.98px) {
+  .navbar{
+    height: 80px;
+  }
+  .profile{
+    margin-right: 10%;
+    margin-bottom: 12px;
+  }
+  .navbar-brand{
+    width: 80px; 
+  }
+}
+.shop {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.shop a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+}
+
+.shop i.fas, .shop i.bi {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.count_cart {
+  position: absolute !important;
+  top: -10px !important;
+  right: -8px !important;
+  background-color: #dc3545 !important;
+  color: white !important;
+  border-radius: 50% !important;
+  width: 18px !important;
+  height: 18px !important;
+  font-size: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: bold !important;
+}
+/* Fix for dropdown menu items with icons */
+.dropdown-menu .drop {
+  display: flex !important;
+  align-items: center !important;
+  padding: 0.5rem 1rem !important;
+  text-decoration: none !important;
+  color: #212529 !important;
+}
+
+.dropdown-menu .drop:hover {
+  background-color: #f8f9fa !important;
+}
+
+.dropdown-menu .drop i {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 20px !important;
+  height: 20px !important;
+  margin-right: 10px !important;
+  /* Remove the ms-3 class from the HTML and use this fixed margin instead */
+  margin-left: 0 !important;
+}
+
+.dropdown-menu .drop span {
+  display: inline-block !important;
+}
+.lang{
+  width: 20px;
+  margin-right: 10px;
+  margin-bottom: 3px;
+}
+.dropdown-toggle::after {
+  border-top-color: #000 !important; /* Black caret */
+  /* OR use your theme color */
+  border-top-color: var(--bs-primary) !important;
+}

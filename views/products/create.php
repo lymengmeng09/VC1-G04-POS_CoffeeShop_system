@@ -4,7 +4,7 @@
         <div class="card-body">
             <form action="/products/store" id="productForm" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label for="productImage">Product Image</label>
+                    <label for="productImage"><?php echo __('Product image'); ?></label>
                     <div class="image-upload-container">
                         <input type="file" class="file-input" id="productImage" name="image_url" accept="image/*" required>
                         <div class="image-preview-box" id="uploadBox" onclick="triggerFileInput()">
@@ -14,32 +14,32 @@
                                     <polyline points="17 8 12 3 7 8"></polyline>
                                     <line x1="12" y1="3" x2="12" y2="15"></line>
                                 </svg>
-                                <p>Upload Image</p>
+                                <p><?php echo __('upload_image'); ?></p>
                             </div>
                             <img id="imagePreview" src="#" alt="Product Image Preview" style="display: none; max-width: 100%; max-height: 100%;">
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="productName">Product Name</label>
+                    <label for="productName"><?php echo __('product_name'); ?></label>
                     <input type="text" class="form-control" id="productName" name="product_name" placeholder="Enter product name" required>
                 </div>
                 <div class="form-group">
-                    <label for="category_id">Category:</label>
+                    <label for="category_id"><?php echo __('category'); ?>:</label>
                     <select name="category_id" class="form-control" required>
-                        <option value="">Select a category</option>
+                        <option value=""><?php echo __('Select a category'); ?></option>
                         <?php foreach ($categories as $category): ?>
                             <option value="<?= $category['category_id'] ?>"><?= $category['category_name'] ?></option>
                         <?php endforeach ?>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="price">Price</label>
+                    <label for="price"><?php echo __('price'); ?></label>
                     <input type="number" class="form-control" id="price" name="price" placeholder="Enter price" required step="0.01">
                 </div>
                 <div class="btu-save-cancel d-flex gap-2 mt-3">
-                    <button type="submit" class="btn btn-success">Submit</button>
-                    <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/products'">Cancel</button>
+                    <button type="submit" class="btn btn-success"><?php echo __('submit'); ?></button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/products'"><?php echo __('cancel'); ?></button>
                 </div>
             </form>
         </div>

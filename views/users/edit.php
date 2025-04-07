@@ -5,32 +5,32 @@
             <form method="POST" action="/update-user?id=<?= $user['id'] ?>" id="userForm" class="needs-validation" novalidate enctype="multipart/form-data">
                 <!-- Profile Image Upload Section -->
                 <div class="form-group">
-                    <label for="profileImage">Profile Image</label>
+                    <label for="profileImage"><?php echo __('profile_image'); ?></label>
                     <div class="image-upload-container">
                         <input type="file" class="file-input" id="profileImage" name="profile_image" accept="image/*">
                         <div class="image-preview-box" id="uploadBox" onclick="triggerFileInput()">
-                            <img id="imagePreview" src="/<?= htmlspecialchars($user['profile']) ?>" alt="Profile Image Preview" style="max-width: 100%; max-height: 100%;">
+                            <img id="imagePreview" src="/<?= htmlspecialchars($user['profile']) ?>" onerror="this.src='/views/assets/images/profile.png'" alt="<?php echo __('profile_image_preview'); ?>" style="max-width: 100%; max-height: 100%;">
                         </div>
                     </div>
                 </div>
 
                 <!-- Name Field -->
                 <div class="form-group">
-                    <label for="name" class="form-label">Name</label>
+                    <label for="name" class="form-label"><?php echo __('name'); ?></label>
                     <input type="text" class="form-control" id="name" name="name" value="<?= htmlspecialchars($user['name']) ?>" required>
                 </div>
 
                 <!-- Email Field -->
                 <div class="form-group">
-                    <label for="email" class="form-label">Email</label>
+                    <label for="email" class="form-label"><?php echo __('email'); ?></label>
                     <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
                 </div>
                 <?php if (AccessControl::isAdmin()): ?>
                     <!-- Role Selection Dropdown (visible to admins) -->
                     <div class="form-group">
-                        <label for="role_id" class="form-label">Role:</label>
+                        <label for="role_id" class="form-label"><?php echo __('role'); ?>:</label>
                         <select name="role_id" class="form-control" required>
-                            <option value="">Select a role</option>
+                            <option value=""><?php echo __('select_role'); ?></option>
                             <?php foreach ($roles as $role): ?>
                                 <option value="<?= $role['id'] ?>" <?= $role['id'] == $user['role_id'] ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($role['role_name']) ?>
@@ -43,8 +43,8 @@
                     <input type="hidden" name="role_id" value="<?= $user['role_id'] ?>">
                 <?php endif; ?>
                 <!-- Save and Cancel Buttons -->
-                <button type="submit" class="btn btn-primary mt-2">Save</button>
-                <a href="/list-users" class="btn btn-secondary mt-2">Cancel</a>
+                <button type="submit" class="btn btn-primary mt-2"><?php echo __('save'); ?></button>
+                <a href="/list-users" class="btn btn-secondary mt-2"><?php echo __('cancel'); ?></a>
             </form>
         </div>
     </div>
@@ -116,7 +116,7 @@ $(document).ready(function() {
                 }
                 
                 // Show success message
-                alert('Profile updated successfully!');
+                alert('<?php echo __('profile_updated_success'); ?>');
             }
         });
     });
