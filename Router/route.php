@@ -9,7 +9,14 @@ require_once "Controllers/AddProductController.php";
 require_once "Controllers/ViewStockController.php";
 require_once "Middleware/AuthMiddleware.php";
 require_once "Controllers/OrderHistoryController.php";
+require_once "Controllers/PurchaseController.php";
 
+ 
+require_once "Middleware/AuthMiddleware.php";
+require_once "Helpers/LanguageHelper.php";
+
+// Initialize language system
+LanguageHelper::init();
 
 $route = new Router();
 
@@ -68,5 +75,17 @@ $route->post("/products/delete/{id}", [AddProductController::class, 'destroy']);
 
 // order-history
 $route->get("/order-history", [OrderHistoryController::class, 'index']);
+
+// Purchase history routes
+$route->get("/purchase-history", [PurchaseController::class, 'index']);
+$route->get("/purchase-history/export", [PurchaseController::class, 'exportCsv']);
+
+
+
+  
+
+ 
+      
+
 
 $route->route();

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo LanguageHelper::getCurrentLang(); ?>">
 
 <head>
   <meta charset="UTF-8">
@@ -8,7 +8,6 @@
 
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/views/assets/css/bootstrap.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <link rel="stylesheet" href="/views/assets/css/view.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -27,11 +26,23 @@
   <link rel="stylesheet" href="/views/assets/css/Dashboard.css">
   <link rel="stylesheet" href="/views/assets/css/navbar.css">
   <link rel="stylesheet" href="/views/assets/css/create.css">
+  <link href="https://fonts.googleapis.com/css2?family=Hanuman:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/views/assets/css/history.css">
-   <!-- Include jsPDF and jsPDF-AutoTable -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+  
+  <!-- Fallback Khmer font (Dangrek) -->
+  <link href="https://fonts.googleapis.com/css2?family=Dangrek&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Odor+Mean+Chey&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Siemreap&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/views/assets/css/purchase.css">
  
 </head>
-
+<style>
+    
+    /* Khmer language specific styling */
+    html[lang="km"] * {
+      font-family: 'Siemreap', sans-serif;
+      line-height: 1.6; /* Better readability for Khmer */
+    }
+    
+  </style>
 <body>
