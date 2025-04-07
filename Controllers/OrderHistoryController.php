@@ -1,5 +1,6 @@
 <?php
 require_once 'Models/OrderModel.php';
+
 class OrderHistoryController extends BaseController {
     protected $orderModel;
     
@@ -7,83 +8,111 @@ class OrderHistoryController extends BaseController {
         $this->orderModel = new OrderModel();
     }
     
-    // Display order history page
     public function index() {
-        // Get filter parameters from request
-        $searchQuery = isset($_GET['search']) ? $_GET['search'] : '';
-        $filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
-        $startDate = isset($_GET['start_date']) ? $_GET['start_date'] : '';
-        $endDate = isset($_GET['end_date']) ? $_GET['end_date'] : '';
+        if (!isset($_SESSION['user'])) {
+            header('Location: /login');
+            exit();
+        }
+
+        $customerId = $_SESSION['user']['id'];
+        $orders = $this->orderModel->getOrdersByCustomer($customerId);
         
-        // Get orders
-        $order = $this->orderModel->getOrders($searchQuery, $filter, $startDate, $endDate);
-        
-        // Load view with data
-        $this->view('order/order-history', [
-            'orders' => $order,
-            'searchQuery' => $searchQuery,
-            'filter' => $filter,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
+        foreach ($orders as &$order) {
+            $order['items'] = $this->orderModel->getOrderItems($order['order_id']);
+        }
+
+        $this->view('orders/history', [
+            'orders' => $orders,
             'title' => 'Order History'
         ]);
     }
     
-    // Display order details page
-    public function details($id = null) {
-        if ($id === null) {
-            $this->redirect('orders');
+    public function saveOrder() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->json(['success' => false, 'message' => 'Invalid request method']);
+            return;
         }
-        
-        // Get order details
+
+        if (!isset($_SESSION['user'])) {
+            $this->json(['success' => false, 'message' => 'Not authenticated']);
+            return;
+        }
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        $customerId = $_SESSION['user']['id'];
+        $items = $data['items'] ?? [];
+        $total = $data['total'] ?? 0;
+
+        if (empty($items)) {
+            $this->json(['success' => false, 'message' => 'No items in order']);
+            return;
+        }
+
+        try {
+            $orderId = $this->orderModel->saveOrder($customerId, $total);
+            $this->orderModel->saveOrderItems($orderId, $items);
+            
+            $this->json([
+                'success' => true,
+                'order_id' => $orderId,
+                'message' => 'Order saved successfully'
+            ]);
+        } catch (Exception $e) {
+            $this->json([
+                'success' => false,
+                'message' => 'Error saving order: ' . $e->getMessage()
+            ]);
+        }
+    }
+    
+    public function show($id) {
+        if (!isset($_SESSION['user'])) {
+            header('Location: /login');
+            exit();
+        }
+
+        $customerId = $_SESSION['user']['id'];
         $order = $this->orderModel->getOrderById($id);
         
-        // Get order items
+        if (!$order || $order['customer_id'] != $customerId) {
+            $this->redirect('/order-history');
+            return;
+        }
+
         $orderItems = $this->orderModel->getOrderItems($id);
         
-        // Load view with data
         $this->view('orders/details', [
             'order' => $order,
             'orderItems' => $orderItems,
-            'title' => 'Order Details: ' . $id
+            'title' => 'Order Details'
         ]);
     }
     
-    // Handle AJAX search requests
-    public function search() {
-        // Get filter parameters from request
-        $searchQuery = isset($_GET['term']) ? $_GET['term'] : '';
-        $filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
-        $startDate = isset($_GET['start_date']) ? $_GET['start_date'] : '';
-        $endDate = isset($_GET['end_date']) ? $_GET['end_date'] : '';
+    public function exportCsv() {
+        if (!isset($_SESSION['user'])) {
+            header('Location: /login');
+            exit();
+        }
+
+        $customerId = $_SESSION['user']['id'];
+        $orders = $this->orderModel->getOrdersByCustomer($customerId);
         
-        // Get filtered orders
-        $orders = $this->orderModel->getOrders($searchQuery, $filter, $startDate, $endDate);
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="order_history_' . date('Y-m-d') . '.csv"');
         
-        // Return JSON response
-        $this->json($orders);
-    }
-    
-    // Update order status
-    public function updateStatus() {
-        // Check if request is POST
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('orders');
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['Order Number', 'Date', 'Total Amount', 'Status']);
+        
+        foreach ($orders as $order) {
+            fputcsv($output, [
+                $order['order_number'],
+                $order['order_date'],
+                $order['total_amount'],
+                $order['payment_status']
+            ]);
         }
         
-        // Get order ID and status from POST data
-        $id = isset($_POST['id']) ? $_POST['id'] : null;
-        $status = isset($_POST['status']) ? $_POST['status'] : null;
-        
-        if ($id === null || $status === null) {
-            $this->json(['success' => false, 'message' => 'Invalid request']);
-        }
-        
-        // Update status
-        $success = $this->orderModel->updateStatus($id, $status);
-        
-        // Return JSON response
-        $this->json(['success' => $success]);
+        fclose($output);
+        exit();
     }
 }
-

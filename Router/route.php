@@ -75,6 +75,10 @@ $route->post("/products/delete/{id}", [AddProductController::class, 'destroy']);
 
 // order-history
 $route->get("/order-history", [OrderHistoryController::class, 'index']);
+$route->post("/order-history/save", [OrderHistoryController::class, 'saveOrder']);
+$route->get("/order-history/{id}", [OrderHistoryController::class, 'show']);
+$route->get("/order-history/export", [OrderHistoryController::class, 'exportCsv']);
+
 
 // Purchase history routes
 $route->get("/purchase-history", [PurchaseController::class, 'index']);

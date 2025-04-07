@@ -353,3 +353,249 @@ function sendOrderData() {
   });
 }
 });
+// Add item to cart
+const cartItems = new Map(); // To track items in the cart
+
+document.querySelectorAll('.btn-Order').forEach(button => {
+    button.addEventListener('click', function () {
+        const id = this.dataset.id;
+        const name = this.dataset.name;
+        const price = parseFloat(this.dataset.price);
+        const img = this.dataset.img;
+
+        if (cartItems.has(id)) {
+            cartItems.get(id).quantity += 1;
+        } else {
+            cartItems.set(id, { id, name, price, img, quantity: 1 });
+        }
+
+        updateCartTable();
+    });
+});
+
+function updateCartTable() {
+    const cartTableBody = document.getElementById('cart-table-body');
+    cartTableBody.innerHTML = '';
+    let total = 0;
+
+    cartItems.forEach(item => {
+        const subtotal = item.price * item.quantity;
+        total += subtotal;
+
+        const row = document.createElement('tr');
+        row.dataset.id = item.id;
+        row.dataset.name = item.name;
+        row.dataset.price = item.price;
+        row.innerHTML = `
+            <td><img src="${item.img}" alt="${item.name}" style="width: 50px;"></td>
+            <td>${item.name}</td>
+            <td class="quantity">${item.quantity}</td>
+            <td>$${subtotal.toFixed(2)}</td>
+            <td><button class="btn btn-danger btn-sm remove-item">Remove</button></td>
+        `;
+        cartTableBody.appendChild(row);
+    });
+
+    document.getElementById('cart-total').textContent = total.toFixed(2);
+    document.getElementById('cart-table').style.display = cartItems.size > 0 ? 'block' : 'none';
+    document.getElementById('cart-section').style.display = cartItems.size > 0 ? 'block' : 'none';
+}
+
+// Remove item from cart
+document.getElementById('cart-table-body').addEventListener('click', function (e) {
+    if (e.target.classList.contains('remove-item')) {
+        const row = e.target.closest('tr');
+        const id = row.dataset.id;
+        cartItems.delete(id);
+        updateCartTable();
+    }
+});
+
+// Clear cart
+document.getElementById('clear-all').addEventListener('click', function () {
+    cartItems.clear();
+    updateCartTable();
+});
+
+// Handle Pay Now button click
+document.getElementById('PayMent').addEventListener('click', function () {
+    const cartItemsArray = Array.from(cartItems.values());
+    let total = 0;
+
+    cartItemsArray.forEach(item => {
+        total += item.price * item.quantity;
+    });
+
+    // Generate receipt content
+    const receiptContent = document.getElementById('receipt-content');
+    let receiptHTML = `
+        <div style="text-align: center;">
+            <img src="/path/to/logo.png" alt="Logo" style="width: 50px;">
+            <h5>Order Receipt</h5>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Price($)</th>
+                    <th>Total($)</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    cartItemsArray.forEach(item => {
+        const subtotal = item.price * item.quantity;
+        receiptHTML += `
+            <tr>
+                <td>${item.name}</td>
+                <td>${item.quantity}</td>
+                <td>$${item.price.toFixed(2)}</td>
+                <td>$${subtotal.toFixed(2)}</td>
+                <td>${new Date().toISOString().split('T')[0]}</td>
+            </tr>
+        `;
+    });
+
+    receiptHTML += `
+            </tbody>
+        </table>
+        <p><strong>TOTAL PRICE: $${total.toFixed(2)}</strong></p>
+    `;
+
+    receiptContent.innerHTML = receiptHTML;
+
+    // Show receipt modal
+    const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
+    receiptModal.show();
+
+    // Store cart items and total for the OK button
+    document.getElementById('receiptModal').dataset.cartItems = JSON.stringify(cartItemsArray);
+    document.getElementById('receiptModal').dataset.total = total;
+});
+
+// Handle OK button click
+document.getElementById('ok-button').addEventListener('click', function () {
+    const cartItemsArray = JSON.parse(document.getElementById('receiptModal').dataset.cartItems);
+    const total = document.getElementById('receiptModal').dataset.total;
+
+    // Send cart data to server to save the order
+    fetch('/products/saveOrder', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `cartItems=${encodeURIComponent(JSON.stringify(cartItemsArray))}&total=${total}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Clear cart
+            cartItems.clear();
+            updateCartTable();
+
+            // Redirect to history page
+            window.location.href = '/products/history';
+        }
+    })
+    .catch(error => console.error('Error saving order:', error));
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    // ... (keep your existing initialization code)
+
+    // Modify the Pay Now button click handler
+    document.getElementById('PayMent').addEventListener('click', function() {
+        if (cart.length === 0) {
+            alert("Your cart is empty!");
+            return;
+        }
+
+        // Prepare order data
+        const orderData = {
+            items: cart.map(item => ({
+                product_id: item.id,
+                quantity: item.quantity,
+                price: item.price
+            })),
+            total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+        };
+
+        // Send to server
+        fetch('/order-history/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(orderData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                generateReceipt(data.order_id);
+                // Clear cart after successful order
+                cart = [];
+                saveCart();
+            } else {
+                alert('Failed to save order: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while saving the order');
+        });
+    });
+
+    // Modify generateReceipt function
+    function generateReceipt(orderId) {
+        let totalPrice = 0;
+        const now = new Date();
+        
+        const receiptItems = cart.map(item => {
+            const itemTotal = item.quantity * item.price;
+            totalPrice += itemTotal;
+            return `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.quantity}</td>
+                    <td>$${item.price.toFixed(2)}</td>
+                    <td>$${itemTotal.toFixed(2)}</td>
+                </tr>
+            `;
+        }).join('');
+        
+        receiptContent.innerHTML = `
+            <h5>Order #${orderId}</h5>
+            <p>Date: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}</p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${receiptItems}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="3">Total</th>
+                        <th>$${totalPrice.toFixed(2)}</th>
+                    </tr>
+                </tfoot>
+            </table>
+        `;
+        
+        receiptModal.show();
+    }
+
+    // Modify OK button handler
+    document.getElementById('ok-button').addEventListener('click', function() {
+        window.location.href = '/order-history';
+    });
+});
