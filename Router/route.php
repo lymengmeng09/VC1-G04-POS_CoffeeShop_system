@@ -8,7 +8,7 @@ require_once "Controllers/ListUserController.php";
 require_once "Controllers/AddProductController.php";
 require_once "Controllers/ViewStockController.php";
 require_once "Controllers/PurchaseController.php";
-require_once "Controllers/LanguageController.php";
+
  
 require_once "Middleware/AuthMiddleware.php";
 
@@ -71,12 +71,14 @@ $route->post("/products/delete/{id}", [AddProductController::class, 'destroy']);
 
 // Purchase history routes
 $route->get("/purchase-history", [PurchaseController::class, 'index']);
-$route->get("/purchase-history/download", [PurchaseController::class, 'downloadPDF']);
+$route->get("/purchase-history/export", [PurchaseController::class, 'exportCsv']);
+
+
+
   
 
  
- // Language route
-// $route->post("/language/change", [LanguageController::class, 'change']);
+      
 
 
 $route->route();

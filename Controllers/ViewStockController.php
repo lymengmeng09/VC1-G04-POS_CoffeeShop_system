@@ -100,6 +100,13 @@ class ViewStockController extends BaseController {
                     $this->sendToTelegram($productDetails);
     
                     // Store receipt data
+
+                    error_log("Adding product $i to database");
+                    $product_id = $this->productModel->addProduct($name, (float)$price, (int)$quantity, $image);
+                    if (!$product_id) {
+                        throw new Exception("Failed to add product " . ($i + 1) . " to database");
+                    }
+
                     $receiptItems[] = [
                         'name' => $name,
                         'change_quantity' => $quantity,
@@ -220,7 +227,8 @@ class ViewStockController extends BaseController {
                     }
 
                     $existingQuantity = (int)$product['quantity'];
-                    $updatedQuantity = $existingQuantity + (int)$newQuantity;
+                    $quantityChange = (int)$newQuantity; // The change in quantity (can be negative)
+                    $updatedQuantity = $existingQuantity + $quantityChange;
 
                     if ($updatedQuantity < 0) {
                         throw new Exception("Cannot reduce quantity below 0 for product '{$product['name']}'. Current quantity is $existingQuantity.");
@@ -235,6 +243,7 @@ class ViewStockController extends BaseController {
                     $this->notifyStockChange($productId, "Updated");
 
                     $changeQuantity = $newQuantity > 0 ? "+$newQuantity" : $newQuantity;
+                    $changeQuantity = $quantityChange > 0 ? "+$quantityChange" : $quantityChange;
                     $receiptItems[] = [
                         'name' => $product['name'],
                         'change_quantity' => $changeQuantity,
@@ -302,6 +311,25 @@ class ViewStockController extends BaseController {
         $topProducts = $this->productModel->getTopSellingProducts($startDate, $endDate);
         include "views/dashboard.php";
     }
+
+    // public function update() {
+    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    //         $id = htmlspecialchars($_POST['id']);
+    //         $data = [
+    //             'name' => htmlspecialchars($_POST['name']),
+    //             'price' => floatval($_POST['price']),
+    //             'quantity' => intval($_POST['quantity'])
+    //         ];
+
+    //         $product = $this->productModel->getProductById($id);
+    //         if (!$product) {
+    //             die("Product not found.");
+    //         }
+
+    //         $this->productModel->updateProduct($id, $data['name'], $data['price'], $data['quantity']);
+    //         $this->redirect('/viewStock');
+    //     }
+    // }
 
     public function clearReceipt() {
         if (session_status() === PHP_SESSION_NONE) {
@@ -387,3 +415,4 @@ class ViewStockController extends BaseController {
     }
 }
 ?>
+ 
