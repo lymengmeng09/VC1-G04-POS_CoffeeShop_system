@@ -1,0 +1,121 @@
+<?php
+return [
+    // General
+    'app_name' => 'ប្រព័ន្ធគ្រប់គ្រងកាហ្វេ',
+    'dashboard' => 'ផ្ទាំងគ្រប់គ្រង',
+    'order' => 'បញ្ជាទិញ',
+    'stock' => 'ស្តុក',
+    'report' => 'របាយការណ៍',
+    'users' => 'អ្នកប្រើប្រាស់',
+    'my_profile' => 'ប្រវត្តិរូបខ្ញុំ',
+    'logout' => 'ចាកចេញ',
+
+    // Navigation
+    'home' => 'ទំព័រដើម',
+    'products' => 'ផលិតផល',
+    'settings' => 'ការកំណត់',
+
+    // User Interface
+    'search' => 'ស្វែងរក',
+    'add_new' => 'បន្ថែមថ្មី',
+    'edit' => 'កែប្រែ',
+    'delete' => 'លុប',
+    'save' => 'រក្សាទុក',
+    'cancel' => 'បោះបង់',
+    'back' => 'ត្រឡប់ក្រោយ',
+    'submit' => 'ដាក់ស្នើ',
+
+    // Products
+    'product_name' => 'ឈ្មោះផលិតផល',
+    'price' => 'តម្លៃ',
+    'quantity' => 'បរិមាណ',
+    'description' => 'ការពិពណ៌នា',
+    'category' => 'ប្រភេទ',
+    'Product image' => 'រូបភាពផលិតផល',
+    'add_product' => 'បន្ថែមផលិតផល',
+    'edit_product' => 'កែប្រែផលិតផល',
+    'product_management' => 'ការគ្រប់គ្រងផលិតផល',
+    'search_products_placeholder' => 'ស្វែងរកផលិតផល...',
+    'all' => 'ទាំងអស់',
+    'create_menu' => 'បង្កើតម៉ឺនុយ',
+    'order' => 'បញ្ជាទិញ',
+    'bills' => 'វិក្កយបត្រ',
+    'total' => 'សរុប',
+    'cancel' => 'បោះបង់',
+    'pay_now' => 'បង់ប្រាក់',
+    'delete_confirmation' => 'ការបញ្ជាក់ការលុប',
+    'are_you_sure_delete' => 'តើអ្នកប្រាកដថាចង់លុប',
+    'order_receipt' => 'បង្កាន់ដៃបញ្ជាទិញ',
+    'confirm' => 'បញ្ជាក់',
+    'Select a category' => 'ជ្រើសរើសប្រភេទផលិតផល',
+
+    // Users
+    'username' => 'ឈ្មោះអ្នកប្រើប្រាស់',
+    'email' => 'អ៊ីមែល',
+    'password' => 'ពាក្យសម្ងាត់',
+    'role' => 'តួនាទី',
+    'add_user' => 'បន្ថែមអ្នកប្រើប្រាស់',
+    'edit_user' => 'កែប្រែអ្នកប្រើប្រាស់',
+    'search user' => 'ស្វែងរកអ្នកប្រើប្រាស់...',
+    'Change password' => 'ផ្លាស់ប្តូរពាក្យសម្ងាត់',
+    'Member management' => 'គ្រប់គ្រងសមាជិក',
+    'All role' => 'តួនាទីទាំងអស់',
+    'admin' => 'អ្នកគ្រប់គ្រង',
+    'Staff' => 'បុគ្គលិក',
+    'change_password_for' => 'ប្តូរពាក្យសម្ងាត់សម្រាប់',
+'new_password' => 'ពាក្យសម្ងាត់ថ្មី',
+'delete_user' => 'លុបអ្នកប្រើប្រាស់',
+'confirm_delete_user' => 'តើអ្នកប្រាកដថាចង់លុបអ្នកប្រើប្រាស់នេះមែនទេ?',
+'discard' => 'បោះបង់',
+    // In languages/en.php
+
+
+// In languages/km.php
+'profile_image' => 'រូបភាពប្រវត្តិរូប',
+'upload_image' => 'បញ្ចូលរូបភាព',
+'profile_image_preview' => 'មើលរូបភាពប្រវត្តិរូប',
+'name' => 'ឈ្មោះ',
+'enter_name_placeholder' => 'បញ្ចូលឈ្មោះរបស់អ្នក',
+'enter_email_placeholder' => 'បញ្ចូលអ៊ីមែលរបស់អ្នក',
+'create_password_placeholder' => 'បង្កើតពាក្យសម្ងាត់',
+'confirm_password_label' => 'បញ្ជាក់ពាក្យសម្ងាត់',
+'confirm_password_placeholder' => 'បញ្ជាក់ពាក្យសម្ងាត់របស់អ្នក',
+'select_role' => 'ជ្រើសរើសតួនាទី',
+
+    // Messages
+    'confirm_delete' => 'តើអ្នកប្រាកដថាចង់លុបធាតុនេះមែនទេ?',
+    'item_added' => 'ធាតុត្រូវបានបន្ថែមដោយជោគជ័យ',
+    'item_updated' => 'ធាតុត្រូវបានធ្វើបច្ចុប្បន្នភាពដោយជោគជ័យ',
+    'item_deleted' => 'ធាតុត្រូវបានលុបដោយជោគជ័យ',
+    'error_occurred' => 'មានកំហុសមួយបានកើតឡើង។ សូមព្យាយាមម្តងទៀត។',
+
+    // Language
+    'language' => 'ភាសា',
+    'switch_language' => 'ប្តូរភាសា',
+
+    //login
+    'login' => 'ចូល',
+    'email_placeholder' => 'បញ្ចូលឈ្មោះអ្នកប្រើប្រាស់របស់អ្នក',
+    'password_placeholder' => 'បញ្ចូលពាក្យសម្ងាត់របស់អ្នក',
+    'email_required' => 'អ៊ីមែលត្រូវបានទាមទារឬមិនត្រឹមត្រូវ។',
+    'password_required' => 'ពាក្យសម្ងាត់ត្រូវបានទាមទារ។',
+    'forgot_password' => 'ភ្លេចពាក្យសម្ងាត់?',
+    'login_heading' => 'ចូលគណនីរបស់អ្នក',
+    'login_description' => 'ចុះឈ្មោះឥឡូវនេះដើម្បីចូលប្រើប្រព័ន្ធគ្រប់គ្រងហាងកាហ្វេរបស់អ្នក។ គ្រប់គ្រងស្តុកដោយងាយស្រួល តាមដានការលក់ និងធ្វើឱ្យប្រតិបត្តិការមានភាពរលូនជាមួយនឹងវេទិការបស់យើងដែលងាយស្រួលប្រើប្រាស់។',
+    'login_button' => 'ចូល',
+'forgot_password' => 'ភ្លេចពាក្យសម្ងាត់?',
+'please_login' => 'សូមចូលគណនីរបស់អ្នក',
+'email_not_registered' => 'អ៊ីមែលនេះមិនបានចុះឈ្មោះទេ។',
+
+    'email_required' => 'តម្រូវឱ្យមានអ៊ីមែល។',
+    'password_required' => 'តម្រូវឱ្យមានពាក្យសម្ងាត់។',
+    'field_required' => 'វាលនេះត្រូវបានទាមទារ។',
+    'valid_email' => 'សូមបញ្ចូលអាសយដ្ឋានអ៊ីមែលត្រឹមត្រូវ។',
+    'name_required' => 'តម្រូវឱ្យមានឈ្មោះ។',
+    'role_required' => 'សូមជ្រើសរើសតួនាទី។',
+    'password_length' => 'ពាក្យសម្ងាត់ត្រូវតែមានយ៉ាងហោចណាស់ 8 តួអក្សរ។',
+    'confirm_password' => 'សូមបញ្ជាក់ពាក្យសម្ងាត់របស់អ្នក។',
+    'passwords_not_match' => 'ពាក្យសម្ងាត់មិនត្រូវគ្នាទេ។',
+
+    'edit_stock' => 'កែប្រែស្តុក',
+];

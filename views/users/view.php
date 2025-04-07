@@ -7,7 +7,7 @@ $user = $_SESSION['user'];
         <div class="row align-items-center">
             <div class="col-md-8 mb-3 mb-md-0">
                 <div class="d-flex align-items-center">
-                    <img src="<?= htmlspecialchars($user['profile']) ?>" alt="<?= htmlspecialchars($user['name']) ?>" class="rounded-circle me-3" width="64" height="64">
+                    <img src="<?= htmlspecialchars($user['profile']) ?>" onerror="this.src='/views/assets/images/profile.png'" alt="<?= htmlspecialchars($user['name']) ?>" class="rounded-circle me-3" width="64" height="64">
                     <div class="user">
                         <h2 class="card-title mb-0" style="color: #432115ce; font-weight:600;"><?= htmlspecialchars($user['name']) ?></h2>
                         <p class="card-text mb-0" style="color: #006241;"><?= htmlspecialchars($user['email']) ?></p>

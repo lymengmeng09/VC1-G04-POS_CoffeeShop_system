@@ -4,6 +4,7 @@ require "Models/StockModels.php";
 class ViewStockController extends BaseController {
     private $productModel;
     private $uploadDir = "uploads/";
+    private $telegramBotToken = '7898878636:AAFtwwPFcVSIi256SkNUaKitGDS5eaOhq1o';
 
     public function __construct() {
         $this->productModel = new ProductModel();
@@ -16,6 +17,119 @@ class ViewStockController extends BaseController {
         $this->view('stock-products/viewStock', ['products' => $this->productModel->getAllProducts()]);
     }
 
+    private function getAllChatIds() {
+        return $this->productModel->getAllTelegramUsers();
+    }
+
+    public function registerTelegramUser($chatId) {
+        try {
+            $success = $this->productModel->addTelegramUser($chatId);
+            if ($success) {
+                error_log("Registered new Telegram user: $chatId");
+            }
+            return $success;
+        } catch (Exception $e) {
+            error_log("Error registering Telegram user: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function telegramWebhook() {
+        try {
+            $update = json_decode(file_get_contents('php://input'), true);
+            error_log("Webhook received: " . json_encode($update));
+            if (isset($update['message']['chat']['id'])) {
+                $chatId = $update['message']['chat']['id'];
+                if ($this->registerTelegramUser($chatId)) {
+                    $this->sendToTelegram("Welcome to the stock update bot! You will now receive stock updates.", [$chatId]);
+                } else {
+                    error_log("Failed to register chat ID: $chatId");
+                }
+            } else {
+                error_log("Webhook: No chat ID found in update");
+            }
+            header('Content-Type: application/json');
+            echo json_encode(['ok' => true]);
+        } catch (Exception $e) {
+            error_log("Webhook error: " . $e->getMessage());
+            header('Content-Type: application/json');
+            echo json_encode(['ok' => false, 'error' => $e->getMessage()]);
+        }
+    }
+
+    private function sendToTelegram($message, $specificChatIds = null) {
+        error_log("sendToTelegram: Attempting to send message: " . substr($message, 0, 50));
+        
+        $chatIds = $specificChatIds ?? $this->getAllChatIds();
+        if (empty($chatIds)) {
+            error_log("sendToTelegram: No Telegram users found to broadcast to");
+            return false;
+        }
+
+        error_log("sendToTelegram: Broadcasting to " . count($chatIds) . " chat IDs: " . implode(', ', $chatIds));
+        
+        $successCount = 0;
+        $url = "https://api.telegram.org/bot{$this->telegramBotToken}/sendMessage";
+        
+        foreach ($chatIds as $chatId) {
+            $params = [
+                'chat_id' => $chatId,
+                'text' => $message,
+                'parse_mode' => 'HTML'
+            ];
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_VERBOSE, true); // Enable verbose output for debugging
+            curl_setopt($ch, CURLOPT_STDERR, fopen('php://stderr', 'w')); // Log curl details
+            
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $error = curl_error($ch);
+            curl_close($ch);
+            
+            if ($response === false || $httpCode !== 200) {
+                error_log("sendToTelegram: Telegram API Error for chat $chatId: " . ($error ?: "HTTP $httpCode") . " - Response: " . $response);
+                continue;
+            }
+            
+            $result = json_decode($response, true);
+            if ($result['ok']) {
+                $successCount++;
+                error_log("sendToTelegram: Successfully sent to chat $chatId");
+            } else {
+                error_log("sendToTelegram: Telegram API Failed for chat $chatId: " . ($result['description'] ?? 'Unknown error') . " - Response: " . json_encode($result));
+            }
+        }
+        
+        error_log("sendToTelegram: Broadcast completed. Sent to $successCount out of " . count($chatIds) . " users");
+        return $successCount > 0;
+    }
+
+    // New method to test Telegram sending
+    public function testTelegram() {
+        try {
+            $message = "📦 Test message from CoffeeShop system\nTime: " . date('m/d/Y h:i A', time());
+            $success = $this->sendToTelegram($message);
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            $_SESSION['notification'] = $success ? "Test message sent successfully" : "Failed to send test message";
+            $this->redirect('/viewStock');
+        } catch (Exception $e) {
+            error_log("Error in testTelegram: " . $e->getMessage());
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            $_SESSION['notification'] = "Error sending test message: " . $e->getMessage();
+            $this->redirect('/viewStock');
+        }
+    }
+
     public function add() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             try {
@@ -23,12 +137,10 @@ class ViewStockController extends BaseController {
                     session_start();
                 }
     
-                // Log incoming data for debugging
                 error_log("Received POST request to /add-product");
                 error_log("POST data: " . json_encode($_POST));
                 error_log("FILES data: " . json_encode($_FILES));
     
-                // Collect form data
                 $names = $_POST['name'] ?? [];
                 $prices = $_POST['price'] ?? [];
                 $quantities = $_POST['quantity'] ?? [];
@@ -45,7 +157,6 @@ class ViewStockController extends BaseController {
                 $receiptItems = [];
                 $timestamp = date('Y-m-d H:i:s');
     
-                // Process each product
                 for ($i = 0; $i < count($names); $i++) {
                     $name = trim($names[$i] ?? '');
                     $price = $prices[$i] ?? '';
@@ -63,7 +174,6 @@ class ViewStockController extends BaseController {
                         throw new Exception("Quantity must be a non-negative integer for product " . ($i + 1));
                     }
     
-                    // Handle image upload
                     $image = null;
                     if (isset($files['name'][$i]) && $files['error'][$i] == UPLOAD_ERR_OK) {
                         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
@@ -72,7 +182,7 @@ class ViewStockController extends BaseController {
                             throw new Exception("Only JPEG, PNG, and GIF images are allowed for product " . ($i + 1));
                         }
     
-                        $maxFileSize = 5 * 1024 * 1024;  // 5MB
+                        $maxFileSize = 5 * 1024 * 1024;
                         if ($files['size'][$i] > $maxFileSize) {
                             throw new Exception("Image size must not exceed 5MB for product " . ($i + 1));
                         }
@@ -85,29 +195,19 @@ class ViewStockController extends BaseController {
                         $image = $targetFile;
                     }
     
-                    // Add product to the database
-
-                    $result = $this->productModel->addProduct($name, (float)$price, (int)$quantity, $image);
-                    if (!$result) {
-                        throw new Exception("Failed to add product " . ($i + 1) . " to database");
-                    }
-    
-                    // Send the product data to the chatbot with icon
-                    $productDetails = "📦 New product added:\n" .
-                                      "Name: $name\n" .
-                                      "Price: $$price\n" .
-                                      "Quantity: $quantity\n" .
-                                      "Image: " . ($image ? $image : 'No image');
-                    $this->sendToTelegram($productDetails);
-    
-                    // Store receipt data
-
-                    error_log("Adding product $i to database");
                     $product_id = $this->productModel->addProduct($name, (float)$price, (int)$quantity, $image);
                     if (!$product_id) {
                         throw new Exception("Failed to add product " . ($i + 1) . " to database");
                     }
-
+    
+                    $productDetails = "📦 New product added:\n" .
+                                    "Name: $name\n" .
+                                    "Price: $$price\n" .
+                                    "Quantity: $quantity\n" .
+                                    "Image: " . ($image ? $image : 'No image');
+                    $this->sendToTelegram($productDetails);
+    
+                    error_log("Adding product $i to database");
                     $receiptItems[] = [
                         'name' => $name,
                         'change_quantity' => $quantity,
@@ -116,7 +216,7 @@ class ViewStockController extends BaseController {
                     ];
                 }
     
-                // Store receipt data in session
+                $this->productModel->storeReceiptData($receiptItems, 'added');
                 $_SESSION['receipt'] = [
                     'items' => $receiptItems,
                     'action' => 'added'
@@ -133,7 +233,6 @@ class ViewStockController extends BaseController {
             }
         }
     
-        // Session start for GET requests
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
@@ -141,6 +240,7 @@ class ViewStockController extends BaseController {
         header("Location: /viewStock");
         exit;
     }
+
     public function update() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
@@ -163,12 +263,28 @@ class ViewStockController extends BaseController {
                     throw new Exception("Product not found.");
                 }
     
-                // Changed from updateProducts to updateProduct with individual parameters
-                $this->productModel->updateProduct($id, $data['name'], $data['price'], $data['quantity']);
+                // Update the product and get the result
+                $result = $this->productModel->updateProduct($id, $data['name'], $data['price'], $data['quantity']);
+                if (!$result['success']) {
+                    throw new Exception("Failed to update product.");
+                }
+    
                 error_log("Product updated with ID: $id");
+    
+                // Notify via Telegram for the update
                 $this->notifyStockChange($id, "Updated");
     
-                $_SESSION['notification'] = "Product '{$data['name']}' updated successfully.";
+                // Prepare notifications
+                $notifications = ["Product '{$data['name']}' updated successfully."];
+                if (!empty($result['notifications'])) {
+                    $notifications = array_merge($notifications, $result['notifications']);
+                    // Send low stock or out of stock notifications to Telegram
+                    foreach ($result['notifications'] as $notification) {
+                        $this->sendToTelegram($notification);
+                    }
+                }
+    
+                $_SESSION['notification'] = implode(' ', $notifications);
                 $this->redirect('/viewStock');
             } catch (Exception $e) {
                 error_log("Error in update(): " . $e->getMessage());
@@ -177,8 +293,6 @@ class ViewStockController extends BaseController {
             }
         }
     }
-
-    // Keeping updateStock() as is since it’s not in your routes but might be used elsewhere
     public function updateStock() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             try {
@@ -230,7 +344,7 @@ class ViewStockController extends BaseController {
                     }
 
                     $existingQuantity = (int)$product['quantity'];
-                    $quantityChange = (int)$newQuantity; // The change in quantity (can be negative)
+                    $quantityChange = (int)$newQuantity;
                     $updatedQuantity = $existingQuantity + $quantityChange;
 
                     if ($updatedQuantity < 0) {
@@ -245,7 +359,6 @@ class ViewStockController extends BaseController {
                     error_log("Product updated with ID: $productId");
                     $this->notifyStockChange($productId, "Updated");
 
-                    $changeQuantity = $newQuantity > 0 ? "+$newQuantity" : $newQuantity;
                     $changeQuantity = $quantityChange > 0 ? "+$quantityChange" : $quantityChange;
                     $receiptItems[] = [
                         'name' => $product['name'],
@@ -261,6 +374,7 @@ class ViewStockController extends BaseController {
                     }
                 }
 
+                $this->productModel->storeReceiptData($receiptItems, 'updated');
                 $_SESSION['receipt'] = [
                     'items' => $receiptItems,
                     'action' => 'updated'
@@ -305,8 +419,18 @@ class ViewStockController extends BaseController {
     }
 
     public function destroy($id) {
-        $this->productModel->deleteProduct($id);
-        $this->redirect('/viewStock');
+        try {
+            $this->productModel->deleteProduct($id);
+            $this->notifyStockChange($id, "Deleted");
+            $this->redirect('/viewStock');
+        } catch (Exception $e) {
+            error_log("Error in destroy(): " . $e->getMessage());
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            $_SESSION['notification'] = 'Error deleting product: ' . $e->getMessage();
+            $this->redirect('/viewStock');
+        }
     }
 
     public function dashboard() {
@@ -315,25 +439,6 @@ class ViewStockController extends BaseController {
         $topProducts = $this->productModel->getTopSellingProducts($startDate, $endDate);
         include "views/dashboard.php";
     }
-
-    // public function update() {
-    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    //         $id = htmlspecialchars($_POST['id']);
-    //         $data = [
-    //             'name' => htmlspecialchars($_POST['name']),
-    //             'price' => floatval($_POST['price']),
-    //             'quantity' => intval($_POST['quantity'])
-    //         ];
-
-    //         $product = $this->productModel->getProductById($id);
-    //         if (!$product) {
-    //             die("Product not found.");
-    //         }
-
-    //         $this->productModel->updateProduct($id, $data['name'], $data['price'], $data['quantity']);
-    //         $this->redirect('/viewStock');
-    //     }
-    // }
 
     public function clearReceipt() {
         if (session_status() === PHP_SESSION_NONE) {
@@ -345,78 +450,44 @@ class ViewStockController extends BaseController {
     }
 
     public function viewReceipts() {
-        $stmt = $this->productModel->conn->query("SELECT * FROM receipts ORDER BY timestamp DESC");
-        $receipts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $this->view('stock-products/receipts', ['receipts' => $receipts]);
-    }
-
-    private function sendToTelegram($message) {
-        $telegramBotToken = '7898878636:AAFtwwPFcVSIi256SkNUaKitGDS5eaOhq1o'; // Replace with your bot token
-        $chatId = '6461561884'; // Replace with your chat ID
-
-
-        error_log("Attempting to send Telegram message: " . substr($message, 0, 50));
-        
-        $url = "https://api.telegram.org/bot{$telegramBotToken}/sendMessage";
-        $params = [
-            'chat_id' => $chatId,
-            'text' => $message,
-            'parse_mode' => 'HTML'
-        ];
-        
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $error = curl_error($ch);
-        
-        curl_close($ch);
-        
-        if ($response === false || $httpCode !== 200) {
-            error_log("Telegram API Error: " . ($error ?: "HTTP $httpCode") . " - Response: " . $response);
-            return false;
+        try {
+            $receipts = $this->productModel->getAllReceipts();
+            $this->view('stock-products/receipts', ['receipts' => $receipts]);
+        } catch (Exception $e) {
+            error_log("Error in viewReceipts: " . $e->getMessage());
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            $_SESSION['notification'] = 'Error fetching receipts: ' . $e->getMessage();
+            $this->redirect('/viewStock');
         }
-        
-        $result = json_decode($response, true);
-        if (!$result['ok']) {
-            error_log("Telegram API Failed: " . $result['description'] . " - Response: " . json_encode($result));
-            return false;
-        }
-        
-        error_log("Telegram message sent successfully");
-        return true;
     }
 
     private function notifyStockChange($productId, $action) {
         try {
-            error_log("Notifying stock change for product ID: $productId, Action: $action");
+            error_log("notifyStockChange: Broadcasting stock change for product ID: $productId, Action: $action");
             $product = $this->productModel->getProductById($productId);
-            if (!$product) {
-                error_log("Product not found for ID: $productId");
+            if (!$product && $action !== "Deleted") {
+                error_log("notifyStockChange: Product not found for ID: $productId");
                 return;
             }
             
             $timestamp = date('m/d/Y h:i A', time());
             $message = "📦 <b>Stock $action</b>\n" .
-                      "Time: {$timestamp}\n" .
-                      "Name: " . htmlspecialchars($product['name']) . "\n" .
-                      "Price: $" . number_format($product['price'], 2) . "\n" .
-                      "Quantity: " . $product['quantity'];
+                      "Time: {$timestamp}\n";
             
-            $success = $this->sendToTelegram($message);
-            if (!$success) {
-                error_log("Failed to send Telegram message for product: " . $product['name']);
+            if ($action !== "Deleted") {
+                $message .= "Name: " . htmlspecialchars($product['name']) . "\n" .
+                           "Price: $" . number_format($product['price'], 2) . "\n" .
+                           "Quantity: " . $product['quantity'];
             } else {
-                error_log("Telegram notification sent for product: " . $product['name']);
+                $message .= "Product ID: $productId";
             }
+            
+            $this->sendToTelegram($message);
+            
         } catch (Exception $e) {
             error_log("Error in notifyStockChange: " . $e->getMessage());
         }
     }
 }
-?>
