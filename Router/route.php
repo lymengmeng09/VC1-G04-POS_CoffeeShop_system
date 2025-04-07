@@ -24,11 +24,13 @@ $route->get("/viewStock", [ViewStockController::class, 'index'])
 $route->post("/add-product", [ViewStockController::class, 'add']);
 $route->get("/edit_product", [ViewStockController::class, 'edit']);
 $route->put("/update_product", [ViewStockController::class, 'update']);
+$route->put("barcode", [ViewStockController::class, 'update']);
 $route->delete("/delete_product/{id}", [ViewStockController::class, 'destroy']);
 
 
 $route->post("/update-stock", [ViewStockController::class, 'updateStock']);
 $route->get("/clearReceipt", [ViewStockController::class, 'clearReceipt']);
+
 
 
 // Public routes (no middleware)
