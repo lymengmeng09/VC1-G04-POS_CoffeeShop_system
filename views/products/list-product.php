@@ -171,24 +171,37 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success" id="confirm-receipt">Confirm</button>
+                        <button type="button" class="btn btn-primary" id="ok-button" data-bs-dismiss="modal" style="padding: 10px 20px; font-size: 16px; margin-left: 45%;" >OK</button>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Receipt Modal -->
-        <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="receiptModalLabel">Order Receipt</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body" id="receipt-content">
-                        <!-- Receipt details will be inserted here dynamically -->
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="confirm-receipt">Confirm</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
+
+
+        <script>
+// Handle Pay Now button click
+document.getElementById('PayMent').addEventListener('click', function () {
+    // Generate receipt content dynamically (optional if you already have logic)
+    const receiptContent = document.getElementById('receipt-content');
+    receiptContent.innerHTML = '<p>Your order has been placed. Thank you!</p>'; // example content
+
+    // Show receipt modal
+    const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
+    receiptModal.show();
+});
+
+// Handle OK button click
+document.getElementById('ok-button').addEventListener('click', function () {
+    // Hide the cart section
+    document.getElementById('cart-section').style.display = 'none';
+
+    // Optionally clear cart table if needed
+    document.getElementById('cart-table-body').innerHTML = '';
+    document.getElementById('cart-total').textContent = '';
+
+    // Redirect to home (or refresh without cart query param)
+    window.location.href = window.location.pathname;
+});
+</script>
+ 
