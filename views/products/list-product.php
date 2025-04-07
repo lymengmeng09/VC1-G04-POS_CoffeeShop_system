@@ -163,7 +163,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title " id="receiptModalLabel"><?php echo __('order_receipt'); ?></h5>
+                        <h5 class="modal-title" id="receiptModalLabel"><?php echo __('order_receipt'); ?></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" id="receipt-content">
@@ -178,30 +178,4 @@
         </div>
         
 
-
-        <script>
-// Handle Pay Now button click
-document.getElementById('PayMent').addEventListener('click', function () {
-    // Generate receipt content dynamically (optional if you already have logic)
-    const receiptContent = document.getElementById('receipt-content');
-    receiptContent.innerHTML = '<p>Your order has been placed. Thank you!</p>'; // example content
-
-    // Show receipt modal
-    const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
-    receiptModal.show();
-});
-
-// Handle OK button click
-document.getElementById('ok-button').addEventListener('click', function () {
-    // Hide the cart section
-    document.getElementById('cart-section').style.display = 'none';
-
-    // Optionally clear cart table if needed
-    document.getElementById('cart-table-body').innerHTML = '';
-    document.getElementById('cart-total').textContent = '';
-
-    // Redirect to home (or refresh without cart query param)
-    window.location.href = window.location.pathname;
-});
-</script>
  
