@@ -125,7 +125,7 @@
                                     <div class="cart-total">Total: $<span id="cart-total">0.00</span></div>
                                     <div class="btn_cart">
                                         <button id="clear-all" class="btn btn-outline-secondary">Cancel</button>
-                                        <button id="PayMent" class="btn btn-primary">Pay Now</button>
+                                        <button id="PayMent" class="btn btn-primary">Pay Now</a></button>
                                     </div>
                                 </div>
                             </div>
@@ -134,6 +134,23 @@
                 </div>
             </div>
         </div>
+        <script>
+    document.getElementById("PayMent").addEventListener("click", function () {
+        // ✅ Hide the cart and bill section
+        const cartSection = document.getElementById("cart-section");
+        const cartTable = document.getElementById("cart-table");
+
+        if (cartSection) cartSection.style.display = "none";
+        if (cartTable) cartTable.style.display = "none";
+
+        // ✅ Optional: Clear cart data if needed
+        // document.getElementById("cart-table-body").innerHTML = "";
+        // document.getElementById("cart-total").textContent = "0.00";
+
+        // ✅ Redirect to product list (homepage)
+        window.location.href = "/views/products/list-products.php";
+    });
+</script>
 
 
         <!-- Delete Confirmation Modal -->
@@ -171,7 +188,9 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success" id="confirm-receipt">Confirm</button>
-                    </div>
+                    <button type="button" class="btn btn-primary" id="ok-button" data-bs-dismiss="modal" style="padding: 10px 20px; font-size: 16px; margin-left: 45%;" onclick="ConceldRedirect()">OK</button>
+                        
+                        </div>
                 </div>
             </div>
         </div>
