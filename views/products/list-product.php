@@ -1,11 +1,11 @@
-<h5>Product Management</h5>
+<h5><?php echo __('product_management'); ?></h5>
 <!-- Modified Search and Filter Section -->
 <div class="card mb-2">
     <div class="card-body">
         <form id="filterForm" method="GET" class="nav">
             <div class="col-md-4">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search products..." name="search" id="searchInput">
+                    <input type="text" class="form-control" placeholder="<?php echo __('search_products_placeholder'); ?>" name="search" id="searchInput">
                     <button class="btn" style="border:1px solid #D9D9D9;" type="submit">
                         <i class="fas fa-search"></i></button>
                 </div>
@@ -17,10 +17,10 @@
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <?php
                         if ($selected_category === 'all') {
-                            echo 'Category';
+                            echo __('category');
                         } else {
                             // Find the selected category name
-                            $selected_name = 'Category';
+                            $selected_name = __('category');
                             foreach ($categories as $cat) {
                                 if ($cat['category_id'] == $selected_category) {
                                     $selected_name = $cat['category_name'];
@@ -34,7 +34,7 @@
                     <ul class="dropdown-menu" aria-labelledby="drop2" id="categoryList">
                         <li>
                             <a class="dropdown-item cofe <?= ($selected_category === 'all') ? 'active' : '' ?>"
-                                href="?category=all">All</a>
+                                href="?category=all"><?php echo __('all'); ?></a>
                         </li>
                         <?php foreach ($categories as $category): ?>
                             <li>
@@ -47,7 +47,7 @@
                     </ul>
                 </div>
                 <button class="btn btn-primary text-light ms-2">
-                    <a href="/products/create" class="text-light text-decoration-none"><i class="fas fa-plus me-2"></i> Create Menu</a>
+                    <a href="/products/create" class="text-light text-decoration-none"><i class="fas fa-plus me-2"></i> <?php echo __('create_menu'); ?></a>
                 </button>
             </div>
         </form>
@@ -69,14 +69,13 @@
                                             </a>
                                             <ul class="dropdown-menu" style="min-width: 120px; padding: 0.5rem 0;">
                                                 <!-- Edit Link -->
-                                                <li class="edit"><a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>" class="edit-link bi-pencil"> Edit</a></li>
+                                                <li class="edit"><a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>" class="edit-link bi-pencil"> <?php echo __('edit'); ?></a></li>
                                                 <!-- Delete Button with Confirmation -->
                                                 <li><button type="button" class="dropdown-item btn-delete bi-trash"
-
                                                 data-id="<?= htmlspecialchars($product['product_id']) ?>"
                                                         data-name="<?= htmlspecialchars($product['product_name']) ?>"
                                                         data-bs-toggle="modal" data-bs-target="#deleteModal">
-                                                   Delete
+                                                   <?php echo __('delete'); ?>
                                                     </button>
                                                 </li>
                                             </ul>
@@ -100,7 +99,7 @@
                                                 data-price="<?= number_format($product['price'], 2) ?>"
                                                 data-img="<?= htmlspecialchars($product['image_url']) ?>"
                                                 data-category="<?= htmlspecialchars($product['category_id']) ?>">
-                                                Order
+                                                <?php echo __('order'); ?>
                                             </button>
                                         </div>
 
@@ -115,14 +114,14 @@
                     <div id="cart-table" style="display: none; padding: 0;">
                         <div class="card card-order sticky-top" style="top: 20px; width: 440px;">
                             <div class="card-body">
-                                <h3>Bills</h3>
+                                <h3><?php echo __('bills'); ?></h3>
                                 <table class="table">
                                     <tbody id="cart-table-body">
                                         <!-- Cart items will be added here dynamically -->
                                     </tbody>
                                 </table>
                                 <div class="d-flex justify-content-between total" id="btn">
-                                    <div class="cart-total">Total: $<span id="cart-total">0.00</span></div>
+                                    <div class="cart-total"><?php echo __('total'); ?>: $<span id="cart-total">0.00</span></div>
                                     <div class="btn_cart">
                                         <button id="clear-all" class="btn btn-outline-secondary">Cancel</button>
                                         <button id="PayMent" class="btn btn-primary">Pay Now</button>
@@ -134,6 +133,7 @@
                 </div>
             </div>
         </div>
+    
 
 
         <!-- Delete Confirmation Modal -->
@@ -141,17 +141,17 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel">Delete Confirmation</h5>
+                        <h5 class="modal-title" id="deleteModalLabel"><?php echo __('delete_confirmation'); ?></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Are you sure you want to delete <strong id="modalProductName"></strong>?
+                        <?php echo __('are_you_sure_delete'); ?> <strong id="modalProductName"></strong>?
                     </div>
                     <div class="modal-footer">
                         <form id="deleteForm" method="POST">
                             <input type="hidden" name="_method" value="DELETE">
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger"><?php echo __('delete'); ?></button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><?php echo __('cancel'); ?></button>
                         </form>
                     </div>
                 </div>
@@ -163,7 +163,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title " id="receiptModalLabel">Order Receipt</h5>
+                        <h5 class="modal-title " id="receiptModalLabel"><?php echo __('order_receipt'); ?></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" id="receipt-content">

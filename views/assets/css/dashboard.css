@@ -75,3 +75,142 @@
     height: 15px;
     margin-right: 5px;
 }
+
+/* responsive */
+
+/* General Responsive Styles */
+@media (max-width: 768px) {
+    /* Layout adjustments */
+    .page-content {
+        padding: 10px;
+    }
+    
+    .row {
+        margin-left: -25px;
+        margin-right: -25px;
+    }
+    
+    .col-12, 
+    .col-lg-9, 
+    .col-lg-3, 
+    .col-6, 
+    .col-md-6, 
+    .col-lg-4, 
+    .col-lg-6 {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    /* Card adjustments */
+    .card {
+        margin-bottom: 15px;
+    }
+    
+    /* Stats cards */
+    .col-6.col-lg-4.col-md-6 {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    
+    /* Stats icons */
+    .stats-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    /* Profile card */
+    .card-body.py-4.px-5 {
+        padding: 15px !important;
+    }
+    
+    .avatar.avatar-xl {
+        width: 50px;
+        height: 50px;
+    }
+    
+    /* Recent team members */
+    .recent-message {
+        padding: 10px 5px !important;
+    }
+    
+    .avatar.avatar-lg {
+        width: 40px;
+        height: 40px;
+    }
+    
+    /* Charts */
+    .card-body > div {
+        overflow-x: auto;
+    }
+    
+    canvas {
+        min-width: 100%;
+    }
+    
+    /* Typography */
+    h3, h4, h5, h6 {
+        font-size: 0.9rem;
+    }
+    
+    .font-bold, .font-extrabold {
+        font-size: 1rem;
+    }
+    
+    /* Two-column layout becomes single column */
+    .col-12.col-lg-9,
+    .col-12.col-lg-3 {
+        width: 100%;
+    }
+    
+    /* Adjust the order if needed */
+    .col-12.col-lg-3 {
+        order: -1; /* Moves sidebar to top on mobile */
+        margin-bottom: 20px;
+    }
+}
+
+/* For very small screens */
+@media (max-width: 480px) {
+    /* Even smaller text */
+    h3 {
+        font-size: 1.2rem;
+    }
+    
+    h4 {
+        font-size: 1rem;
+    }
+    
+    /* Stats cards content */
+    .card-body.px-3.py-4-5 .row {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .card-body.px-3.py-4-5 .col-md-4,
+    .card-body.px-3.py-4-5 .col-md-8 {
+        width: 100%;
+    }
+    
+    /* Profile avatar */
+    .d-flex.align-items-center {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .ms-3.name {
+        margin-left: 0 !important;
+        margin-top: 10px;
+    }
+    
+    /* Recent messages */
+    .recent-message {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .name.ms-4 {
+        margin-left: 0 !important;
+        margin-top: 5px;
+    }
+}

@@ -4,7 +4,7 @@
         <div class="card-body">
             <form action="/products/store" id="productForm" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label for="productImage">Product Image</label>
+                    <label for="productImage"><?php echo __('Product image'); ?></label>
                     <div class="image-upload-container">
                         <input type="file" class="file-input" id="productImage" name="image_url" accept="image/*" required>
                         <div class="image-preview-box" id="uploadBox" onclick="triggerFileInput()">
@@ -21,20 +21,20 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="productName">Product Name</label>
+                    <label for="productName"><?php echo __('product_name'); ?></label>
                     <input type="text" class="form-control" id="productName" name="product_name" placeholder="Enter product name" required>
                 </div>
                 <div class="form-group">
-                    <label for="category_id">Category:</label>
+                    <label for="category_id"><?php echo __('category'); ?>:</label>
                     <select name="category_id" class="form-control" required>
-                        <option value="">Select a category</option>
+                        <option value=""><?php echo __('Select a category'); ?></option>
                         <?php foreach ($categories as $category): ?>
                             <option value="<?= $category['category_id'] ?>"><?= $category['category_name'] ?></option>
                         <?php endforeach ?>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="price">Price</label>
+                    <label for="price"><?php echo __('price'); ?></label>
                     <input type="number" class="form-control" id="price" name="price" placeholder="Enter price" required step="0.01">
                 </div>
                 <div class="btu-save-cancel d-flex gap-2 mt-3">

@@ -1,6 +1,5 @@
 /**
- * Universal Form Validation Script
- * Works with login, user creation, and password reset forms
+ * Universal Form Validation Script with Multilingual Support
  */
 document.addEventListener("DOMContentLoaded", () => {
   // Add CSS for validation styling if not already in your stylesheet
@@ -52,6 +51,27 @@ function addValidationStyles() {
   }
 }
 
+// Get translations from the global object
+function getTranslation(key) {
+  // Check if translations object exists
+  if (window.validationMessages && window.validationMessages[key]) {
+    return window.validationMessages[key]
+  }
+  // Fallback to default English messages
+  // const defaultTranslations = {
+  //   'email_required': 'Email is required.',
+  //   'password_required': 'Password is required.',
+  //   'field_required': 'This field is required.',
+  //   'valid_email': 'Please enter a valid email address.',
+  //   'name_required': 'Name is required.',
+  //   'role_required': 'Please select a role.',
+  //   'password_length': 'Password must be at least 8 characters long.',
+  //   'confirm_password': 'Please confirm your password.',
+  //   'passwords_not_match': 'Passwords do not match.'
+  // }
+  return defaultTranslations[key] || key
+}
+
 // Function to initialize login form validation
 function initLoginFormValidation() {
   const loginForm = document.getElementById("loginForm")
@@ -64,13 +84,13 @@ function initLoginFormValidation() {
   // Add input event listeners for real-time validation
   if (emailField) {
     emailField.addEventListener("input", function () {
-      validateRequiredField(this, "Email is required.")
+      validateRequiredField(this, getTranslation('email_required'))
     })
   }
 
   if (passwordField) {
     passwordField.addEventListener("input", function () {
-      validateRequiredField(this, "Password is required.")
+      validateRequiredField(this, getTranslation('password_required'))
       updateToggleIconPosition(this)
     })
   }
@@ -83,13 +103,13 @@ function initLoginFormValidation() {
 
     // Validate email
     if (emailField) {
-      const emailValid = validateRequiredField(emailField, "Email is required.")
+      const emailValid = validateRequiredField(emailField, getTranslation('email_required'))
       isValid = isValid && emailValid
     }
 
     // Validate password
     if (passwordField) {
-      const passwordValid = validateRequiredField(passwordField, "Password is required.")
+      const passwordValid = validateRequiredField(passwordField, getTranslation('password_required'))
       isValid = isValid && passwordValid
       updateToggleIconPosition(passwordField)
     }
@@ -136,15 +156,15 @@ function initPasswordFormsValidation() {
     )
     requiredFields.forEach((field) => {
       field.addEventListener("input", () => {
-        let errorMessage = "This field is required."
+        let errorMessage = getTranslation('field_required')
 
         // Custom messages based on field type or name
         if (field.type === "email") {
-          errorMessage = "Please provide a valid email address."
+          errorMessage = getTranslation('valid_email')
         } else if (field.name === "name") {
-          errorMessage = "Name is required."
+          errorMessage = getTranslation('name_required')
         } else if (field.name === "role_id") {
-          errorMessage = "Please select a role."
+          errorMessage = getTranslation('role_required')
         }
 
         validateRequiredField(field, errorMessage)
@@ -168,15 +188,15 @@ function initPasswordFormsValidation() {
 
       // Validate other required fields
       requiredFields.forEach((field) => {
-        let errorMessage = "This field is required."
+        let errorMessage = getTranslation('field_required')
 
         // Custom messages based on field type or name
         if (field.type === "email") {
-          errorMessage = "Please provide a valid email address."
+          errorMessage = getTranslation('valid_email')
         } else if (field.name === "name") {
-          errorMessage = "Name is required."
+          errorMessage = getTranslation('name_required')
         } else if (field.name === "role_id") {
-          errorMessage = "Please select a role."
+          errorMessage = getTranslation('role_required')
         }
 
         const fieldValid = validateRequiredField(field, errorMessage)
@@ -203,7 +223,7 @@ function updateToggleIconPosition(inputField) {
   // Check if the input field has validation error
   if (inputField.classList.contains("is-invalid")) {
     // Move the icon to 40% when there's an error
-    toggleIcon.style.top = "53%"
+    toggleIcon.style.top = "54%"
   } else {
     // Remove the inline style to let the original CSS take effect
     toggleIcon.style.removeProperty("top")
@@ -226,7 +246,7 @@ function initPasswordToggles() {
       passwordInput.setAttribute("type", type)
 
       // Toggle icon
-      this.classList.toggle("fa-eye-slash")
+      this.classList.toggle("bi-eye-slash-fill")
     })
   })
 }
@@ -250,7 +270,7 @@ function validateRequiredField(field, errorMessage) {
   // Check email format if it's an email field
   if (field.type === "email" && !isValidEmail(field.value)) {
     field.classList.add("is-invalid")
-    errorElement.textContent = "Please enter a valid email address."
+    errorElement.textContent = getTranslation('valid_email')
     return false
   }
 
@@ -271,14 +291,14 @@ function validatePasswordField(passwordField) {
   // Check if empty
   if (!passwordField.value) {
     passwordField.classList.add("is-invalid")
-    errorElement.textContent = "Password is required."
+    errorElement.textContent = getTranslation('password_required')
     return false
   }
 
   // Check length (minimum 8 characters)
   if (passwordField.value.length < 8) {
     passwordField.classList.add("is-invalid")
-    errorElement.textContent = "Password must be at least 8 characters long."
+    errorElement.textContent = getTranslation('password_length')
     return false
   }
 
@@ -299,14 +319,14 @@ function validateConfirmPasswordField(confirmPasswordField, passwordField) {
   // Check if empty
   if (!confirmPasswordField.value) {
     confirmPasswordField.classList.add("is-invalid")
-    errorElement.textContent = "Please confirm your password."
+    errorElement.textContent = getTranslation('confirm_password')
     return false
   }
 
   // Check if matches password
   if (confirmPasswordField.value !== passwordField.value) {
     confirmPasswordField.classList.add("is-invalid")
-    errorElement.textContent = "Passwords do not match."
+    errorElement.textContent = getTranslation('passwords_not_match')
     return false
   }
 
