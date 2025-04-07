@@ -1,39 +1,39 @@
 #app {
-    display: flex;
-    flex-direction: column; /* Stack items vertically */
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
 }
 
 #sidebar {
-    width: 100%;
-    background: #f8f8f8;
-    padding: 10px;
+  width: 100%;
+  background: #f8f8f8;
+  padding: 10px;
 }
 .shop{
-  margin-left: 990px;
-  margin-bottom: 18px;
+margin-left: 990px;
+margin-bottom: 18px;
 }
 
 .navbar {
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    position: sticky;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  position: sticky;
 }
 .navbar a i {
-    transition: color 0.3s ease-in-out;
-  }
-  .navbar a i:hover {
-    color: #007bff;
-  }
-  .badge-notification {
-    font-size: 0.75rem;
-    font-weight: bold;
-  }
+  transition: color 0.3s ease-in-out;
+}
+.navbar a i:hover {
+  color: #007bff;
+}
+.badge-notification {
+  font-size: 0.75rem;
+  font-weight: bold;
+}
 .avatar-img {
-    width: 50px;
-    height: 50px;
-    
+  width: 50px;
+  height: 50px;
+  
 }
 .drop{
-  color: rgba(53, 53, 53, 0.778);
-  margin-right: 10px;
-  text-decoration: none;
+color: rgba(53, 53, 53, 0.778);
+margin-right: 10px;
+text-decoration: none;
 }
