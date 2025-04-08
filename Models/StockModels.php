@@ -265,18 +265,18 @@ class ProductModel {
     }
     public function addTelegramUser($chatId) {
         try {
-            $query = "INSERT IGNORE INTO telegram_users (chat_id) VALUES (:chat_id)";
+            $query = "INSERT INTO telegram_users (chat_id, is_active) VALUES (:chat_id, 1)
+                      ON DUPLICATE KEY UPDATE is_active = 1";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':chat_id', $chatId, PDO::PARAM_STR);
             $success = $stmt->execute();
-            error_log("addTelegramUser: Chat ID $chatId " . ($success ? "added successfully" : "failed to add"));
+            error_log("addTelegramUser: Chat ID $chatId " . ($success ? "added/updated successfully" : "failed"));
             return $success;
         } catch (Exception $e) {
             error_log("Error adding Telegram user: " . $e->getMessage());
             throw new Exception('Failed to add Telegram user: ' . $e->getMessage());
         }
     }
-
     public function getAllTelegramUsers() {
         try {
             $query = "SELECT chat_id FROM telegram_users WHERE is_active = 1";
@@ -290,7 +290,6 @@ class ProductModel {
             throw new Exception('Failed to fetch Telegram users: ' . $e->getMessage());
         }
     }
-
     public function getAllReceipts() {
         try {
             $query = "SELECT * FROM receipts ORDER BY timestamp DESC";

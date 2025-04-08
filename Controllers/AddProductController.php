@@ -168,6 +168,59 @@ public function destroy($id)
     $this->model->deleteProduct($id);
     $this->redirect('/products');
 }
+/// Function to handle product join action tables // In your Controlle
+public function storeReceipt() {
+    $data = json_decode(file_get_contents("php://input"), true);
+    error_log("Received: " . print_r($data, true)); // Debug: Check server logs
 
-    
+    if (!$data || empty($data['items']) || !isset($data['customer_id'])) {
+        echo json_encode(['success' => false, 'message' => 'Invalid or missing data']);
+        return;
+    }
+
+    $customer_id = $data['customer_id'];
+    $total_amount = floatval($data['total']);
+    $items = $data['items'];
+    $order_number = uniqid('ORD-');
+    $timestamp = date('Y-m-d H:i:s');
+
+    $order_id = $this->model->insertOrder([
+        'customer_id' => $customer_id,
+        'order_number' => $order_number,
+        'order_date' => $timestamp,
+        'total_amount' => $total_amount,
+        'payment_status' => 'paid',
+        'created_at' => $timestamp,
+        'updated_at' => $timestamp
+    ]);
+
+    if (!$order_id) {
+        echo json_encode(['success' => false, 'message' => 'Failed to create order']);
+        return;
+    }
+
+    foreach ($items as $item) {
+        $subtotal = floatval($item['quantity']) * floatval($item['price']);
+        $this->model->insertOrderItem([
+            'order_id' => $order_id,
+            'product_id' => $item['product_id'],
+            'quantity' => $item['quantity'],
+            'price' => floatval($item['price']),
+            'subtotal' => $subtotal
+        ]);
+    }
+
+    echo json_encode(['success' => true, 'order_id' => $order_id]);
+}
+
+public function getReceipt($order_id) {
+    $receiptData = $this->model->getOrderReceipt($order_id);
+    if ($receiptData) {
+        echo json_encode(['success' => true, 'receipt' => $receiptData]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Receipt not found']);
+    }
+}
+
+
 }
