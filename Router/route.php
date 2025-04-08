@@ -8,7 +8,7 @@ require_once "Controllers/ListUserController.php";
 require_once "Controllers/AddProductController.php";
 require_once "Controllers/ViewStockController.php";
 require_once "Middleware/AuthMiddleware.php";
-require_once "Controllers/OrderHistoryController.php";
+require_once "Controllers/OrderController.php";
 require_once "Controllers/PurchaseController.php";
 
  
@@ -66,19 +66,17 @@ $route->post("/users/update/{id}", [ListUserController::class, 'update'])
 
  
 // products
-$route->get("/products", [AddProductController::class, 'index']);
-$route->get("/products/create", [AddProductController::class, 'create']);
-$route->post("/products/store", [AddProductController::class, 'store']);
-$route->get("/products/edit/{id}", [AddProductController::class, 'edit']);
-$route->post("/products/update/{id}", [AddProductController::class, 'update']);
-$route->post("/products/delete/{id}", [AddProductController::class, 'destroy']);
+$route->get('/products', [AddProductController::class, 'index']);
+$route->get('/products/create', [AddProductController::class, 'create']);
+$route->post('/products/store', [AddProductController::class, 'store']);
+$route->get('/products/edit/{id}', [AddProductController::class, 'edit']);
+$route->post('/products/update/{id}', [AddProductController::class, 'update']);
+$route->post('/products/destroy/{id}', [AddProductController::class, 'destroy']);
+$route->post('/products/submitOrder', [AddProductController::class, 'submitOrder']);
+
 
 // order-history
-$route->get("/order-history", [OrderHistoryController::class, 'index']);
-$route->post("/order-history/save", [OrderHistoryController::class, 'saveOrder']);
-$route->get("/order-history/{id}", [OrderHistoryController::class, 'show']);
-$route->get("/order-history/export", [OrderHistoryController::class, 'exportCsv']);
-
+$route->get('/order-history', [OrderController::class, 'index']);
 
 // Purchase history routes
 $route->get("/purchase-history", [PurchaseController::class, 'index']);

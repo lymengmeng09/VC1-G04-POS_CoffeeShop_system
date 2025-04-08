@@ -1,22 +1,16 @@
 <?php
 require_once 'Models/AddProductModel.php';
-require_once 'Models/OrderModel.php';
 require_once 'BaseController.php';
 
-class AddProductController extends BaseController
-{
-    private $productModel;
-    private $orderModel;
+class AddProductController extends BaseController {
+    private $model;
 
-    function __construct()
-    {
-        $this->productModel = new AddProductModel();
-        $this->orderModel = new OrderModel();
+    function __construct() {
+        $this->model = new AddProductModel();
         $this->checkAuth();
     }
 
-    private function checkAuth()
-    {
+    private function checkAuth() {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
@@ -26,12 +20,10 @@ class AddProductController extends BaseController
         }
     }
 
-    public function index()
-    {
+    function index() {
         $category_id = $_GET['category'] ?? 'all';
-        $products = $this->productModel->getProductsByCategory($category_id);
-        $categories = $this->productModel->getCategories();
-        
+        $products = $this->model->getProductsByCategory($category_id);
+        $categories = $this->model->getCategories();
         $this->view('products/list-product', [
             'products' => $products,
             'categories' => $categories,
@@ -39,14 +31,12 @@ class AddProductController extends BaseController
         ]);
     }
 
-    public function create()
-    {
-        $categories = $this->productModel->getCategories();
+    function create() {
+        $categories = $this->model->getCategories();
         $this->view('products/create', ['categories' => $categories]);
     }
 
-    public function store()
-    {
+    function store() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $targetDir = "uploads/";
             $fileName = basename($_FILES["image_url"]["name"]);
@@ -63,7 +53,7 @@ class AddProductController extends BaseController
                             'image_url' => $targetFilePath,
                             'category_id' => $_POST['category_id']
                         ];
-                        $this->productModel->createProduct($data);
+                        $this->model->createProduct($data);
                         $this->redirect('/products');
                     } else {
                         echo "Sorry, there was an error uploading your file.";
@@ -77,23 +67,21 @@ class AddProductController extends BaseController
         }
     }
 
-    public function edit($id)
-    {
-        $product = $this->productModel->getProductById($id);
+    public function edit($id) {
+        $product = $this->model->getProductById($id);
         if (!$product) {
             $_SESSION['error'] = 'Product not found!';
             $this->redirect('/products');
             return;
         }
-        $categories = $this->productModel->getCategories();
+        $categories = $this->model->getCategories();
         $this->view('products/edit', [
             'product' => $product,
             'categories' => $categories
         ]);
     }
 
-    public function update($id)
-    {
+    public function update($id) {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $uploadDir = 'uploads/products/';
             if (!is_dir($uploadDir)) {
@@ -131,13 +119,13 @@ class AddProductController extends BaseController
                 'product_id' => $id
             ];
 
-            if (empty($data['product_name']) || empty($data['price']) || empty($data['category_id'])) {
+            if (empty($data['product_name']) || empty($data['price']) || empty($data['category']) || empty($data['category_id'])) {
                 $_SESSION['error'] = 'All fields except the image are required!';
                 $this->view('products/edit', ['error' => $_SESSION['error']]);
                 return;
             }
 
-            if ($this->productModel->updateProduct($data)) {
+            if ($this->model->updateProduct($data)) {
                 $this->redirect('/products');
             } else {
                 $_SESSION['error'] = 'There was an issue updating the product.';
@@ -146,49 +134,51 @@ class AddProductController extends BaseController
         }
     }
 
-    public function destroy($id)
-    {
-        $this->productModel->deleteProduct($id);
+    public function destroy($id) {
+        $this->model->deleteProduct($id);
         $this->redirect('/products');
     }
 
-    // Save order when user confirms
-    public function saveOrder()
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $cartItems = json_decode($_POST['cartItems'], true);
-            $total = floatval($_POST['total']);
-            $customerId = $_SESSION['user']['id'];
+    // Updated submitOrder method (removed customer_id)
+    public function submitOrder() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $data = json_decode(file_get_contents('php://input'), true);
+                error_log("Received data: " . print_r($data, true)); // Debug input
 
-            $orderId = $this->orderModel->saveOrder($customerId, $total);
+                $cartItems = $data['cartItems'] ?? [];
+                $totalAmount = $data['totalAmount'] ?? 0;
 
-            $items = [];
-            foreach ($cartItems as $item) {
-                $items[] = [
-                    'product_id' => $item['id'],
-                    'quantity' => $item['quantity'],
-                    'price' => $item['price']
-                ];
+                if (empty($cartItems) || !is_numeric($totalAmount)) {
+                    throw new Exception('Invalid order data. Cart empty or total invalid.');
+                }
+
+                $orderNumber = 'POS-' . date('YmdHis') . '-' . rand(1000, 9999);
+                $orderDate = date('Y-m-d H:i:s');
+                $paymentStatus = 'completed';
+
+                $items = array_map(function ($item) {
+                    return [
+                        'product_id' => $item['id'],
+                        'quantity' => $item['quantity'],
+                        'price' => $item['price'],
+                        'subtotal' => $item['quantity'] * $item['price'],
+                    ];
+                }, $cartItems);
+
+                error_log("Prepared items: " . print_r($items, true)); // Debug items
+
+                $orderId = $this->model->storeOrder($orderNumber, $orderDate, $totalAmount, $paymentStatus, $items);
+
+                echo json_encode(['success' => true, 'order_id' => $orderId, 'message' => 'Order placed successfully']);
+                exit;
+            } catch (Exception $e) {
+                error_log("Submit Order Error: " . $e->getMessage());
+                echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+                exit;
             }
-
-            $this->orderModel->saveOrderItems($orderId, $items);
-
-            echo json_encode(['success' => true, 'order_id' => $orderId]);
         }
-    }
-
-    // Display order history
-    public function history()
-    {
-        $customerId = $_SESSION['user']['id'];
-        $orders = $this->orderModel->getOrdersByCustomer($customerId);
-        
-        foreach ($orders as &$order) {
-            $order['items'] = $this->orderModel->getOrderItems($order['order_id']);
-        }
-
-        $this->view('order/ohistory', [
-            'orders' => $orders
-        ]);
+        echo json_encode(['success' => false, 'error' => 'Invalid request method']);
+        exit;
     }
 }

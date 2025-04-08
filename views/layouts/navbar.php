@@ -107,22 +107,22 @@ $currentLang = LanguageHelper::getCurrentLang();
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="/viewStock" class='sidebar-link'>
-                            <i class="bi bi-shop"></i>
-                            <span><?php echo __('stock'); ?></span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
                         <a href="/order-history" class="sidebar-link" aria-label="View Order History">
                             <i class="bi bi-cart-fill"></i>
                             <span>History</span>
                         </a>
-                    <li class="sidebar-item">
-                        <a href="/purchase-history" class='sidebar-link'>
-                            <i class="bi bi-file-earmark-medical-fill"></i>
-                            <span><?php echo __('report'); ?></span>
-                        </a>
-                    </li>
+                        <li class="sidebar-item">
+                            <a href="/viewStock" class='sidebar-link'>
+                                <i class="bi bi-shop"></i>
+                                <span><?php echo __('stock'); ?></span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="/purchase-history" class='sidebar-link'>
+                                <i class="bi bi-file-earmark-medical-fill"></i>
+                                <span><?php echo __('report'); ?></span>
+                            </a>
+                        </li>
                     <li class="sidebar-item">
                         <a href="/list-users" class='sidebar-link'>
                             <i class="bi bi-person-circle"></i>

@@ -1,16 +1,55 @@
+// fetch('/products/submitOrder', {
+//     method: 'POST',
+//     headers: {
+//         'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify({
+//         cartItems: cart.map(item => ({
+//             id: item.id,
+//             name: item.name,
+//             quantity: item.quantity,
+//             price: item.price,
+//             subtotal: item.price * item.quantity
+//         })),
+//         totalAmount: total
+//     })
+// })
+// .then(response => {
+//     console.log('Response:', response);
+//     if (!response.ok) {
+//         throw new Error('Network response was not ok');
+//     }
+//     return response.json();
+// })
+// .then(data => {
+//     console.log('Data:', data);
+//     if (data.success) {
+//         alert('Order submitted successfully!');
+//         cart = [];
+//         total = 0;
+//         updateCart(); // if you have a function to re-render cart
+//         window.location.href = '/orders'; // go to order history
+//     } else {
+//         alert('Error submitting order: ' + data.error);
+//     }
+// })
+// .catch(error => {
+//     console.error('Fetch error:', error);
+//     alert('Failed to submit order. Please try again.');
+// });
+
 document.addEventListener("DOMContentLoaded", function() {
-  // Initialize elements
-  const searchInput = document.getElementById("searchInput");
-  const productItems = document.querySelectorAll(".product-item");
-  const cartTableBody = document.getElementById("cart-table-body");
-  const cartTotalElement = document.getElementById("cart-total");
-  const cartCountElement = document.getElementById("cart-count");
-  const cartTable = document.getElementById("cart-table");
-  const clearAllBtn = document.getElementById("clear-all");
-  const payNowBtn = document.getElementById("PayMent");
-  const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
-  const receiptContent = document.getElementById('receipt-content');
-  const confirmReceiptBtn = document.getElementById('confirm-receipt');
+    const searchInput = document.getElementById("searchInput");
+    const productItems = document.querySelectorAll(".product-item");
+    const cartTableBody = document.getElementById("cart-table-body");
+    const cartTotalElement = document.getElementById("cart-total");
+    const cartCountElement = document.getElementById("cart-count");
+    const cartTable = document.getElementById("cart-table");
+    const clearAllBtn = document.getElementById("clear-all");
+    const payNowBtn = document.getElementById("PayMent");
+    const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
+    const receiptContent = document.getElementById('receipt-content');
+    const confirmReceiptBtn = document.getElementById('confirm-receipt');
   const deleteModal = document.getElementById('deleteModal') ? new bootstrap.Modal(document.getElementById('deleteModal')) : null;
   
   // Cart state
@@ -54,18 +93,18 @@ document.addEventListener("DOMContentLoaded", function() {
       
       // Remove item from cart
       cartTableBody.addEventListener('click', function(e) {
-          if (e.target.classList.contains('remove-item')) {
-              const productId = e.target.dataset.id;
-              cart = cart.filter(item => item.id !== productId);
-              saveCart();
-          }
-      });
+        if (e.target.classList.contains('remove-item')) {
+            const productId = e.target.dataset.id;
+            cart = cart.filter(item => item.id !== productId);
+            saveCart();
+        }
+    });
       
       // Clear cart
       clearAllBtn.addEventListener('click', function() {
-          cart = [];
-          saveCart();
-      });
+        cart = [];
+        saveCart();
+    });
       
       // Payment
       payNowBtn.addEventListener('click', function() {
@@ -111,19 +150,19 @@ document.addEventListener("DOMContentLoaded", function() {
   }
   
   function filterProducts() {
-      const searchTerm = searchInput.value.toLowerCase();
-      const selectedCategory = document.querySelector(".dropdown-item.active")?.dataset.category || 'all';
-      
-      productItems.forEach(function(product) {
-          const productName = product.querySelector(".card-title").textContent.toLowerCase();
-          const productCategory = product.dataset.category.toLowerCase();
-          
-          const matchesSearch = productName.includes(searchTerm);
-          const matchesCategory = selectedCategory === 'all' || productCategory.includes(selectedCategory);
-          
-          product.style.display = matchesSearch && matchesCategory ? "" : "none";
-      });
-  }
+    const searchTerm = searchInput.value.toLowerCase();
+    const selectedCategory = document.querySelector(".dropdown-item.active")?.dataset.category || 'all';
+
+    productItems.forEach(function(product) {
+        const productName = product.querySelector(".card-title").textContent.toLowerCase();
+        const productCategory = product.dataset.category.toLowerCase();
+
+        const matchesSearch = productName.includes(searchTerm);
+        const matchesCategory = selectedCategory === 'all' || productCategory.includes(selectedCategory);
+
+        product.style.display = matchesSearch && matchesCategory ? "" : "none";
+    });
+}
   
   function addToCart(id, name, price, img, category) {
       const existingItem = cart.find(item => item.id === id);
@@ -597,5 +636,34 @@ document.addEventListener("DOMContentLoaded", function() {
     // Modify OK button handler
     document.getElementById('ok-button').addEventListener('click', function() {
         window.location.href = '/order-history';
+    });
+});
+document.getElementById('confirm-receipt').addEventListener('click', function () {
+    fetch('/products/submitOrder', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            cartItems: cart,
+            totalAmount: total
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            cart = [];
+            total = 0;
+            updateCart();
+            document.getElementById('cart-section').style.display = 'none';
+            alert('Order placed successfully! Check the order history.');
+            window.location.href = '/orders'; // Redirect to history page
+        } else {
+            alert('Error placing order: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error placing order.');
     });
 });
