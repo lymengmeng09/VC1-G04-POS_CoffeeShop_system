@@ -5,7 +5,8 @@ $user = $_SESSION['user'];
 <!-- Include Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- Include Chart.js Data Labels Plugin for displaying percentages -->
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js">
+</script>
 
 
 
@@ -20,16 +21,15 @@ $user = $_SESSION['user'];
                     <div class="card">
                         <div class="card-body px-3 py-4-5">
                             <div class="row">
-                                <div class="col-md-4">
-                                    <div class="stats-icon purple">
-                                        <i class="iconly-boldShow"></i>
+                                <div class="col-md-8 d-flex">
+                                    <h4 class="font-semibold text-danger ">Expenses</h4>
+                                    <div class="col-md-4">
+                                        <i class="material-icons text-danger down fs-1">trending_down</i>
                                     </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <h6 class="text-muted font-semibold">Total Revenues</h6>
-                                    <h6 class="font-extrabold mb-0">112,000L.E</h6>
-                                </div>
                             </div>
+                            <h1 class="font-semibold text-danger ">$1,245.00</h1>
+                            <h6 class=" mb-0 ">For This month</h6>  
                         </div>
                     </div>
                 </div>
@@ -37,16 +37,15 @@ $user = $_SESSION['user'];
                     <div class="card">
                         <div class="card-body px-3 py-4-5">
                             <div class="row">
-                                <div class="col-md-4">
-                                    <div class="stats-icon blue">
-                                        <i class="iconly-boldProfile"></i>
+                                <div class="col-md-8 d-flex ">
+                                    <h4 class=" font-semibold text-success">Income</h4>
+                                    <div class="col-md-4">
+                                        <i class="material-icons text-success down1 fs-1">trending_up</i>
                                     </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <h6 class="text-muted font-semibold">Total Order</h6>
-                                    <h6 class="font-extrabold mb-0">183,000Cups</h6>
-                                </div>
                             </div>
+                            <h1 class="font-semibold text-success ">$1,245.00</h1>
+                            <h6 class=" mb-0 ">For This month</h6>  
                         </div>
                     </div>
                 </div>
@@ -54,16 +53,15 @@ $user = $_SESSION['user'];
                     <div class="card">
                         <div class="card-body px-3 py-4-5">
                             <div class="row">
-                                <div class="col-md-4">
-                                    <div class="stats-icon green">
-                                        <i class="iconly-boldAdd-User"></i>
+                                <div class="col-md-8 d-flex ">
+                                    <h4 class="text-primary font-semibold ">Profits</h4>
+                                    <div class="col-md-4">
+                                        <i class="material-icons text-primary down2 fs-1">paid</i>
                                     </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <h6 class="text-muted font-semibold">Total Customers</h6>
-                                    <h6 class="font-extrabold mb-0">8000Cust.</h6>
-                                </div>
                             </div>
+                            <h1 class="font-semibold text-primary ">$1,245.00</h1>
+                            <h6 class="mb-0 ">For This month</h6>
                         </div>
                     </div>
                 </div>
@@ -95,15 +93,15 @@ $user = $_SESSION['user'];
                 </div>
                 <div class="col-12 col-lg-6">
                     <div class="card">
-                    <div class="card-header">
+                        <div class="card-header">
                             <h4>Top Selling Products</h4>
                         </div>
                         <h5 class="mb-0 ms-3">Espresso</h5>
-                    <div id="chart-america"></div>
-                    <h5 class="mb-0 ms-3">Americano</h5>
-                    <div id="chart-europe"></div>
-                    <h5 class="mb-0 ms-3">Cappuccino</h5>
-                    <div id="chart-indonesia"></div>
+                        <div id="chart-america"></div>
+                        <h5 class="mb-0 ms-3">Americano</h5>
+                        <div id="chart-europe"></div>
+                        <h5 class="mb-0 ms-3">Cappuccino</h5>
+                        <div id="chart-indonesia"></div>
 
                     </div>
                 </div>
@@ -114,7 +112,8 @@ $user = $_SESSION['user'];
                 <div class="card-body py-4 px-5">
                     <div class="d-flex align-items-center">
                         <div class="avatar avatar-xl">
-                            <img src="/views/assets/images/faces/1.jpg" alt="Face 1" onerror="this.src='https://via.placeholder.com/150';">
+                            <img src="/views/assets/images/faces/1.jpg" alt="Face 1"
+                                onerror="this.src='https://via.placeholder.com/150';">
                         </div>
                         <div class="ms-3 name">
                             <h4 class="font-bold"><?php echo htmlspecialchars($user['name']); ?></h4>
@@ -130,7 +129,8 @@ $user = $_SESSION['user'];
                 <div class="card-content pb-4">
                     <div class="recent-message d-flex px-4 py-3">
                         <div class="avatar avatar-lg">
-                            <img src="/views/assets/images/faces/2.jpg" alt="Face 2" onerror="this.src='https://via.placeholder.com/150';">
+                            <img src="/views/assets/images/faces/2.jpg" alt="Face 2"
+                                onerror="this.src='https://via.placeholder.com/150';">
                         </div>
                         <div class="name ms-4">
                             <h5 class="mb-1">Lymeng Phorng</h5>
@@ -139,7 +139,8 @@ $user = $_SESSION['user'];
                     </div>
                     <div class="recent-message d-flex px-4 py-3">
                         <div class="avatar avatar-lg">
-                            <img src="/views/assets/images/faces/4.jpg" alt="Face 4" onerror="this.src='https://via.placeholder.com/150';">
+                            <img src="/views/assets/images/faces/4.jpg" alt="Face 4"
+                                onerror="this.src='https://via.placeholder.com/150';">
                         </div>
                         <div class="name ms-4">
                             <h5 class="mb-1">Ahnoch Phengneang</h5>
@@ -148,7 +149,8 @@ $user = $_SESSION['user'];
                     </div>
                     <div class="recent-message d-flex px-4 py-3">
                         <div class="avatar avatar-lg">
-                            <img src="/views/assets/images/faces/3.jpg" alt="Face 3" onerror="this.src='https://via.placeholder.com/150';">
+                            <img src="/views/assets/images/faces/3.jpg" alt="Face 3"
+                                onerror="this.src='https://via.placeholder.com/150';">
                         </div>
                         <div class="name ms-4">
                             <h5 class="mb-1">Sreypich Rom</h5>
@@ -157,7 +159,8 @@ $user = $_SESSION['user'];
                     </div>
                     <div class="recent-message d-flex px-4 py-3">
                         <div class="avatar avatar-lg">
-                            <img src="/views/assets/images/faces/6.jpg" alt="Face 3" onerror="this.src='https://via.placeholder.com/150';">
+                            <img src="/views/assets/images/faces/6.jpg" alt="Face 3"
+                                onerror="this.src='https://via.placeholder.com/150';">
                         </div>
                         <div class="name ms-4">
                             <h5 class="mb-1">Sina Nak</h5>
@@ -166,7 +169,8 @@ $user = $_SESSION['user'];
                     </div>
                     <div class="recent-message d-flex px-4 py-3">
                         <div class="avatar avatar-lg">
-                            <img src="/views/assets/images/faces/5.jpg" alt="Face 3" onerror="this.src='https://via.placeholder.com/150';">
+                            <img src="/views/assets/images/faces/5.jpg" alt="Face 3"
+                                onerror="this.src='https://via.placeholder.com/150';">
                         </div>
                         <div class="name ms-4">
                             <h5 class="mb-1">That Ven</h5>
@@ -175,7 +179,7 @@ $user = $_SESSION['user'];
                     </div>
                 </div>
             </div>
-            
+
         </div>
     </section>
 </div>
