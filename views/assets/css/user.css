@@ -33,7 +33,7 @@
 .table tbody td{
     font-size: medium;
 }
-h5{
+h5, h3{
     color: #673E20;
 }
 .star{
