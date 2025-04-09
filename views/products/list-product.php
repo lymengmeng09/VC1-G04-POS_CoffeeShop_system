@@ -169,173 +169,20 @@
         </div>
 
         <!-- Receipt Modal -->
-        <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="receiptModalLabel"><?php echo __('order_receipt'); ?></h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body" id="receipt-content">
-                        <!-- Receipt details will be inserted here dynamically -->
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="confirm-receipt">Confirm</button>
-                        <button type="button" class="btn btn-primary" id="ok-button" data-bs-dismiss="modal" style="padding: 10px 20px; font-size: 16px; margin-left: 45%;" >OK</button>
-                    </div>
-                </div>
+<div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="receiptModalLabel"><?php echo __('order_receipt'); ?></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="receipt-content">
+                <!-- Receipt details will be inserted here dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="confirm-receipt">Save as PDF</button>
+                <button type="button" class="btn btn-primary" id="ok-button" data-bs-dismiss="modal">OK</button>
             </div>
         </div>
-        
-
-
-        <script>
-// Handle Pay Now button click
-document.getElementById('PayMent').addEventListener('click', function() {
-    // Get cart items
-    const cartItems = [];
-    const cartRows = document.querySelectorAll("#cart-table-body tr");
-    
-    cartRows.forEach(row => {
-        const productId = row.getAttribute("data-product-id");
-        const productName = row.querySelector(".product-name").textContent;
-        const quantity = parseInt(row.querySelector(".quantity").textContent);
-        const price = parseFloat(row.querySelector(".price").textContent.replace("$", ""));
-        const subtotal = parseFloat(row.querySelector(".subtotal").textContent.replace("$", ""));
-        
-        cartItems.push({
-            product_id: productId,
-            product_name: productName,
-            quantity: quantity,
-            price: price,
-            subtotal: subtotal
-        });
-    });
-    
-    // Generate receipt content
-    let receiptHTML = `
-        <div class="text-center mb-4">
-            <img src="/assets/images/logo.png" alt="Logo" style="max-width: 100px;">
-            <h3>Order Receipt</h3>
-        </div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                    <th>Price($)</th>
-                    <th>Total($)</th>
-                    <th>Timestamp</th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
-    
-    cartItems.forEach(item => {
-        receiptHTML += `
-            <tr>
-                <td>${item.product_name}</td>
-                <td>${item.quantity}</td>
-                <td>$${item.price.toFixed(2)}</td>
-                <td>$${item.subtotal.toFixed(2)}</td>
-                <td>${new Date().toISOString().split('T')[0]}</td>
-            </tr>
-        `;
-    });
-    
-    const totalAmount = parseFloat(document.getElementById("cart-total").textContent);
-    
-    receiptHTML += `
-            </tbody>
-        </table>
-        <div class="text-end">
-            <strong>TOTAL PRICE</strong>
-            <span class="ms-3">$${totalAmount.toFixed(2)}</span>
-        </div>
-    `;
-    
-    // Update receipt content
-    document.getElementById('receipt-content').innerHTML = receiptHTML;
-    
-    // Show receipt modal
-    const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
-    receiptModal.show();
-});
-
-// Function to save order data and redirect to history page
-function saveOrderAndRedirect() {
-    // Get cart items
-    const cartItems = [];
-    const cartRows = document.querySelectorAll("#cart-table-body tr");
-    
-    cartRows.forEach(row => {
-        const productId = row.getAttribute("data-product-id");
-        const productName = row.querySelector(".product-name").textContent;
-        const quantity = parseInt(row.querySelector(".quantity").textContent);
-        const price = parseFloat(row.querySelector(".price").textContent.replace("$", ""));
-        const subtotal = parseFloat(row.querySelector(".subtotal").textContent.replace("$", ""));
-        const categoryId = row.getAttribute("data-category-id");
-        const categoryName = row.getAttribute("data-category-name");
-        
-        cartItems.push({
-            product_id: productId,
-            product_name: productName,
-            quantity: quantity,
-            price: price,
-            subtotal: subtotal,
-            category_id: categoryId,
-            category_name: categoryName
-        });
-    });
-    
-    // Get total amount
-    const totalAmount = parseFloat(document.getElementById("cart-total").textContent);
-    
-    // Prepare order data
-    const orderData = {
-        items: cartItems,
-        total: totalAmount
-    };
-    
-    // Send order data to server
-    fetch('/products/generateReceipt', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(orderData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Redirect to order history page
-            window.location.href = "/order/history";
-        } else {
-            console.error("Error saving order:", data.message);
-            alert("There was an error saving your order. Please try again.");
-        }
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        alert("There was an error processing your order. Please try again.");
-    });
-}
-
-// Add click event listeners to both buttons
-document.getElementById('confirm-receipt').addEventListener("click", function() {
-    // Close the modal first
-    const receiptModal = bootstrap.Modal.getInstance(document.getElementById('receiptModal'));
-    if (receiptModal) {
-        receiptModal.hide();
-    }
-    
-    // Save order and redirect
-    saveOrderAndRedirect();
-});
-
-document.getElementById('ok-button').addEventListener("click", function() {
-    // Save order and redirect
-    saveOrderAndRedirect();
-});
-</script>
- 
+    </div>
+</div>
