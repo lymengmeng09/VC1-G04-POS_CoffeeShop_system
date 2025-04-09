@@ -616,7 +616,5 @@ function sendOrderData() {
             updateBillsNotification();
         }
     });
-
-    // === Start the App ===
     setupEventListeners();
  
