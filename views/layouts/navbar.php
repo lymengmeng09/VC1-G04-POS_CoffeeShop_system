@@ -121,7 +121,7 @@ $currentLang = LanguageHelper::getCurrentLang();
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="/order-history" class="sidebar-link" aria-label="View Order History">
+                        <a href="/products/history" class="sidebar-link" aria-label="View Order History">
                             <i class="bi bi-cart-fill"></i>
                             <span>History</span>
                         </a>
