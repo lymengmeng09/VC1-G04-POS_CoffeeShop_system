@@ -199,13 +199,15 @@ class ViewStockController extends BaseController {
                     if (!$product_id) {
                         throw new Exception("Failed to add product " . ($i + 1) . " to database");
                     }
-    
-                    $productDetails = "📦 New product added:\n" .
-                                    "Name: $name\n" .
-                                    "Price: $$price\n" .
-                                    "Quantity: $quantity\n" .
-                                    "Image: " . ($image ? $image : 'No image');
-                    $this->sendToTelegram($productDetails);
+                    $productDetails = "📦 <b>New Product Added!</b> 🎉\n" .
+                    "➖➖➖➖➖➖➖➖➖\n" .
+                    "📛 <b>Name:</b> $name\n" .
+                    "💰 <b>Price:</b> $" . number_format($price, 2) . "\n" .
+                    "📦 <b>Quantity:</b> $quantity\n" .
+                    "🖼️ <b>Image:</b> " . ($image ? "<i>$image</i>" : "No image uploaded") . "\n" .
+                    "➖➖➖➖➖➖➖➖➖\n" .
+                    "Added on: " . date('m/d/Y h:i A');
+  $this->sendToTelegram($productDetails);
     
                     error_log("Adding product $i to database");
                     $receiptItems[] = [
@@ -293,6 +295,7 @@ class ViewStockController extends BaseController {
             }
         }
     }
+    
     public function updateStock() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             try {
@@ -473,21 +476,27 @@ class ViewStockController extends BaseController {
             }
             
             $timestamp = date('m/d/Y h:i A', time());
-            $message = "📦 <b>Stock $action</b>\n" .
-                      "Time: {$timestamp}\n";
-            
-            if ($action !== "Deleted") {
-                $message .= "Name: " . htmlspecialchars($product['name']) . "\n" .
-                           "Price: $" . number_format($product['price'], 2) . "\n" .
-                           "Quantity: " . $product['quantity'];
-            } else {
-                $message .= "Product ID: $productId";
-            }
-            
-            $this->sendToTelegram($message);
+            $message = "📦 <b>Stock $action!</b> " . ($action === "Deleted" ? "🗑️" : "✨") . "\n" .
+            "➖➖➖➖➖➖➖➖➖\n" .
+            "🕒 <b>Time:</b> <i>{$timestamp}</i>\n";
+ 
+ if ($action !== "Deleted") {
+     $message .= "📛 <b>Name:</b> " . htmlspecialchars($product['name']) . "\n" .
+                 "💰 <b>Price:</b> $" . number_format($product['price'], 2) . "\n" .
+                 "📦 <b>Quantity:</b> " . $product['quantity'] . "\n" .
+                 ($action === "Updated" ? "🔄 <b>Change:</b> " . ($product['quantity'] > 0 ? "Stock updated" : "Out of stock!") . "\n" : "");
+ } else {
+     $message .= "🆔 <b>Product ID:</b> $productId\n" .
+                 "❌ <b>Status:</b> Removed from stock\n";
+ }
+ 
+ $message .= "➖➖➖➖➖➖➖➖➖";
+ $this->sendToTelegram($message);
             
         } catch (Exception $e) {
             error_log("Error in notifyStockChange: " . $e->getMessage());
         }
+
     }
 }
+

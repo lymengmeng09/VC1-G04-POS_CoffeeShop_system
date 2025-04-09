@@ -127,7 +127,7 @@
         color: #8a6a4b;
     }
 
-    .product-search {
+    #product-search {
         width: 450px;
         padding: 10px 10px 10px 35px;
         border: 1px solid #d9c8a9;
@@ -286,7 +286,7 @@
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
-                    <input type="search" class="form-control searchbar product-search" id="searchInput" placeholder="Search product name" aria-label="Search">
+                    <input type="search" class="form-control" id="product-search" placeholder="Search product name" aria-label="Search">
                 </div>
             </div>
         </div>

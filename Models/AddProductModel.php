@@ -113,4 +113,5 @@ class AddProductModel
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
+
 }

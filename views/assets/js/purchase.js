@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const dateRangeButtons = document.querySelectorAll('.date-range-btn');
     const startDateInput = document.getElementById('start-date');
     const endDateInput = document.getElementById('end-date');
-    const searchInput = document.getElementById('searchInput');
+    const searchInput = document.getElementById('product-search'); // Updated ID
     const exportExcelBtn = document.getElementById('export-excel');
     const refreshBtn = document.getElementById('refresh-btn');
     const purchasesBody = document.getElementById('purchases-body');
@@ -35,31 +35,33 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     searchInput.addEventListener('input', () => {
+        console.log('Search input:', searchInput.value); // Debug
         updateTable();
     });
 
     function updateDateInputs(range) {
         const today = new Date();
-        let startDate = new Date();
-        let endDate = new Date();
+        let startDate, endDate;
 
         switch(range) {
             case 'today':
-                startDate = endDate = today;
+                startDate = new Date(today);
+                endDate = new Date(today);
                 break;
             case 'this_week':
+                startDate = new Date(today);
                 const day = today.getDay();
                 const diff = today.getDate() - day + (day === 0 ? -6 : 1);
-                startDate = new Date(today.setDate(diff));
-                endDate = new Date();
+                startDate.setDate(diff);
+                endDate = new Date(today);
                 break;
             case 'this_month':
-                startDate = new Date(today.getFullYear(), today.getMonth(), 2); // 1st of current month
-                endDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+                startDate = new Date(2025, 3, 1); // April 1, 2025
+                endDate = new Date(2025, 3, 30);  // April 30, 2025
                 break;
             case 'all':
                 startDate = new Date('2000-01-01');
-                endDate = today;
+                endDate = new Date(today);
                 break;
             case 'custom':
                 return;
@@ -87,12 +89,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         fetch(`/purchase-history?${params.toString()}`)
             .then(response => {
+                console.log('Fetch URL:', `/purchase-history?${params.toString()}`); // Debug
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 return response.json();
             })
             .then(data => {
+                console.log('Fetched data:', data); // Debug
                 purchasesBody.innerHTML = '';
                 
                 if (!data || data.length === 0) {
@@ -135,18 +139,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const worksheetData = [
-            ['Products Name', 'Quantity', 'Price', 'Date', 'Total Cost']
+            ['Products Name', 'Quantity', 'Price', 'Date', 'Total Cost'] // Updated header
         ];
 
         rows.forEach(row => {
             const cells = row.querySelectorAll('td');
             if (cells.length === 5) {
                 const rowData = [
-                    cells[0].textContent.trim(), // Coffee Name
-                    parseInt(cells[1].textContent.trim(), 10) || 0, // Quantity
-                    parseFloat(cells[2].textContent.replace('$', '').trim()) || 0, // Price
-                    cells[3].textContent.trim(), // Date
-                    parseFloat(cells[4].textContent.replace('$', '').trim()) || 0 // Total Cost
+                    cells[0].textContent.trim(),
+                    parseInt(cells[1].textContent.trim(), 10) || 0,
+                    parseFloat(cells[2].textContent.replace('$', '').trim()) || 0,
+                    cells[3].textContent.trim(),
+                    parseFloat(cells[4].textContent.replace('$', '').trim()) || 0
                 ];
                 worksheetData.push(rowData);
             }

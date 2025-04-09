@@ -896,4 +896,129 @@ Recept style
   margin-top: 2%;
  } */
 
- 
+ /* General table styling */
+.products-section .table {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  background-color: #fff;
+  font-size: 0.95rem;
+}
+.table tr th {
+  background-color: #9F725E;
+  color: #fff;
+}
+/* Header styling */
+.products-section .table thead {
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.products-section .table th {
+  padding: 1rem;
+  border: none;
+  text-align: left;
+}
+
+/* Body styling */
+.products-section .table tbody tr {
+  border-bottom: 1px solid #e9ecef;
+  transition: background-color 0.2s ease;
+}
+
+.products-section .table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.products-section .table td {
+  padding: 0.75rem 1rem;
+  border: none;
+  vertical-align: middle;
+}
+
+/* Product column styling */
+.products-section .table td img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.products-section .table td .fw-bold {
+  font-weight: 600;
+  color: #343a40;
+}
+
+/* Price column styling */
+.products-section .table td.text-primary {
+  color: #007bff !important;
+  font-weight: 600;
+}
+
+/* Stock column styling */
+.products-section .table td.text-center {
+  font-weight: 500;
+  color: #6c757d;
+}
+
+/* Status badge styling */
+.products-section .badge {
+  font-size: 0.75rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.products-section .badge.bg-success {
+  background-color: #e6f4ea !important;
+  color: #28a745 !important;
+}
+
+.products-section .badge.bg-danger {
+  background-color: #fdeded !important;
+  color: #dc3545 !important;
+}
+
+/* Action dropdown styling */
+.products-section .dropdown .bi-three-dots-vertical {
+  font-size: 1.2rem;
+  color: #6c757d;
+  margin-right: 0;
+}
+
+.products-section .dropdown-menu {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 100px;
+  padding: 0.25rem 0;
+}
+
+.products-section .dropdown-item {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: #343a40;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.products-section .dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.products-section .dropdown-item.bi-pencil {
+  color: #007bff;
+}
+
+.products-section .dropdown-item.bi-trash {
+  color: #dc3545;
+}
+
+/* Remove default table borders */
+.products-section .table-bordered {
+  border: none !important;
+}

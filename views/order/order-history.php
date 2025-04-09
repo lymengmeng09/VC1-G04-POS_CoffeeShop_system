@@ -1,88 +1,60 @@
-<!-- Order History Content -->
-<div class="order-history-content mt-4 p-3 bg-white rounded shadow-sm">
-    <h2 class="mb-4">Order History</h2>
-<!-- Date Filter -->
-<div class="date-filter d-flex justify-content-end mb-4 gap-2">
-    <div class="date-input">
-        <div class="input-group">
-            <span class="input-group-text bg-white">
-                <i class="bi bi-calendar"></i>
-            </span>
-            <input type="date" class="form-control" id="fromDate">
-        </div>
-    </div>
-
-    <div class="date-input">
-        <div class="input-group">
-            <span class="input-group-text">To</span>
-            <span class="input-group-text bg-white">
-                <i class="bi bi-calendar"></i>
-            </span>
-            <input type="date" class="form-control" id="toDate">
+<h5><?php echo __('order_history'); ?></h5>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <?php if (empty($orders)): ?>
+                <p><?php echo __('no_orders_found'); ?></p>
+            <?php else: ?>
+                <?php foreach ($orders as $order): ?>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-white" >Product</th>
+                                        <th class="text-white">Category</th>
+                                        <th class="text-white">Quantity</th>
+                                        <th class="text-white">Price</th>
+                                        <th class="text-white">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (isset($order['items']) && is_array($order['items']) && !empty($order['items'])): ?>
+                                        <?php foreach ($order['items'] as $item): ?>
+                                            <tr>
+                                                <td><?php echo isset($item['product_name']) ? htmlspecialchars($item['product_name']) : 'N/A'; ?></td>
+                                                <td><?php echo isset($item['category_name']) ? htmlspecialchars($item['category_name']) : 'N/A'; ?></td>
+                                                <td><?php echo isset($item['quantity']) ? $item['quantity'] : '0'; ?></td>
+                                                <td>$<?php echo isset($item['price']) ? number_format($item['price'], 2) : '0.00'; ?></td>
+                                                <td>$<?php echo isset($item['subtotal']) ? number_format($item['subtotal'], 2) : '0.00'; ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="6">No items in this order.</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                            <div class="text-end">
+                                <strong>Total Amount: $<?php echo isset($order['total_amount']) ? number_format($order['total_amount'], 2) : '0.00'; ?></strong>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 </div>
 
-
-<!-- Orders Table -->
-<div class="history-card">
-  <div class="table-responsive">
-    <table class="history-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Payment</th>
-          <th>Date</th>
-          <th>Total</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php foreach ($orders as $index => $order): ?>
-        <tr>
-          <td>#<?php echo htmlspecialchars($order['id']); ?></td>
-          <td>
-            <div class="user-info">
-              <img src="<?php echo htmlspecialchars($order['avatar']); ?>" alt="User">
-              <span><?php echo isset($order['product_id']) ? htmlspecialchars($order['product_id']) : 'N/A'; ?></span>
-            </div>
-          </td>
-          <td><?php echo htmlspecialchars($order['payment']); ?></td>
-          <td><?php echo isset($order['order_date']) ? htmlspecialchars($order['order_date']) : 'N/A'; ?></td>
-          <td>$<?php echo number_format((float) $order['total'], 2); ?></td> <!-- Added $ symbol with two decimal places -->
-          <td>
-            <div class="history-dropdown">
-              <button type="button" id="dropdownMenuButton<?php echo $index; ?>">
-                <i class="bi bi-three-dots-vertical"></i>
-              </button>
-              <div class="history-dropdown-menu" aria-labelledby="dropdownMenuButton<?php echo $index; ?>">
-                <a href="#"><i class="bi bi-arrow-counterclockwise me-2"></i>Refund</a>
-                <a href="#"><i class="bi bi-chat-left me-2"></i>Message</a>
-              </div>
-            </div>
-          </td>
-        </tr>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-
-<script>
-    function setDefaultDates() {
-        let today = new Date();
-        let lastMonth = new Date();
-        lastMonth.setMonth(today.getMonth() - 1); // Set 'From' date to one month before today
-
-        // Format date to YYYY-MM-DD
-        let formatDate = (date) => date.toISOString().split('T')[0];
-
-        document.getElementById("fromDate").value = formatDate(lastMonth);
-        document.getElementById("toDate").value = formatDate(today);
+<style>
+    .card-header {
+        background-color: #f8f9fa;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
-
-    // Set default dates on page load
-    window.onload = setDefaultDates;
-</script>
+    .table th, .table td {
+        vertical-align: middle;
+    }
+</style>

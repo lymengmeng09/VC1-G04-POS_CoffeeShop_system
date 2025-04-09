@@ -169,5 +169,7 @@ public function destroy($id)
     $this->redirect('/products');
 }
 
-    
+/// Function to handle product join action tables // In your Controlle
 }
+
+

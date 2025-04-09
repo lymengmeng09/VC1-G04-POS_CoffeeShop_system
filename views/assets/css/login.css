@@ -1,40 +1,57 @@
 .gradient-custom-2 {
-    background: #844A24;
-    padding: 20px;
+  background: #844a24;
+  padding: 20px;
 }
 
 .gradient-custom-2:hover {
-    background: #b66d3d;
+  background: #b66d3d;
 }
 .form-control.is-valid {
-    border-color: #ced4da !important; /* Default border color */
-    background-image: none !important; /* Remove checkmark */
+  border-color: #ced4da !important; /* Default border color */
+  background-image: none !important; /* Remove checkmark */
 }
 
 /* Ensure invalid inputs still show red */
 .form-control.is-invalid {
-    border-color: #dc3545 !important;
+  border-color: #dc3545 !important;
 }
 .fa-eye {
-    color: rgba(0, 0, 0, 0.647);
-    top: 75%;
-    transform: translateY(-50%);
+  color: rgba(0, 0, 0, 0.647);
+  top: 75%;
+  transform: translateY(-50%);
 }
 
 /* Position when there is an error message */
-.is-invalid ~ .fa-eye{
-    top: 55% !important;
-    transform: translateY(-50%);
+.is-invalid ~ .fa-eye {
+  top: 55% !important;
+  transform: translateY(-50%);
 }
 @media (min-width: 768px) {
     .gradient-form {
         height: 100vh !important;
     }
 }
-
-@media (min-width: 769px) {
+@media (max-width: 991.98px) {
+    .col-lg-6.d-flex.align-items-center.gradient-custom-2 {
+        display: none !important;
+    }
+    .col-lg-6:first-child {
+        width: 100%;
+    }
+    .card-body {
+        padding: 2rem;
+    }
+    .text-center img {
+        width: 150px;
+    }
+    .card {
+        margin-top: 50px;
+    }
     .gradient-custom-2 {
-        border-top-right-radius: .3rem;
-        border-bottom-right-radius: .3rem;
+        max-width: none;
+    }
+    .text-center {
+        margin: 20px;
+        font-size: 18px;
     }
 }
