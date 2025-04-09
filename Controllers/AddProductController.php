@@ -171,3 +171,5 @@ public function destroy($id)
 
 /// Function to handle product join action tables // In your Controlle
 }
+
+

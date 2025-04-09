@@ -33,6 +33,10 @@ class ProductModel {
             $stmt->bindParam(":price", $price, PDO::PARAM_STR);
             $stmt->bindParam(":quantity", $quantity, PDO::PARAM_INT);
             $stmt->bindParam(":image", $image, PDO::PARAM_STR);
+            if (!$stmt->execute()) {
+                throw new Exception('Database error: ' . implode(', ', $stmt->errorInfo()));
+            }
+            return true;
 
             if (!$stmt->execute()) {
                 throw new Exception('Database error: ' . implode(', ', $stmt->errorInfo()));
@@ -51,13 +55,16 @@ class ProductModel {
 
             return $product_id;
         } catch (Exception $e) {
-            error_log("Error adding product: " . $e->getMessage());
             throw new Exception('Failed to add product: ' . $e->getMessage());
         }
     }
 
     public function updateProduct($id, $name, $price, $quantity) {
         try {
+            // Cast quantity to integer
+            $quantity = (int)$quantity;
+            error_log("Quantity after casting: $quantity (type: " . gettype($quantity) . ")");
+    
             $product = $this->getProductById($id);
             if (!$product) {
                 throw new Exception("Product not found");
@@ -90,10 +97,13 @@ class ProductModel {
     
             // Check for low stock or out of stock
             $notifications = [];
+            error_log("Quantity before stock check: $quantity (type: " . gettype($quantity) . ")");
             if ($quantity == 0) {
                 $notifications[] = "Product '$name' is now Out of Stock.";
-            } elseif ($quantity > 0 && $quantity < 5) {
+                error_log("Out of Stock triggered for product: $name");
+            } else if($quantity > 0 && $quantity < 5) {
                 $notifications[] = "Product '$name' is Low on Stock (Quantity: $quantity).";
+                error_log("Low on Stock triggered for product: $name, quantity: $quantity");
             }
     
             return [

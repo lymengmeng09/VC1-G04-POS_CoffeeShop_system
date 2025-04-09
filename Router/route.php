@@ -10,6 +10,7 @@ require_once "Controllers/ViewStockController.php";
 require_once "Middleware/AuthMiddleware.php";
 require_once "Controllers/OrderHistoryController.php";
 require_once "Controllers/PurchaseController.php";
+require_once "Controllers/ScannerController.php";
 
  
 require_once "Middleware/AuthMiddleware.php";
@@ -26,11 +27,13 @@ $route->get("/viewStock", [ViewStockController::class, 'index'])
 $route->post("/add-product", [ViewStockController::class, 'add']);
 $route->get("/edit_product", [ViewStockController::class, 'edit']);
 $route->put("/update_product", [ViewStockController::class, 'update']);
+$route->post('/scanner', [ScannerController::class, 'checkScanner']);
 $route->delete("/delete_product/{id}", [ViewStockController::class, 'destroy']);
 
 
 $route->post("/update-stock", [ViewStockController::class, 'updateStock']);
 $route->get("/clearReceipt", [ViewStockController::class, 'clearReceipt']);
+
 
 
 // Public routes (no middleware)

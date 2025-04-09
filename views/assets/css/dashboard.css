@@ -76,6 +76,21 @@
     margin-right: 5px;
 }
 
+.down{
+    position: relative;
+    bottom: 30px;
+    left: 80px;
+}
+.down1{
+    position: relative;
+    bottom: 28px;
+    left: 104px;
+}
+.down2{
+    position: relative;
+    bottom: 22px;
+    left: 116px;
+}
 /* responsive */
 
 /* General Responsive Styles */
