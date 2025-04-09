@@ -53,7 +53,7 @@
         <div class="action-buttons mt-2">
         <button class="btn btn-primary me-4">
         <i class="material-icons me-2 "style="position: relative; top: 4px;">qr_code_scanner</i>
-        <a href="/barcode">Scan Barcode</a>
+        <a href="/scanner">Scan Barcode</a>
             </button>
             <!-- Existing Button -->
             <button class="btn btn-primary me-4" data-bs-toggle="modal" data-bs-target="#updateProductModal">

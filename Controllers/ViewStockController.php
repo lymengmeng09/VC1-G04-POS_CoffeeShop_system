@@ -491,3 +491,4 @@ class ViewStockController extends BaseController {
         }
     }
 }
+

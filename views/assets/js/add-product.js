@@ -316,40 +316,106 @@ document.getElementById('clear-all').addEventListener('click', () => toggleCart(
 }
   
 function sendOrderData() {
-  const orderData = {
-      items: cart.map(item => ({
-          product_id: item.id,
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity,
-          category: item.category,
-          change_quantity: `+${item.quantity}`,
-          timestamp: new Date().toISOString()
-      })),
-      total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
-  };
-  
-  fetch('/products/generate-receipt', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest'
-      },
-      body: JSON.stringify(orderData)
-  })
-  .then(response => {
-      if (!response.ok) {
-          throw new Error('Network response was not ok');
-      }
-      return response.json();
-  })
-  .then(data => {
-      if (!data.success) {
-          console.error('Error generating receipt on backend:', data.message);
-      }
-  })
-  .catch(error => {
-      console.error('Fetch error:', error);
-  });
+    const orderData = {
+        items: cart.map(item => ({
+            product_id: item.id,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            category: item.category
+        })),
+        total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+    };
+    
+    fetch('/products/generate-receipt', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify(orderData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            console.log('Order saved successfully with ID:', data.order_id);
+            // Optionally update UI or show success message
+        } else {
+            console.error('Error generating receipt on backend:', data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+    });
 }
+
+// Update the confirmReceiptBtn event listener to clear cart only after successful save
+confirmReceiptBtn.addEventListener('click', function() {
+    saveAsPDF(); // This will trigger sendOrderData()
+    // Note: Cart clearing is now handled in saveAsPDF after successful server response
+});
+
+function saveAsPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const now = new Date();
+
+    // Send data to server first
+    const orderData = {
+        items: cart.map(item => ({
+            product_id: item.id,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            category: item.category
+        })),
+        total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+    };
+
+    fetch('/products/generate-receipt', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify(orderData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Save PDF
+            doc.save(`receipt_${now.getTime()}.pdf`);
+            
+            // Clear cart and update UI
+            cart = [];
+            saveCart();
+            receiptModal.hide();
+            toggleCart(false);
+            
+            // Redirect to history page
+            window.location.href = '/products/history';
+        } else {
+            alert('Error saving order: ' + data.message);
+        }
+    })
+    .catch(error => {
+        alert('Error saving order: ' + error.message);
+    });
+}
+const orderData = {
+    items: cart.map(item => ({
+        product_id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        category: item.category
+    })),
+    total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+};
+console.log('Order Data:', orderData); // Debug
 });
