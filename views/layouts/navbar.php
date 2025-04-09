@@ -22,34 +22,40 @@ $currentLang = LanguageHelper::getCurrentLang();
         </div>
         <div class="d-flex justify-content-end align-items-center">
             <!-- Language Switcher Button -->
-                <div class="dropdown me-3">
-                    <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-globe"></i>
-                        <?php echo LanguageHelper::getLanguageName($currentLang); ?>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <?php foreach (LanguageHelper::getSupportedLangs() as $lang): ?>
-                            <li>
-                                <a class="dropdown-item <?php echo $lang === $currentLang ? 'active' : ''; ?>" 
-                                   href="?lang=<?php echo $lang; ?>">
-                                    <?php if ($lang === 'en'): ?>
-                                        <i class="bi bi-flag"></i>
-                                    <?php else: ?>
-                                        <i class="bi bi-flag-fill"></i>
-                                    <?php endif; ?>
-                                    <?php echo LanguageHelper::getLanguageName($lang); ?>
-                                </a>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
+            <div class="dropdown me-3" >
+                <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <?php if ($currentLang === 'en'): ?>
+                        <img src="../../views/assets/images/logo/english.png" alt="" class="lang">
+                    <?php else: ?>
+                        <img src="../../views/assets/images/logo/cambodia.png" alt="" class="lang">
+                    <?php endif; ?>
+                    <?php echo LanguageHelper::getLanguageName($currentLang); ?>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <?php foreach (LanguageHelper::getSupportedLangs() as $lang): ?>
+                        <li>
+                            <a class="dropdown-item <?php echo $lang === $currentLang ? 'active' : ''; ?>"
+                                href="?lang=<?php echo $lang; ?>">
+                                <?php if ($lang === 'en'): ?>
+                                    <img src="../../views/assets/images/logo/english.png" alt="" class="lang">
+                                <?php else: ?>
+                                    <img src="../../views/assets/images/logo/cambodia.png" alt="" class="lang">
+                                <?php endif; ?>
+                                <?php echo LanguageHelper::getLanguageName($lang); ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
 
-            
-            <div class="shop me-3" style="position: relative;">
+
+            <div class="shop me-3">
                 <a href="javascript:void(0)" id="cart-icon">
-                    <i class="fas bi-cart-fill" style="font-size: 24px;"></i>
+                    <i class="bi bi-cart-fill" style="font-size: 28px;"></i>
                     <span class="count_cart" id="cart-count">0</span>
+                    <a href="/views/products/list-product.php"></a>
                 </a>
+               
             </div>
 
             <!-- Avatar Dropdown -->
@@ -63,11 +69,13 @@ $currentLang = LanguageHelper::getCurrentLang();
                     <ul class="dropdown-menu">
                         <li>
                             <a href="/view-profile" class="drop">
-                            <i class="bi bi-person ms-3"></i><span> <?php echo __('my_profile'); ?></span></a>
+                                <i class="bi bi-person"></i><span><?php echo __('my_profile'); ?></span>
+                            </a>
                         </li>
                         <li>
-                            <a href="/login/logout" class="drop"><i class="bi bi-box-arrow-in-left ms-3"></i>
-                            <span><?php echo __('logout'); ?></span></a>
+                            <a href="/login/logout" class="drop">
+                                <i class="bi bi-box-arrow-in-left"></i><span><?php echo __('logout'); ?></span>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -135,4 +143,3 @@ $currentLang = LanguageHelper::getCurrentLang();
         </div>
     </div>
     <div id="main">
-

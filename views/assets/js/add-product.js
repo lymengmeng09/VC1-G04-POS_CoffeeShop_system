@@ -419,3 +419,270 @@ const orderData = {
 };
 console.log('Order Data:', orderData); // Debug
 });
+
+///Hide the bills document.addEventListener("DOMContentLoaded", () => {
+    // === Element References ===
+    const elements = {
+        cartItemsContainer: document.getElementById("cart-items"),
+        cartTotalElement: document.getElementById("cart-total"),
+        cartTable: document.getElementById("cart-table"),
+        cartSection: document.getElementById("cart-section"),
+        productGrid: document.getElementById("product-grid"),
+        cartCountElement: document.getElementById("cart-count"),
+        billsNotification: document.getElementById("bills-notification"),
+        billsTotal: document.getElementById("bills-total"),
+        clearAllBtn: document.getElementById("clear-all"),
+        payNowBtn: document.getElementById("PayMent"),
+        receiptModal: document.getElementById("receiptModal")
+            ? new bootstrap.Modal(document.getElementById("receiptModal"))
+            : null,
+    };
+
+    // === State Management ===
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let cartVisible = JSON.parse(localStorage.getItem("cartVisible")) || false;
+
+    // === Initialization ===
+    toggleCart(cartVisible);
+    updateCartDisplay();
+    updateCartCount();
+    updateBillsNotification();
+
+    // === Event Listeners ===
+    function setupEventListeners() {
+        // Order buttons
+        document.querySelectorAll(".btn-Order").forEach((button) => {
+            button.addEventListener("click", () => {
+                addToCart(
+                    button.dataset.id,
+                    button.dataset.name,
+                    button.dataset.price,
+                    button.dataset.img,
+                    button.dataset.category
+                );
+                toggleCart(true);
+            });
+        });
+
+        // Cart quantity changes
+        if (elements.cartItemsContainer) {
+            elements.cartItemsContainer.addEventListener("input", (e) => {
+                if (e.target.classList.contains("quantity-input")) {
+                    const productId = e.target.dataset.id;
+                    const product = cart.find((item) => item.id === productId);
+
+                    if (product) {
+                        product.quantity = parseInt(e.target.value);
+                        if (product.quantity <= 0) {
+                            cart = cart.filter((item) => item.id !== productId);
+                        }
+                        saveCart();
+                    }
+                }
+            });
+
+            // Remove item from cart
+            elements.cartItemsContainer.addEventListener("click", (e) => {
+                if (e.target.classList.contains("remove-item")) {
+                    const productId = e.target.dataset.id;
+                    cart = cart.filter((item) => item.id !== productId);
+                    saveCart();
+                }
+            });
+        }
+
+        // Clear cart
+        if (elements.clearAllBtn) {
+            elements.clearAllBtn.addEventListener("click", () => {
+                cart = [];
+                saveCart();
+                toggleCart(false);
+            });
+        }
+
+        // Payment
+        if (elements.payNowBtn) {
+            elements.payNowBtn.addEventListener("click", () => {
+                if (cart.length === 0) {
+                    alert("Your cart is empty!");
+                    return;
+                }
+                const receiptContent = document.getElementById("receipt-content");
+                receiptContent.innerHTML = "<p>Your order has been placed. Thank you!</p>";
+                elements.receiptModal.show();
+            });
+        }
+
+        // OK button in receipt modal
+        const okButton = document.getElementById("ok-button");
+        if (okButton) {
+            okButton.addEventListener("click", () => {
+                cart = [];
+                saveCart();
+                toggleCart(false);
+                elements.receiptModal.hide();
+            });
+        }
+
+        // Confirm receipt
+        const confirmButton = document.getElementById("confirm-receipt");
+        if (confirmButton) {
+            confirmButton.addEventListener("click", () => {
+                saveAsPDF();
+                cart = [];
+                saveCart();
+                toggleCart(false);
+                elements.receiptModal.hide();
+            });
+        }
+
+        // Cart icon click to redirect to order page
+        const cartIcon = document.getElementById("cart-icon");
+        if (cartIcon) {
+            cartIcon.addEventListener("click", () => {
+                window.location.href = "/path/to/order-page"; // Adjust the URL
+            });
+        }
+    }
+
+    // === Cart Management ===
+    function addToCart(id, name, price, img, category) {
+        const existingItem = cart.find((item) => item.id === id);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({
+                id,
+                name,
+                price: parseFloat(price),
+                quantity: 1,
+                img,
+                category,
+            });
+        }
+        saveCart();
+    }
+
+    function saveCart() {
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updateCartDisplay();
+        updateCartCount();
+        updateBillsNotification();
+    }
+
+    // === UI Updates ===
+    function updateCartDisplay() {
+        if (!elements.cartItemsContainer) return; // Skip if not on order page
+
+        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+        elements.cartItemsContainer.innerHTML = "";
+        let total = 0;
+
+        cart.forEach((product) => {
+            const itemTotal = product.price * product.quantity;
+            total += itemTotal;
+
+            const card = document.createElement("div");
+            card.classList.add("col-12", "mb-3");
+            card.innerHTML = `
+                <div class="card h-100 pt-2" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 4px;">
+                    <div class="text-center">
+                        <div class="image-container">
+                            <img src="${product.img}" alt="${product.name}" class="img-fluid mb-2 product-image">
+                        </div>
+                        <div class="mt-2">
+                            <h6 class="card-title text-center mb-1" style="font-size: 1.1em; font-weight:350; color: rgba(101, 67, 33, 0.9);">
+                                <strong>${product.name}</strong>
+                            </h6>
+                            <p class="text-success fw-bold mb-0">
+                                $${product.price.toFixed(2)} x 
+                                <input type="number" class="quantity-input" value="${product.quantity}" data-id="${product.id}" min="1" style="width: 60px;">
+                                = $${itemTotal.toFixed(2)}
+                            </p>
+                            <button class="btn btn-danger btn-sm remove-item mt-2" data-id="${product.id}">
+                                Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            elements.cartItemsContainer.appendChild(card);
+        });
+
+        if (elements.cartTotalElement) {
+            elements.cartTotalElement.textContent = total.toFixed(2);
+        }
+        if (elements.cartTable) {
+            elements.cartTable.style.display = totalItems > 0 && cartVisible ? "block" : "none";
+        }
+
+        if (totalItems === 0) {
+            toggleCart(false);
+        }
+    }
+
+    function toggleCart(show) {
+        if (!elements.cartSection || !elements.productGrid) return; // Skip if not on order page
+
+        cartVisible = show;
+        localStorage.setItem("cartVisible", JSON.stringify(cartVisible));
+
+        if (show && cart.length > 0) {
+            elements.cartSection.style.display = "block";
+            elements.productGrid.classList.remove("col-lg-12");
+            elements.productGrid.classList.add("col-lg-8");
+            elements.cartSection.classList.remove("col-lg-3");
+            elements.cartSection.classList.add("col-lg-4");
+
+            document.querySelectorAll("#product-grid .col-md-3").forEach((el) => {
+                el.classList.remove("col-md-3");
+                el.classList.add("col-md-4");
+            });
+        } else {
+            elements.cartSection.style.display = "none";
+            elements.productGrid.classList.remove("col-lg-8");
+            elements.productGrid.classList.add("col-lg-12");
+
+            document.querySelectorAll("#product-grid .col-md-4").forEach((el) => {
+                el.classList.remove("col-md-4");
+                el.classList.add("col-md-3");
+            });
+        }
+        updateCartDisplay();
+    }
+
+    function updateCartCount() {
+        if (!elements.cartCountElement) return; // Skip if not on a page with cart count
+
+        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+        elements.cartCountElement.textContent = totalItems;
+        elements.cartCountElement.style.display = totalItems > 0 ? "inline-block" : "none";
+    }
+
+    function updateBillsNotification() {
+        if (!elements.billsNotification || !elements.billsTotal) return; // Skip if not on a page with notification
+
+        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+        const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+
+        if (totalItems > 0) {
+            elements.billsTotal.textContent = `Bills: $${totalPrice.toFixed(2)}`;
+            elements.billsNotification.style.display = "block";
+        } else {
+            elements.billsNotification.style.display = "none";
+        }
+    }
+
+    // === Event Listener for Storage Changes ===
+    window.addEventListener("storage", (event) => {
+        if (event.key === "cart") {
+            cart = JSON.parse(localStorage.getItem("cart")) || [];
+            updateCartCount();
+            updateCartDisplay();
+            updateBillsNotification();
+        }
+    });
+
+    // === Start the App ===
+    setupEventListeners();
+ 

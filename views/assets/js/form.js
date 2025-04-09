@@ -223,7 +223,7 @@ function updateToggleIconPosition(inputField) {
   // Check if the input field has validation error
   if (inputField.classList.contains("is-invalid")) {
     // Move the icon to 40% when there's an error
-    toggleIcon.style.top = "54%"
+    toggleIcon.style.top = "58%"
   } else {
     // Remove the inline style to let the original CSS take effect
     toggleIcon.style.removeProperty("top")

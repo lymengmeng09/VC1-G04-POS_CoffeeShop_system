@@ -114,92 +114,72 @@ class AddProductModel
         return $stmt->execute();
     }
 
-    
-   // Create a new order
-public function createOrder($customer_id, $total_amount) {
-    try {
-        $sql = "INSERT INTO orders (customer_id, total_amount, order_date) 
-                VALUES (:customer_id, :total_amount, NOW())";
-        
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':customer_id', $customer_id, PDO::PARAM_INT);
-        $stmt->bindParam(':total_amount', $total_amount, PDO::PARAM_STR);
-        $stmt->execute();
-        
-        return $this->conn->lastInsertId();
-    } catch (PDOException $e) {
-        error_log("Error creating order: " . $e->getMessage());
-        return false;
-    }
-}
+    // Function to get the total number of products// Existing methods (getProductsByCategory, getCategories, etc.) remain unchanged...
 
-// Create order items
-public function createOrderItem($order_id, $product_id, $quantity, $price) {
-    try {
-        // Get product category
-        $stmt = $this->conn->prepare("SELECT category_id FROM products WHERE product_id = :product_id");
-        $stmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);
-        $stmt->execute();
-        $product = $stmt->fetch(PDO::FETCH_ASSOC);
-        $category_id = $product['category_id'];
-        
-        // Insert order item
-        $sql = "INSERT INTO order_items (order_id, product_id, category_id, quantity, price) 
-                VALUES (:order_id, :product_id, :category_id, :quantity, :price)";
-        
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':order_id', $order_id, PDO::PARAM_INT);
-        $stmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);
-        $stmt->bindParam(':category_id', $category_id, PDO::PARAM_INT);
-        $stmt->bindParam(':quantity', $quantity, PDO::PARAM_INT);
-        $stmt->bindParam(':price', $price, PDO::PARAM_STR);
-        $stmt->execute();
-        
-        return true;
-    } catch (PDOException $e) {
-        error_log("Error creating order item: " . $e->getMessage());
-        return false;
-    }
-}
-
-// Get order history for a specific customer
-public function getOrderHistory($customer_id) {
-    try {
-        // Get all orders for this customer
-        $sql = "SELECT o.order_id, o.total_amount, o.order_date 
-                FROM orders o 
-                WHERE o.customer_id = :customer_id 
-                ORDER BY o.order_date DESC";
-        
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':customer_id', $customer_id, PDO::PARAM_INT);
-        $stmt->execute();
-        $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        // For each order, get the items
-        foreach ($orders as &$order) {
-            $sql = "SELECT oi.*, p.product_name, c.category_name 
-                    FROM order_items oi 
-                    JOIN products p ON oi.product_id = p.product_id 
-                    JOIN categories c ON oi.category_id = c.category_id 
-                    WHERE oi.order_id = :order_id";
-            
+    public function insertOrder($data) {
+        try {
+            $sql = "INSERT INTO orders (customer_id, order_number, order_date, total_amount, payment_status, created_at, updated_at)
+                    VALUES (:customer_id, :order_number, :order_date, :total_amount, :payment_status, :created_at, :updated_at)";
             $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':order_id', $order['order_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':customer_id', $data['customer_id']);
+            $stmt->bindParam(':order_number', $data['order_number']);
+            $stmt->bindParam(':order_date', $data['order_date']);
+            $stmt->bindParam(':total_amount', $data['total_amount']);
+            $stmt->bindParam(':payment_status', $data['payment_status']);
+            $stmt->bindParam(':created_at', $data['created_at']);
+            $stmt->bindParam(':updated_at', $data['updated_at']);
             $stmt->execute();
-            $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
-            // Calculate subtotal for each item
-            foreach ($items as &$item) {
-                $item['subtotal'] = $item['quantity'] * $item['price'];
-            }
-            
-            $order['items'] = $items;
+            return $this->conn->lastInsertId();
+        } catch (Exception $e) {
+            error_log("Insert Order Error: " . $e->getMessage());
+            return false;
         }
-        
-        return $orders;
-    } catch (PDOException $e) {
-        error_log("Error getting order history: " . $e->getMessage());
-        return [];
-    }}
+    }
+
+    public function insertOrderItem($data) {
+        try {
+            $sql = "INSERT INTO order_items (order_id, product_id, quantity, price, subtotal)
+                    VALUES (:order_id, :product_id, :quantity, :price, :subtotal)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':order_id', $data['order_id']);
+            $stmt->bindParam(':product_id', $data['product_id']);
+            $stmt->bindParam(':quantity', $data['quantity']);
+            $stmt->bindParam(':price', $data['price']);
+            $stmt->bindParam(':subtotal', $data['subtotal']);
+            $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Insert Order Item Error: " . $e->getMessage());
+        }
+    }
+
+    public function getOrderReceipt($order_id) {
+        try {
+            $sql = "SELECT 
+                        o.order_id,
+                        o.customer_id,
+                        o.order_number,
+                        o.order_date,
+                        o.total_amount,
+                        o.payment_status,
+                        oi.order_item_id,
+                        oi.product_id,
+                        oi.quantity,
+                        oi.price,
+                        oi.subtotal,
+                        p.product_name
+                    FROM orders o
+                    LEFT JOIN order_items oi ON o.order_id = oi.order_id
+                    LEFT JOIN products p ON oi.product_id = p.product_id
+                    WHERE o.order_id = :order_id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':order_id', $order_id);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log("Get Order Receipt Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    // Keep
 }

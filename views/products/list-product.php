@@ -7,7 +7,7 @@
                 <div class="input-group">
                     <input type="text" class="form-control" placeholder="<?php echo __('search_products_placeholder'); ?>" name="search" id="searchInput">
                     <button class="btn" style="border:1px solid #D9D9D9;" type="submit">
-                        <i class="fas fa-search"></i></button>
+                        <i class="bi bi-search"></i></button>
                 </div>
             </div>
             <div class="col-md-8 d-flex align-items-center justify-content-end">
@@ -69,13 +69,20 @@
                                             </a>
                                             <ul class="dropdown-menu" style="min-width: 120px; padding: 0.5rem 0;">
                                                 <!-- Edit Link -->
-                                                <li class="edit"><a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>" class="edit-link bi-pencil"> <?php echo __('edit'); ?></a></li>
+                                                <li class="edit">
+                                                    <a href="/products/edit/<?= htmlspecialchars($product['product_id']) ?>" class="edit-link">
+                                                        <i class="bi bi-pencil"></i>
+                                                        <span><?php echo __('edit'); ?></span>
+                                                    </a>
+                                                </li>
                                                 <!-- Delete Button with Confirmation -->
-                                                <li><button type="button" class="dropdown-item btn-delete bi-trash"
-                                                data-id="<?= htmlspecialchars($product['product_id']) ?>"
+                                                <li>
+                                                    <button type="button" class="dropdown-item btn-delete"
+                                                        data-id="<?= htmlspecialchars($product['product_id']) ?>"
                                                         data-name="<?= htmlspecialchars($product['product_name']) ?>"
                                                         data-bs-toggle="modal" data-bs-target="#deleteModal">
-                                                   <?php echo __('delete'); ?>
+                                                        <i class="bi bi-trash"></i>
+                                                        <span><?php echo __('delete'); ?></span>
                                                     </button>
                                                 </li>
                                             </ul>
@@ -120,11 +127,14 @@
                                         <!-- Cart items will be added here dynamically -->
                                     </tbody>
                                 </table>
-                                <div class="d-flex justify-content-between total" id="btn">
-                                    <div class="cart-total"><?php echo __('total'); ?>: $<span id="cart-total">0.00</span></div>
-                                    <div class="btn_cart">
-                                        <button id="clear-all" class="btn btn-outline-secondary">Cancel</button>
-                                        <button id="PayMent" class="btn btn-primary">Pay Now</button>
+                                <div class="total-container mb-3">
+                                    <div class="d-flex justify-content-between align-items-center" id="btn">
+                                        <div class="cart-label"><?php echo __('total'); ?>:</div>
+                                        <div class="cart-price">$<span id="cart-total">0.00</span></div>
+                                    </div>
+                                    <div class="btn_cart d-flex justify-content-between mt-2">
+                                        <button id="clear-all" class="btn btn-outline-secondary btn-sm"><?php echo __('cancel'); ?></button>
+                                        <button id="PayMent" class="btn btn-primary btn-sm"><?php echo __('pay_now'); ?></button>
                                     </div>
                                 </div>
                             </div>
@@ -133,7 +143,7 @@
                 </div>
             </div>
         </div>
-    
+
 
 
         <!-- Delete Confirmation Modal -->
@@ -163,7 +173,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title " id="receiptModalLabel"><?php echo __('order_receipt'); ?></h5>
+                        <h5 class="modal-title" id="receiptModalLabel"><?php echo __('order_receipt'); ?></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" id="receipt-content">

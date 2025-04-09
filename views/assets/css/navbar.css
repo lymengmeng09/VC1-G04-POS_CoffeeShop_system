@@ -1,15 +1,15 @@
 #app {
-    display: flex;
-    flex-direction: column; /* Stack items vertically */
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
 }
 body {
   padding-top: 60px; /* Adjust according to the navbar height */
 }
 #sidebar {
-    width: 100%;
-    background: #f8f8f8;
-    margin-top: 20px;
-    z-index: 1000;
+  width: 100%;
+  background: #f8f8f8;
+  margin-top: 20px;
+  z-index: 1000;
 }
 /* .shop{
  margin-right: 20px;
@@ -19,13 +19,13 @@ body {
   margin-bottom: 3px;
 }
 .navbar {
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-    transition: top 0.3s;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: top 0.3s;
 }
 .navbar a i {
     transition: color 0.3s ease-in-out;
@@ -41,14 +41,49 @@ body {
     width: 50px;
     height: 50px;
 }
-.drop{
+.navbar a i:hover {
+  color: #4a2c2a;
+}
+.badge-notification {
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+.avatar-img {
+  width: 50px;
+  height: 50px;
+  
+}
+.drop {
   color: rgba(53, 53, 53, 0.778);
   margin-right: 10px;
   text-decoration: none;
 }
+
+@media only screen and (max-width: 767px) {
+  #sidebar {
+    margin-top: 490px;
+    position: fixed;
+    transition: all 0.3s ease;
+    z-index: 1000;
+  }
+  #sidebar.active .sidebar-wrapper {
+    background: none;
+  }
+  .logo a img {
+    display: none;
+  }
+  .sidebar-menu span {
+    display: none;
+  }
+  .sidebar-menu .menu {
+    display: flex;
+    padding: 12px;
+  }
+}
+
 .profile .dropstart .dropdown-menu{
   margin-top: 45px;
-  min-width: 125px
+  min-width: 150px
 }
 .navbar-brand{
   width: 100px; 
@@ -66,4 +101,77 @@ body {
   .navbar-brand{
     width: 80px; 
   }
+}
+.shop {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.shop a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+}
+
+.shop i.fas, .shop i.bi {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.count_cart {
+  position: absolute !important;
+  top: -10px !important;
+  right: -8px !important;
+  background-color: #dc3545 !important;
+  color: white !important;
+  border-radius: 50% !important;
+  width: 18px !important;
+  height: 18px !important;
+  font-size: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: bold !important;
+}
+/* Fix for dropdown menu items with icons */
+.dropdown-menu .drop {
+  display: flex !important;
+  align-items: center !important;
+  padding: 0.5rem 1rem !important;
+  text-decoration: none !important;
+  color: #212529 !important;
+}
+
+.dropdown-menu .drop:hover {
+  background-color: #f8f9fa !important;
+}
+
+.dropdown-menu .drop i {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 20px !important;
+  height: 20px !important;
+  margin-right: 10px !important;
+  /* Remove the ms-3 class from the HTML and use this fixed margin instead */
+  margin-left: 0 !important;
+}
+
+.dropdown-menu .drop span {
+  display: inline-block !important;
+}
+.lang{
+  width: 20px;
+  margin-right: 10px;
+  margin-bottom: 3px;
+}
+.dropdown-toggle::after {
+  border-top-color: #000 !important; /* Black caret */
+  /* OR use your theme color */
+  border-top-color: var(--bs-primary) !important;
 }

@@ -168,79 +168,61 @@ public function destroy($id)
     $this->model->deleteProduct($id);
     $this->redirect('/products');
 }
-// Update generateReceipt to include customer_id
-// Update the generateReceipt method in your AddProductController.php
+/// Function to handle product join action tables // In your Controlle
+public function storeReceipt() {
+    $data = json_decode(file_get_contents("php://input"), true);
+    error_log("Received: " . print_r($data, true)); // Debug: Check server logs
 
-public function generateReceipt()
-{
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $data = json_decode(file_get_contents('php://input'), true);
-        
-        // Get customer_id from session (assuming user is logged in)
-        $customer_id = $_SESSION['user']['customer_id'] ?? null;
-        if (!$customer_id) {
-            header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'message' => 'Customer not logged in']);
-            exit;
-        }
-
-        try {
-            // Begin transaction
-            $this->model->conn->beginTransaction();
-            
-            // Create the order
-            $total = $data['total'];
-            $order_id = $this->model->createOrder($customer_id, $total);
-            
-            if (!$order_id) {
-                throw new Exception("Failed to create order");
-            }
-            
-            // Create order items
-            foreach ($data['items'] as $item) {
-                $success = $this->model->createOrderItem(
-                    $order_id,
-                    $item['product_id'],
-                    $item['quantity'],
-                    $item['price']
-                );
-                
-                if (!$success) {
-                    throw new Exception("Failed to create order item");
-                }
-            }
-            
-            // Commit transaction
-            $this->model->conn->commit();
-            
-            // Return success response with order_id
-            header('Content-Type: application/json');
-            echo json_encode(['success' => true, 'order_id' => $order_id]);
-        } catch (Exception $e) {
-            // Rollback transaction on error
-            $this->model->conn->rollBack();
-            header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
-        }
-        exit;
-    }
-}
-
-// Update the history method to fetch customer-specific orders
-public function history()
-{
-    // Get customer_id from session
-    $customer_id = $_SESSION['user']['customer_id'] ?? null;
-    if (!$customer_id) {
-        $_SESSION['error'] = 'Please log in to view your order history.';
-        $this->redirect('/login');
+    if (!$data || empty($data['items']) || !isset($data['customer_id'])) {
+        echo json_encode(['success' => false, 'message' => 'Invalid or missing data']);
         return;
     }
 
-    // Get order history for this customer
-    $orders = $this->model->getOrderHistory($customer_id);
-    
-    // Load the order history view
-    $this->view('order/order-history', ['orders' => $orders]);
+    $customer_id = $data['customer_id'];
+    $total_amount = floatval($data['total']);
+    $items = $data['items'];
+    $order_number = uniqid('ORD-');
+    $timestamp = date('Y-m-d H:i:s');
+
+    $order_id = $this->model->insertOrder([
+        'customer_id' => $customer_id,
+        'order_number' => $order_number,
+        'order_date' => $timestamp,
+        'total_amount' => $total_amount,
+        'payment_status' => 'paid',
+        'created_at' => $timestamp,
+        'updated_at' => $timestamp
+    ]);
+
+    if (!$order_id) {
+        echo json_encode(['success' => false, 'message' => 'Failed to create order']);
+        return;
+    }
+
+    foreach ($items as $item) {
+        $subtotal = floatval($item['quantity']) * floatval($item['price']);
+        $this->model->insertOrderItem([
+            'order_id' => $order_id,
+            'product_id' => $item['product_id'],
+            'quantity' => $item['quantity'],
+            'price' => floatval($item['price']),
+            'subtotal' => $subtotal
+        ]);
+    }
+
+    echo json_encode(['success' => true, 'order_id' => $order_id]);
 }
+
+public function getReceipt($order_id) {
+    $receiptData = $this->model->getOrderReceipt($order_id);
+    if ($receiptData) {
+        echo json_encode(['success' => true, 'receipt' => $receiptData]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Receipt not found']);
+    }
 }
+
+
+}
+
+
