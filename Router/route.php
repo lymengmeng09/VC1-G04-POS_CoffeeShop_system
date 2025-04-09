@@ -8,8 +8,8 @@ require_once "Controllers/ListUserController.php";
 require_once "Controllers/AddProductController.php";
 require_once "Controllers/ViewStockController.php";
 require_once "Middleware/AuthMiddleware.php";
-require_once "Controllers/OrderHistoryController.php";
 require_once "Controllers/PurchaseController.php";
+// require_once "Controllers/HistoryController.php";
 
  
 require_once "Middleware/AuthMiddleware.php";
@@ -74,7 +74,9 @@ $route->post("/products/update/{id}", [AddProductController::class, 'update']);
 $route->post("/products/delete/{id}", [AddProductController::class, 'destroy']);
 
 // order-history
-$route->get("/order-history", [OrderHistoryController::class, 'index']);
+// $route->get("/order-history", [OrderHistoryController::class, 'index']);
+$route->get("/order-history", [AddProductController::class, 'history']);
+
 
 // Purchase history routes
 $route->get("/purchase-history", [PurchaseController::class, 'index']);

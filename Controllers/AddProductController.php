@@ -168,6 +168,79 @@ public function destroy($id)
     $this->model->deleteProduct($id);
     $this->redirect('/products');
 }
+public function processOrder()
+{
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $cartData = json_decode($_POST['cart_data'], true);
+        $totalAmount = floatval($_POST['total_amount']);
 
+        // Start a transaction
+        $this->model->conn->beginTransaction();
+
+        try {
+            // Create order
+            $orderData = [
+                'total_amount' => $totalAmount,
+                'order_date' => date('Y-m-d H:i:s') // Add current timestamp
+            ];
+            $orderId = $this->model->createOrder($orderData);
+
+            // Insert order items
+            foreach ($cartData as $item) {
+                $itemData = [
+                    'order_id' => $orderId,
+                    'product_id' => $item['id'], // Changed from product_id to id to match cart data
+                    'quantity' => $item['quantity'],
+                    'price' => $item['price']
+                ];
+                $this->model->createOrderItem($itemData);
+            }
+
+            // Commit transaction
+            $this->model->conn->commit();
+
+            echo json_encode([
+                'success' => true,
+                'order_id' => $orderId,
+                'message' => 'Order processed successfully'
+            ]);
+        } catch (Exception $e) {
+            // Rollback on error
+            $this->model->conn->rollBack();
+            echo json_encode([
+                'success' => false,
+                'message' => 'Error processing order: ' . $e->getMessage()
+            ]);
+        }
+        exit;
+    }
+}
+
+// Add method for order history
+public function history()
+{
+    $orders = $this->model->getOrderHistory();
     
+    // Group order items by order
+    $groupedOrders = [];
+    foreach ($orders as $item) {
+        $orderId = $item['order_id'];
+        if (!isset($groupedOrders[$orderId])) {
+            $groupedOrders[$orderId] = [
+                'order_id' => $orderId,
+                'total_amount' => $item['total_amount'],
+                'order_date' => $item['order_date'],
+                'items' => []
+            ];
+        }
+        $groupedOrders[$orderId]['items'][] = [
+            'product_name' => $item['product_name'],
+            'quantity' => $item['quantity'],
+            'price' => $item['price'],
+            'image_url' => $item['image_url']
+        ];
+    }
+    
+    $this->view('products/history', ['orders' => array_values($groupedOrders)]);
+}
 }

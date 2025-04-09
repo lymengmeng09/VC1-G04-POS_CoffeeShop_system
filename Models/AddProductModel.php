@@ -113,4 +113,40 @@ class AddProductModel
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
+
+    // In AddProductModel.php
+function createOrder($data)
+{
+    $query = "INSERT INTO orders (total_amount) VALUES (:total_amount)";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute([
+        'total_amount' => $data['total_amount']
+    ]);
+    return $this->conn->lastInsertId();
+}
+
+function createOrderItem($data)
+{
+    $query = "INSERT INTO order_items (order_id, product_id, quantity, price) 
+              VALUES (:order_id, :product_id, :quantity, :price)";
+    $stmt = $this->conn->prepare($query);
+    return $stmt->execute([
+        'order_id' => $data['order_id'],
+        'product_id' => $data['product_id'],
+        'quantity' => $data['quantity'],
+        'price' => $data['price']
+    ]);
+}
+
+function getOrderHistory()
+{
+    $query = "SELECT o.*, oi.*, p.product_name, p.image_url 
+              FROM orders o 
+              LEFT JOIN order_items oi ON o.order_id = oi.order_id
+              LEFT JOIN products p ON oi.product_id = p.product_id
+              ORDER BY o.order_date DESC";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 }

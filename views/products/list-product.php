@@ -186,6 +186,58 @@
                 </div>
             </div>
         </div>
-        
+        <script>
+document.getElementById('PayMent').addEventListener('click', function() {
+    // Get cart items from table
+    const cartItems = [];
+    document.querySelectorAll('#cart-table-body tr').forEach(row => {
+        cartItems.push({
+            product_id: row.dataset.id,
+            quantity: parseInt(row.querySelector('.quantity').textContent),
+            price: parseFloat(row.dataset.price)
+        });
+    });
+
+    const total = document.getElementById('cart-total').textContent;
+
+    // Send to server
+    fetch('/products/processOrder', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `cart_data=${encodeURIComponent(JSON.stringify(cartItems))}&total_amount=${total}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Show receipt modal
+            showReceipt(cartItems, total, data.order_id);
+            // Clear cart
+            document.getElementById('cart-table-body').innerHTML = '';
+            document.getElementById('cart-total').textContent = '0.00';
+        }
+    });
+});
+
+function showReceipt(items, total, orderId) {
+    let receiptHtml = `<p>Order ID: ${orderId}</p>
+                      <table class="table">
+                        <thead><tr><th>Product</th><th>Qty</th><th>Price</th></tr></thead>
+                        <tbody>`;
+    items.forEach(item => {
+        receiptHtml += `<tr>
+            <td>${item.product_name || 'Product'}</td>
+            <td>${item.quantity}</td>
+            <td>$${item.price}</td>
+        </tr>`;
+    });
+    receiptHtml += `</tbody></table>
+                   <p>Total: $${total}</p>`;
+    
+    document.getElementById('receipt-content').innerHTML = receiptHtml;
+    new bootstrap.Modal(document.getElementById('receiptModal')).show();
+}
+</script>
 
  
