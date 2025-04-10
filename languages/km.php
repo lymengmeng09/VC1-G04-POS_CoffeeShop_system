@@ -120,4 +120,5 @@ return [
     'passwords_not_match' => 'ពាក្យសម្ងាត់មិនត្រូវគ្នាទេ។',
 
     'edit_stock' => 'កែប្រែស្តុក',
+    'History' => 'ប្រវត្តិ'
 ];

@@ -939,7 +939,7 @@ function saveAsPDF() {
         if (show && cart.length > 0) {
             elements.cartSection.style.display = "block";
             elements.productGrid.classList.remove("col-lg-12");
-            elements.productGrid.classList.add("col-lg-8");
+            elements.productGrid.classList.add("col-lg-7");
             elements.cartSection.classList.remove("col-lg-3");
             elements.cartSection.classList.add("col-lg-4");
 
@@ -949,7 +949,7 @@ function saveAsPDF() {
             });
         } else {
             elements.cartSection.style.display = "none";
-            elements.productGrid.classList.remove("col-lg-8");
+            elements.productGrid.classList.remove("col-lg-7");
             elements.productGrid.classList.add("col-lg-12");
 
             document.querySelectorAll("#product-grid .col-md-4").forEach((el) => {
