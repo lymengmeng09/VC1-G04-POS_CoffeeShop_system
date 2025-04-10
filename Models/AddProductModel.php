@@ -115,20 +115,20 @@ class AddProductModel
     }
 
     // Function to get the total number of products// Existing methods (getProductsByCategory, getCategories, etc.) remain unchanged...
-
     public function insertOrder($data) {
         try {
             $sql = "INSERT INTO orders (customer_id, order_number, order_date, total_amount, payment_status, created_at, updated_at)
                     VALUES (:customer_id, :order_number, :order_date, :total_amount, :payment_status, :created_at, :updated_at)";
             $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':customer_id', $data['customer_id']);
-            $stmt->bindParam(':order_number', $data['order_number']);
-            $stmt->bindParam(':order_date', $data['order_date']);
-            $stmt->bindParam(':total_amount', $data['total_amount']);
-            $stmt->bindParam(':payment_status', $data['payment_status']);
-            $stmt->bindParam(':created_at', $data['created_at']);
-            $stmt->bindParam(':updated_at', $data['updated_at']);
-            $stmt->execute();
+            $stmt->execute([
+                ':customer_id' => $data['customer_id'],
+                ':order_number' => $data['order_number'],
+                ':order_date' => $data['order_date'],
+                ':total_amount' => $data['total_amount'],
+                ':payment_status' => $data['payment_status'],
+                ':created_at' => $data['created_at'],
+                ':updated_at' => $data['updated_at']
+            ]);
             return $this->conn->lastInsertId();
         } catch (Exception $e) {
             error_log("Insert Order Error: " . $e->getMessage());
@@ -141,17 +141,19 @@ class AddProductModel
             $sql = "INSERT INTO order_items (order_id, product_id, quantity, price, subtotal)
                     VALUES (:order_id, :product_id, :quantity, :price, :subtotal)";
             $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':order_id', $data['order_id']);
-            $stmt->bindParam(':product_id', $data['product_id']);
-            $stmt->bindParam(':quantity', $data['quantity']);
-            $stmt->bindParam(':price', $data['price']);
-            $stmt->bindParam(':subtotal', $data['subtotal']);
-            $stmt->execute();
+            $stmt->execute([
+                ':order_id' => $data['order_id'],
+                ':product_id' => $data['product_id'],
+                ':quantity' => $data['quantity'],
+                ':price' => $data['price'],
+                ':subtotal' => $data['subtotal']
+            ]);
+            return true;
         } catch (Exception $e) {
             error_log("Insert Order Item Error: " . $e->getMessage());
+            return false;
         }
     }
-
     public function getOrderReceipt($order_id) {
         try {
             $sql = "SELECT 

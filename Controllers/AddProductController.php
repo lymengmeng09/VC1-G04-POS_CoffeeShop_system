@@ -167,60 +167,74 @@ public function destroy($id)
 {
     $this->model->deleteProduct($id);
     $this->redirect('/products');
-}
-/// Function to handle product join action tables // In your Controlle
-public function storeReceipt() {
-    $data = json_decode(file_get_contents("php://input"), true);
-    error_log("Received: " . print_r($data, true)); // Debug: Check server logs
 
-    if (!$data || empty($data['items']) || !isset($data['customer_id'])) {
+}
+
+public function storeReceipt() {
+    // Enable CORS for testing (remove in production if not needed)
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: POST');
+    header('Access-Control-Allow-Headers: Content-Type, X-CSRF-TOKEN');
+
+    $data = json_decode(file_get_contents("php://input"), true);
+    error_log("Received data: " . json_encode($data)); // Debug incoming data
+
+    if (!$data || !isset($data['customer_id']) || !isset($data['items']) || !is_array($data['items']) || !isset($data['total'])) {
+        http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Invalid or missing data']);
+        error_log("Validation failed: Invalid or missing data");
         return;
     }
 
     $customer_id = $data['customer_id'];
     $total_amount = floatval($data['total']);
     $items = $data['items'];
-    $order_number = uniqid('ORD-');
+    $order_date = $data['order_date'] ?? date('Y-m-d H:i:s');
+    $payment_status = $data['payment_status'] ?? 'pending';
+    $order_number = 'ORD-' . date('YmdHis') . rand(100, 999);
     $timestamp = date('Y-m-d H:i:s');
 
-    $order_id = $this->model->insertOrder([
-        'customer_id' => $customer_id,
-        'order_number' => $order_number,
-        'order_date' => $timestamp,
-        'total_amount' => $total_amount,
-        'payment_status' => 'paid',
-        'created_at' => $timestamp,
-        'updated_at' => $timestamp
-    ]);
+    try {
+        $db = $this->model->getConnection();
+        $db->beginTransaction();
 
-    if (!$order_id) {
-        echo json_encode(['success' => false, 'message' => 'Failed to create order']);
-        return;
-    }
-
-    foreach ($items as $item) {
-        $subtotal = floatval($item['quantity']) * floatval($item['price']);
-        $this->model->insertOrderItem([
-            'order_id' => $order_id,
-            'product_id' => $item['product_id'],
-            'quantity' => $item['quantity'],
-            'price' => floatval($item['price']),
-            'subtotal' => $subtotal
+        $order_id = $this->model->insertOrder([
+            'customer_id' => $customer_id,
+            'order_number' => $order_number,
+            'order_date' => $order_date,
+            'total_amount' => $total_amount,
+            'payment_status' => $payment_status,
+            'created_at' => $timestamp,
+            'updated_at' => $timestamp
         ]);
+
+        if (!$order_id) {
+            throw new Exception('Failed to create order');
+        }
+
+        foreach ($items as $item) {
+            if (!isset($item['product_id']) || !isset($item['quantity']) || !isset($item['price']) || !isset($item['subtotal'])) {
+                throw new Exception('Invalid item data: ' . json_encode($item));
+            }
+            $this->model->insertOrderItem([
+                'order_id' => $order_id,
+                'product_id' => $item['product_id'],
+                'quantity' => $item['quantity'],
+                'price' => floatval($item['price']),
+                'subtotal' => floatval($item['subtotal'])
+            ]);
+        }
+
+        $db->commit();
+        http_response_code(201);
+        echo json_encode(['success' => true, 'order_id' => $order_id]);
+        error_log("Order stored successfully with ID: $order_id");
+    } catch (Exception $e) {
+        $db->rollBack();
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Failed to place order: ' . $e->getMessage()]);
+        error_log("Order Error: " . $e->getMessage());
     }
-
-    echo json_encode(['success' => true, 'order_id' => $order_id]);
 }
 
-public function getReceipt($order_id) {
-    $receiptData = $this->model->getOrderReceipt($order_id);
-    if ($receiptData) {
-        echo json_encode(['success' => true, 'receipt' => $receiptData]);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Receipt not found']);
-    }
-}
-
-
-}
+}                                               
