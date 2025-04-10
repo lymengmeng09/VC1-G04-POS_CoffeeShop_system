@@ -1,174 +1,203 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // DOM Elements
+    const scannerPlaceholder = document.getElementById('scanner-placeholder');
     const startScannerBtn = document.getElementById('start-scanner');
-    const cancelScanBtn = document.getElementById('cancel-scan');
-    const simulateScanBtn = document.getElementById('simulate-scan');
     const manualForm = document.getElementById('manual-form');
     const manualInput = document.getElementById('manual-input');
-    const cameraContainer = document.getElementById('camera-container');
-    const scannerPlaceholder = document.getElementById('scanner-placeholder');
-    const scanResult = document.getElementById('scan-result');
-    const barcodeResult = document.getElementById('barcode-result');
-    const processBarcode = document.getElementById('process-barcode');
+    const readerDiv = document.getElementById('reader');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const errorMessage = document.getElementById('error-message');
+    const errorBarcode = document.getElementById('error-barcode');
+    const scanAgainErrorBtn = document.getElementById('scan-again-error');
+    const scanAgainSuccessBtn = document.getElementById('scan-again-success');
+    const productDetailsContainer = document.getElementById('product-details-container');
     
-    // Store detected barcode
-    let detectedBarcode = '';
-    
-    // Start scanner button click handler
+    let html5QrCode;
+
+    // Start scanner button click
     startScannerBtn.addEventListener('click', function() {
+        readerDiv.style.display = 'block';
         startScanner();
     });
-    
-    // Cancel scan button click handler
-    cancelScanBtn.addEventListener('click', function() {
-        stopScanner();
-    });
-    
-    // Simulate scan button click handler (for testing)
-    simulateScanBtn.addEventListener('click', function() {
-        const testBarcodes = [
-            '8849300162009',
-            '9780201379624',
-            '5901234123457',
-            '4006381333931',
-            '3800065711087'
-        ];
-        
-        const randomBarcode = testBarcodes[Math.floor(Math.random() * testBarcodes.length)];
-        processScannedBarcode(randomBarcode);
-    });
-    
-    // Manual form submit handler
+
+    // Scan again buttons click
+    scanAgainErrorBtn.addEventListener('click', resetScanner);
+    scanAgainSuccessBtn.addEventListener('click', resetScanner);
+
+    // Manual form submission
     manualForm.addEventListener('submit', function(e) {
         e.preventDefault();
         const barcode = manualInput.value.trim();
         if (barcode) {
-            processScannedBarcode(barcode);
-        }
-    });
-    
-    // Process barcode button click handler
-    processBarcode.addEventListener('click', function() {
-        if (detectedBarcode) {
-            fetchProductDetails(detectedBarcode);
+            processBarcode(barcode);
+            manualInput.value = '';
         }
     });
 
-    function fetchProductDetails(barcode) {
-        fetch(`ScannerController.php?action=processBarcode&barcode=${encodeURIComponent(barcode)}`)
+    // Function to start the scanner
+    function startScanner() {
+        html5QrCode = new Html5Qrcode("reader");
+        const config = { fps: 10, qrbox: { width: 250, height: 150 } };
+        
+        html5QrCode.start(
+            { facingMode: "environment" }, 
+            config, 
+            onScanSuccess, 
+            onScanFailure
+        );
+    }
+
+    // Function to stop the scanner
+    function stopScanner() {
+        if (html5QrCode && html5QrCode.isScanning) {
+            html5QrCode.stop().catch(error => {
+                console.error("Error stopping scanner:", error);
+            });
+        }
+    }
+
+    // Function to reset the scanner
+    function resetScanner() {
+        errorMessage.classList.add('d-none');
+        productDetailsContainer.classList.add('d-none');
+        scannerPlaceholder.classList.remove('d-none');
+        readerDiv.style.display = 'none';
+    }
+
+    // Function called on successful scan
+    function onScanSuccess(decodedText) {
+        // Stop the scanner immediately
+        stopScanner();
+        
+        // Process the barcode automatically
+        processBarcode(decodedText);
+    }
+
+    // Function called on scan failure
+    function onScanFailure(error) {
+        // We can ignore this as it's usually just frames without barcodes
+    }
+
+    // Function to process the barcode and fetch product details
+    function processBarcode(barcode) {
+        // Show loading indicator and hide other elements
+        scannerPlaceholder.classList.add('d-none');
+        loadingIndicator.classList.remove('d-none');
+        errorMessage.classList.add('d-none');
+        productDetailsContainer.classList.add('d-none');
+        
+        // Fetch product details from the server
+        fetch(`<?= BASE_URL ?>/scanner/processBarcode?barcode=${encodeURIComponent(barcode)}`)
             .then(response => response.json())
             .then(data => {
+                loadingIndicator.classList.add('d-none');
+                
                 if (data.success) {
                     displayProductDetails(data.product);
                 } else {
-                    displayError(data.message);
+                    errorBarcode.textContent = barcode;
+                    errorMessage.querySelector('p').textContent = data.message || 'Product not found for this barcode.';
+                    errorMessage.classList.remove('d-none');
                 }
             })
             .catch(error => {
-                console.error('Error fetching product:', error);
-                displayError('Error fetching product details');
+                console.error('Error:', error);
+                loadingIndicator.classList.add('d-none');
+                errorBarcode.textContent = barcode;
+                errorMessage.querySelector('p').textContent = 'Error processing barcode. Please try again.';
+                errorMessage.classList.remove('d-none');
             });
     }
 
+    // Function to display product details
     function displayProductDetails(product) {
-        const resultContainer = document.getElementById('scan-result');
-        resultContainer.innerHTML = `
-            <div class="alert alert-success">
-                <h4>Product Found</h4>
-                <p><strong>Name:</strong> ${product.name}</p>
-                <p><strong>Price:</strong> $${product.price}</p>
-                <p><strong>Stock:</strong> ${product.quantity}</p>
-                ${product.image ? `<img src="${product.image}" class="img-fluid mt-2" style="max-width: 200px;" alt="${product.name}">` : ''}
-            </div>
-        `;
-        resultContainer.classList.remove('d-none');
-    }
-
-    function displayError(message) {
-        const resultContainer = document.getElementById('scan-result');
-        resultContainer.innerHTML = `
-            <div class="alert alert-warning">
-                ${message}
-            </div>
-        `;
-        resultContainer.classList.remove('d-none');
-    }
-
-    function startScanner() {
-        cameraContainer.classList.remove('d-none');
-        scannerPlaceholder.classList.add('d-none');
-        scanResult.classList.add('d-none');
+        console.log('Product data received:', product);
         
-        Quagga.init({
-            inputStream: {
-                name: "Live",
-                type: "LiveStream",
-                target: document.querySelector('#interactive'),
-                constraints: {
-                    width: 640,
-                    height: 480,
-                    facingMode: "environment"
-                },
-            },
-            locator: {
-                patchSize: "medium",
-                halfSample: true
-            },
-            numOfWorkers: navigator.hardwareConcurrency || 4,
-            decoder: {
-                readers: [
-                    "code_128_reader",
-                    "ean_reader",
-                    "ean_8_reader",
-                    "code_39_reader",
-                    "code_39_vin_reader",
-                    "codabar_reader",
-                    "upc_reader",
-                    "upc_e_reader",
-                    "i2of5_reader"
-                ]
-            },
-            locate: true
-        }, function(err) {
-            if (err) {
-                console.error("Error initializing Quagga:", err);
-                alert("Error starting the barcode scanner. Please make sure you've granted camera permissions.");
-                stopScanner();
-                return;
-            }
-            Quagga.start();
-        });
+        // Populate product details based on your actual database structure
+        document.getElementById('product-name').textContent = product.name || '';
+        document.getElementById('product-sku').textContent = product.id || '';
+        document.getElementById('product-price').textContent = '$' + parseFloat(product.price || 0).toFixed(2);
+        document.getElementById('product-quantity').textContent = product.quantity || 0;
+        document.getElementById('product-category').textContent = 'Beverages'; // You can add a category field to your database
+        document.getElementById('product-location').textContent = 'Shelf A1'; // You can add a location field to your database
         
-        Quagga.onDetected(function(result) {
-            if (result && result.codeResult && result.codeResult.code) {
-                const code = result.codeResult.code;
-                const beep = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU");
-                beep.play();
-                processScannedBarcode(code);
-                stopScanner();
-            }
+        // Set product image
+        const productImage = document.getElementById('product-image');
+        if (product.image) {
+            productImage.src = '<?= BASE_URL ?>/' + product.image;
+        } else {
+            productImage.src = '<?= BASE_URL ?>/assets/images/placeholder.png';
+        }
+        productImage.alt = product.name || 'Product Image';
+        
+        // Set product status badges
+        const statusContainer = document.getElementById('product-status');
+        statusContainer.innerHTML = '';
+        
+        const quantity = parseInt(product.quantity || 0);
+        const reorderLevel = 5; // You can add a reorder_level field to your database
+        
+        if (quantity > 0) {
+            statusContainer.innerHTML += '<span class="badge bg-success">In Stock</span>';
+        } else {
+            statusContainer.innerHTML += '<span class="badge bg-danger">Out of Stock</span>';
+        }
+        
+        if (quantity <= reorderLevel && quantity > 0) {
+            statusContainer.innerHTML += '<span class="badge bg-warning text-dark ms-2">Low Stock</span>';
+        }
+        
+        // Show product details container
+        productDetailsContainer.classList.remove('d-none');
+    }
+});
+document.addEventListener('DOMContentLoaded', function() {
+    const updateQuantityBtn = document.getElementById('update-quantity');
+    const stockSelect = document.getElementById('stock-select');
+
+    // Fetch and populate products (your stock list) on page load
+    fetch('<?= BASE_URL ?>/scanner/getStock')
+        .then(response => response.json())
+        .then(data => {
+            const products = data.products;
+            products.forEach(product => {
+                const option = document.createElement('option');
+                option.value = product.barcode; // or product.id if you prefer
+                option.textContent = product.name;
+                stockSelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading stock:', error);
         });
-    }
-    
-    function stopScanner() {
-        Quagga.stop();
-        cameraContainer.classList.add('d-none');
-        scannerPlaceholder.classList.remove('d-none');
-    }
-    
-    function processScannedBarcode(barcode) {
-        detectedBarcode = barcode;
-        barcodeResult.textContent = barcode;
-        scanResult.classList.remove('d-none');
-        cameraContainer.classList.add('d-none');
-        manualInput.value = '';
-        fetchProductDetails(barcode);
-    }
-    
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        startScannerBtn.disabled = true;
-        startScannerBtn.textContent = "Camera not supported";
-        document.querySelector('#scanner-placeholder p').textContent = 
-            "Your browser doesn't support camera access. Please enter the barcode manually.";
-    }
+
+    // Update quantity by 1 when selected product is chosen
+    updateQuantityBtn.addEventListener('click', function() {
+        const selectedBarcode = stockSelect.value;
+
+        if (!selectedBarcode) {
+            alert('Please select a product from the stock list.');
+            return;
+        }
+
+        // Send the selected barcode to PHP to update the quantity
+        fetch(`<?= BASE_URL ?>/scanner/updateStockQuantity`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `barcode=${encodeURIComponent(selectedBarcode)}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Quantity updated by 1!');
+                // Optionally, you can update the UI to reflect the new quantity
+            } else {
+                alert('Error updating quantity: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
 });

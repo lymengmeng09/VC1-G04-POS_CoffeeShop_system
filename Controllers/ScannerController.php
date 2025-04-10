@@ -3,10 +3,10 @@ require_once 'models/ScannerModel.php';
 require_once 'controllers/BaseController.php';
 
 class ScannerController extends BaseController {
-    private $productModel;
+    private $scannerModel;
 
     public function __construct() {
-        $this->productModel = new ScannerModel();
+        $this->scannerModel = new ScannerModel();
     }
 
     protected function jsonResponse($data) {
@@ -26,21 +26,24 @@ class ScannerController extends BaseController {
         if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['barcode'])) {
             $barcode = $_GET['barcode'];
             
-            // Get product details
-            $product = $this->productModel->getProductByBarcode($barcode);
+            // For debugging - log the barcode being searched
+            error_log("Searching for barcode: " . $barcode);
+            
+            // Get product details from the database
+            $product = $this->scannerModel->getProductByBarcode($barcode);
             
             if ($product) {
-                // Update stock (e.g., add 1 to quantity)
-                $this->productModel->updateStock($barcode, 1); // You can adjust the quantity change as needed
-                
-                // Fetch updated product details
-                $updatedProduct = $this->productModel->getProductByBarcode($barcode);
+                // For debugging - log the product found
+                error_log("Product found: " . json_encode($product));
                 
                 $this->jsonResponse([
                     'success' => true,
-                    'product' => $updatedProduct
+                    'product' => $product
                 ]);
             } else {
+                // For debugging - log that no product was found
+                error_log("No product found for barcode: " . $barcode);
+                
                 $this->jsonResponse([
                     'success' => false,
                     'message' => 'Product not found for barcode: ' . $barcode
@@ -53,6 +56,38 @@ class ScannerController extends BaseController {
             ]);
         }
     }
+
+    // Method to update stock quantity (optional)
+    public function updateStock() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['barcode']) && isset($_POST['quantity'])) {
+            $barcode = $_POST['barcode'];
+            $quantityChange = (int)$_POST['quantity'];
+            
+            $success = $this->scannerModel->updateStock($barcode, $quantityChange);
+            
+            if ($success) {
+                // Get updated product details
+                $updatedProduct = $this->scannerModel->getProductByBarcode($barcode);
+                
+                $this->jsonResponse([
+                    'success' => true,
+                    'product' => $updatedProduct,
+                    'message' => 'Stock updated successfully'
+                ]);
+            } else {
+                $this->jsonResponse([
+                    'success' => false,
+                    'message' => 'Failed to update stock'
+                ]);
+            }
+        } else {
+            $this->jsonResponse([
+                'success' => false,
+                'message' => 'Invalid request'
+            ]);
+        }
+    }
+
     // Restore the checkScanner method to fix the error
     public function checkScanner() {
         $data = [
@@ -67,5 +102,4 @@ class ScannerController extends BaseController {
     public function Scanner() {
         $this->index();
     }
-
 }
