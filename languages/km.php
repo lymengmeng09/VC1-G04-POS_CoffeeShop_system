@@ -120,5 +120,12 @@ return [
     'passwords_not_match' => 'ពាក្យសម្ងាត់មិនត្រូវគ្នាទេ។',
 
     'edit_stock' => 'កែប្រែស្តុក',
-    'History' => 'ប្រវត្តិ'
+    'History' => 'ប្រវត្តិ',
+
+    //report
+    'Export to Excel' => 'ទាយយកជា​ Excel',
+    'Purchase Reports' => 'របាយការណ៍ទិញចូល',
+    'Today' => 'ថ្ងៃនេះ',
+    'This Week' => 'សប្តាហ៍នេះ',
+    'This Month' => 'ខែនេះ',
 ];
