@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (button.dataset.range === 'all') {
             button.classList.add('active');
         }
-        
+
         button.addEventListener('click', function () {
             dateRangeButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const today = new Date();
         let startDate, endDate;
 
-        switch(range) {
+        switch (range) {
             case 'today':
                 startDate = new Date(today);
                 endDate = new Date(today);
@@ -56,8 +56,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 endDate = new Date(today);
                 break;
             case 'this_month':
-                startDate = new Date(2025, 3, 1); // April 1, 2025
-                endDate = new Date(2025, 3, 30);  // April 30, 2025
+                startDate = new Date(today.getFullYear(), today.getMonth(), 2);
+                endDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
                 break;
             case 'all':
                 startDate = new Date('2000-01-01');
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 console.log('Fetched data:', data); // Debug
                 purchasesBody.innerHTML = '';
-                
+
                 if (!data || data.length === 0) {
                     purchasesBody.innerHTML = '<tr><td colspan="5" class="empty-message">No coffee purchase records found</td></tr>';
                     return;

@@ -267,7 +267,7 @@
 </style>
 <div class="purchase-history">
     <header>
-        <h1>Purchase Reports</h1>
+        <h1><?php echo __('Purchase Reports'); ?></h1>
         <button id="refresh-btn" title="Refresh Data">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 2v6h-6"></path>
@@ -297,7 +297,7 @@
                     <polyline points="7 10 12 15 17 10"></polyline>
                     <line x1="12" y1="15" x2="12" y2="3"></line>
                 </svg>
-                Export to Excel
+                <?php echo __('Export to Excel'); ?>
             </button>
         </div>
     </div>
@@ -305,10 +305,10 @@
         <label>Date Range</label>
         <div class="date-range-buttons">
             <div class="date-filter">
-                <button type="button" class="date-range-btn" data-range="today">Today</button>
-                <button type="button" class="date-range-btn" data-range="this_week">This Week</button>
-                <button type="button" class="date-range-btn" data-range="this_month">This Month</button>
-                <button type="button" class="date-range-btn active" data-range="all">All</button>
+                <button type="button" class="date-range-btn" data-range="today"><?php echo __('Today'); ?></button>
+                <button type="button" class="date-range-btn" data-range="this_week"><?php echo __('This Week'); ?></button>
+                <button type="button" class="date-range-btn" data-range="this_month"><?php echo __('This Month'); ?></button>
+                <button type="button" class="date-range-btn active" data-range="all"><?php echo __('all'); ?></button>
             </div>
             <div class="date-inputs">
                 <input type="date" id="start-date" name="start_date" value="<?php echo $startDate; ?>">
