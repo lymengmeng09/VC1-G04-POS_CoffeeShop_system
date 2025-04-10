@@ -169,7 +169,23 @@ public function destroy($id)
     $this->redirect('/products');
 }
 
-/// Function to handle product join action tables // In your Controlle
+// AddProductController.php
+public function saveOrder()
+{
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $orderData = json_decode(file_get_contents('php://input'), true);
+        
+        try {
+            $orderId = $this->model->createOrder($orderData['total']);
+            $this->model->createOrderItems($orderId, $orderData['items']);
+            
+            echo json_encode(['success' => true, 'order_id' => $orderId]);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+}
 }
 
 

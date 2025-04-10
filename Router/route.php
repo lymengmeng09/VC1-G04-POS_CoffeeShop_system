@@ -75,9 +75,13 @@ $route->post("/products/store", [AddProductController::class, 'store']);
 $route->get("/products/edit/{id}", [AddProductController::class, 'edit']);
 $route->post("/products/update/{id}", [AddProductController::class, 'update']);
 $route->post("/products/delete/{id}", [AddProductController::class, 'destroy']);
+$route->post("/products/save-order", [AddProductController::class, 'saveOrder']);
 
-// order-history
-$route->get("/order-history", [OrderHistoryController::class, 'index']);
+// Order history
+$route->get("/order-history", [OrderHistoryController::class, 'index'])
+      ->middleware("/order-history", AuthMiddleware::class, 'view_orders');
+$route->get("/order-history/details/{id}", [OrderHistoryController::class, 'details'])
+      ->middleware("/order-history/details/{id}", AuthMiddleware::class, 'view_orders');
 
 // Purchase history routes
 $route->get("/purchase-history", [PurchaseController::class, 'index']);
