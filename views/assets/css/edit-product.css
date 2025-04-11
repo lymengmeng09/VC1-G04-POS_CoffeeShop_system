@@ -37,14 +37,14 @@ body {
   }
   
   /* Table styles */
-  .table th {
+  /* .table th {
     font-weight: 600;
   }
   
   .table td {
     vertical-align: middle;
   }
-  
+   */
   /* Card styles */
   .card {
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
