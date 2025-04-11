@@ -30,9 +30,9 @@ class DashboardController extends BaseController
         $topProducts = $this->model->getTopSellingProducts();
         $monthlySales = $this->model->getMonthlySales(date('Y')); // Current year
         $income = $this->model->getTotalIncome();
-        $expenses = 1245.00; // Replace with dynamic calculation
+        $expenses = $this->model->getTotalPurchaseExpenses(date('m')); // Dynamic expenses for current month
         $profits = $income - $expenses;
-    
+
         $this->view('dashboard/dashboard', [
             'topProducts' => $topProducts,
             'monthlySales' => $monthlySales,
@@ -42,3 +42,4 @@ class DashboardController extends BaseController
         ]);
     }
 }
+

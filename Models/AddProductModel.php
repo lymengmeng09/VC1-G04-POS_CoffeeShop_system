@@ -224,5 +224,23 @@ function getMonthlySales($year = null) {
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+function getTotalPurchaseExpenses($month = null) {
+    $query = "SELECT SUM(total_amount) as total_expenses 
+              FROM purchases";
+    
+    if ($month) {
+        $query .= " WHERE MONTH(purchase_date) = :month AND YEAR(purchase_date) = YEAR(CURRENT_DATE)";
+    }
+    
+    $stmt = $this->conn->prepare($query);
+    
+    if ($month) {
+        $stmt->bindValue(':month', $month, PDO::PARAM_INT);
+    }
+    
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['total_expenses'] ?? 0;
+}
 
 }
