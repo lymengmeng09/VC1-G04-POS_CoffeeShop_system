@@ -132,13 +132,14 @@
                                         <div class="d-flex justify-content-between align-items-center" id="btn">
                                             <div class="cart-label"><?php echo __('total'); ?>: $ <span id="cart-total">0.00</span></div>
                                             <div class="pay">
-                                                <input type="radio" name="payment" value="aba"> ABA
-                                                <input type="radio" name="payment" value="cash" class="ms-3"> Cash
+                                                <input type="radio" name="payment" value="aba" id="payment-aba"> ABA
+                                                <input type="radio" name="payment" value="cash" class="ms-3" id="payment-cash"> Cash
                                             </div>
                                         </div>
                                         <div class="btn_cart d-flex justify-content-between mt-2">
                                             <button id="clear-all" class="btn btn-outline-secondary btn-sm"><?php echo __('cancel'); ?></button>
                                             <button id="PayMent" class="btn btn-primary btn-sm"><?php echo __('pay_now'); ?></button>
+                                            <button id="check-btn" class="btn btn-success btn-sm">check</button>
                                         </div>
                                     </div>
                                 </div>
@@ -191,3 +192,32 @@
                 </div>
             </div>
         </div>
+        <!-- QR Code Modal -->
+        <div class="modal fade" id="qrCodeModal" tabindex="-1" aria-labelledby="qrCodeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="qrCodeModalLabel"><?php echo __('scan_qr_code'); ?></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                        <img src="views/assets/images/qrcode.JPG" alt="QR Code" class="img-fluid" style="width: 500px;">
+                    <div class="modal-footer d-flex justify-content-center">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><?php echo __('close'); ?></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.getElementById('check-btn').addEventListener('click', function() {
+                // Check if the "aba" radio button is selected
+                const abaRadio = document.getElementById('payment-aba');
+                if (abaRadio.checked) {
+                    // Show the QR code modal using Bootstrap's modal method
+                    const qrCodeModal = new bootstrap.Modal(document.getElementById('qrCodeModal'));
+                    qrCodeModal.show();
+                } else {
+                    // Optional: Handle the case when "aba" is not selected (e.g., show an alert)
+                    alert('Please select ABA payment method to view the QR code.');
+                }
+            });
+        </script>
