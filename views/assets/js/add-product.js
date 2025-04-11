@@ -85,9 +85,42 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // OK button in receipt modal
     okButton.addEventListener('click', function() {
-        clearCart();
-        receiptModal.hide();
+        const orderData = {
+            items: cart.map(item => ({
+                product_id: item.id,
+                name: item.name,
+                price: item.price,
+                quantity: item.quantity,
+                category_id: item.category
+            })),
+            total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+        };
+        fetch('/products/save-order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify(orderData)
+        })
+        .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            cart = [];
+            saveCart();
+            receiptModal.hide();
+            toggleCart(false);
+            // Optionally redirect to order history
+            // window.location.href = '/order-history';
+        } else {
+            alert('Error saving order: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error saving order: ' + error.message);
     });
+});
       
       // Delete product modal
       if (deleteModal) {
@@ -611,19 +644,19 @@ function saveAsPDF() {
     const doc = new jsPDF();
     const now = new Date();
 
-    // Send data to server first
     const orderData = {
         items: cart.map(item => ({
             product_id: item.id,
             name: item.name,
             price: item.price,
             quantity: item.quantity,
-            category: item.category
+            category_id: item.category // Ensure this matches your backend expectation
         })),
         total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
     };
 
-    fetch('/products/generate-receipt', {
+        
+    fetch('/products/save-order', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -634,36 +667,66 @@ function saveAsPDF() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Save PDF
+            console.log('Order saved with ID:', data.order_id);
+
+            // Generate PDF
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(18);
+            doc.setTextColor(40, 40, 40);
+            doc.text("Target Coffee", 105, 20, null, null, "center");
+
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(60, 60, 60);
+            doc.text(`Date: ${now.toLocaleDateString()}`, 20, 30);
+            doc.text(`Time: ${now.toLocaleTimeString()}`, 20, 38);
+
+            let totalPrice = 0;
+            const tableData = cart.map(item => {
+                const itemTotal = item.quantity * item.price;
+                totalPrice += itemTotal;
+                return [item.name, item.quantity, `$${item.price.toFixed(2)}`, `$${itemTotal.toFixed(2)}`];
+            });
+
+            doc.autoTable({
+                startY: 45,
+                head: [['Item', 'Quantity', 'Price', 'Total']],
+                body: tableData,
+                theme: 'grid',
+                headStyles: { fillColor: [100, 100, 255], textColor: 255, fontStyle: 'bold' },
+                alternateRowStyles: { fillColor: [240, 240, 240] },
+                margin: { left: 20, right: 20 },
+                styles: { fontSize: 12, cellPadding: 5 },
+            });
+
+            let finalY = doc.lastAutoTable.finalY + 10;
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(0, 0, 0);
+            doc.text("TOTAL:", 130, finalY);
+            doc.text(`$${totalPrice.toFixed(2)}`, 170, finalY);
+
             doc.save(`receipt_${now.getTime()}.pdf`);
-            
+
             // Clear cart and update UI
             cart = [];
             saveCart();
             receiptModal.hide();
             toggleCart(false);
-            
-            // Redirect to history page
-            window.location.href = '/products/history';
+
+            // Optionally redirect to order history
+            // window.location.href = '/order-history';
         } else {
             alert('Error saving order: ' + data.message);
         }
     })
     .catch(error => {
+        console.error('Error:', error);
         alert('Error saving order: ' + error.message);
     });
 }
-const orderData = {
-    items: cart.map(item => ({
-        product_id: item.id,
-        name: item.name,
-        price: item.price,
-        quantity: item.quantity,
-        category: item.category
-    })),
-    total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
-};
-console.log('Order Data:', orderData); // Debug
+
+
 
 
 ///Hide the bills document.addEventListener("DOMContentLoaded", () => {

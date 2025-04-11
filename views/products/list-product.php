@@ -187,7 +187,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success" id="confirm-receipt">Confirm</button>
-                        <button type="button" class="btn btn-primary" id="ok-button" data-bs-dismiss="modal" style="padding: 10px 20px; font-size: 16px; margin-left: 45%;">OK</button>
+                        <button type="button" class="btn btn-primary" id="ok-button" data-bs-dismiss="modal" style="padding: 10px 20px; font-size: 16px; margin-left: 45%;" >OK</button>
                     </div>
                 </div>
             </div>
