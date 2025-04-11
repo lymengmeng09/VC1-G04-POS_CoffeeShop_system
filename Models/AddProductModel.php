@@ -114,20 +114,57 @@ class AddProductModel
         return $stmt->execute();
     }
     // AddProductModel.php
-    public function saveOrder()
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $orderData = json_decode(file_get_contents('php://input'), true);
-            
-            try {
-                $orderId = $this->model->createOrder($orderData['total']);
-                $this->model->createOrderItems($orderId, $orderData['items']);
-                
-                echo json_encode(['success' => true, 'order_id' => $orderId]);
-            } catch (Exception $e) {
-                http_response_code(500);
-                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
-            }
-        }
+function createOrder($totalAmount) {
+    $stmt = $this->conn->prepare("INSERT INTO orders (total_amount) VALUES (:total)");
+    $stmt->execute(['total' => $totalAmount]);
+    return $this->conn->lastInsertId();
+}
+
+function createOrderItems($orderId, $items) {
+    foreach ($items as $item) {
+        $stmt = $this->conn->prepare("INSERT INTO order_items 
+            (order_id, product_id, product_name, price, quantity, category_id) 
+            VALUES (:order_id, :product_id, :name, :price, :quantity, :category_id)");
+        
+        $stmt->execute([
+            'order_id' => $orderId,
+            'product_id' => $item['product_id'],
+            'name' => $item['name'],
+            'price' => $item['price'],
+            'quantity' => $item['quantity'],
+            'category_id' => $item['category_id']
+        ]);
     }
+    return true;
+}
+
+function getOrderHistory() {
+    $query = "SELECT o.*, 
+              (SELECT COUNT(*) FROM order_items WHERE order_id = o.order_id) as item_count
+              FROM orders o 
+              ORDER BY o.created_at DESC";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getOrderDetails($orderId) {
+    $query = "SELECT o.*, 
+              (SELECT COUNT(*) FROM order_items WHERE order_id = o.order_id) as item_count
+              FROM orders o 
+              WHERE o.order_id = :order_id";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute(['order_id' => $orderId]);
+    $order = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$order) return null;
+    
+    $query = "SELECT * FROM order_items WHERE order_id = :order_id";
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute(['order_id' => $orderId]);
+    $order['items'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    return $order;
+}
+
 }
