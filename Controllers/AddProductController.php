@@ -186,6 +186,9 @@ public function saveOrder()
         }
     }
 }
+public function history()
+{
+    $this->view('order/order-history', ['orders' => $orders]);
+
 }
-
-
+}
