@@ -197,4 +197,5 @@ class AddProductController extends BaseController
         $orders = $this->model->getOrderHistory();
         $this->view('order-history/index', ['orders' => $orders]);
     }
+    
 }

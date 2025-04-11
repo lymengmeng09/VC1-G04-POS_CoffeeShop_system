@@ -1,8 +1,14 @@
 <?php
 require_once "BaseController.php";
-class DashboardController extends BaseController {
-    public function __construct() {
-        // Check if user is logged in
+require_once 'Models/AddProductModel.php';
+class DashboardController extends BaseController
+{
+    private $model;
+
+    // Constructor to initialize the model and check authentication
+    public function __construct()
+    {
+        $this->model = new AddProductModel(); // Initialize the model
         $this->checkAuth();
     }
     
@@ -19,7 +25,20 @@ class DashboardController extends BaseController {
             exit();
         }
     }
-    public function index() {
-        $this->view('dashboard/dashboard');
+    public function index()
+    {
+        $topProducts = $this->model->getTopSellingProducts();
+        $monthlySales = $this->model->getMonthlySales(date('Y')); // Current year
+        $income = $this->model->getTotalIncome();
+        $expenses = 1245.00; // Replace with dynamic calculation
+        $profits = $income - $expenses;
+    
+        $this->view('dashboard/dashboard', [
+            'topProducts' => $topProducts,
+            'monthlySales' => $monthlySales,
+            'income' => $income,
+            'expenses' => $expenses,
+            'profits' => $profits
+        ]);
     }
 }
