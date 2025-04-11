@@ -117,24 +117,29 @@
                     </div>
                 </div>
                 <div class="col-lg-3" id="cart-section" style="display: <?= isset($_GET['cart']) ? 'block' : 'none' ?>;">
-                    <!-- Cart Table (right side, initially hidden) -->
-                    <div id="cart-table" style="display: none; padding: 0;">
-                        <div class="card card-order sticky-top" style="top: 20px; width: 440px;">
-                            <div class="card-body">
-                                <h3><?php echo __('bills'); ?></h3>
-                                <table class="table">
-                                    <tbody id="cart-table-body">
-                                        <!-- Cart items will be added here dynamically -->
-                                    </tbody>
-                                </table>
-                                <div class="total-container mb-3">
-                                    <div class="d-flex justify-content-between align-items-center" id="btn">
-                                        <div class="cart-label"><?php echo __('total'); ?>:</div>
-                                        <div class="cart-price">$<span id="cart-total">0.00</span></div>
-                                    </div>
-                                    <div class="btn_cart d-flex justify-content-between mt-2">
-                                        <button id="clear-all" class="btn btn-outline-secondary btn-sm"><?php echo __('cancel'); ?></button>
-                                        <button id="PayMent" class="btn btn-primary btn-sm"><?php echo __('pay_now'); ?></button>
+                    <div id="cart-sticky-wrapper">
+                        <!-- Cart Table (right side, fixed position) -->
+                        <div id="cart-table" style="display: none; padding: 0;">
+                            <div class="card card-order" style="width: 450px;">
+                                <div class="card-body">
+                                    <h3><?php echo __('bills'); ?></h3>
+                                    <table class="table">
+                                        <tbody id="cart-table-body">
+                                            <!-- Cart items will be added here dynamically -->
+                                        </tbody>
+                                    </table>
+                                    <div class="total-container mb-3">
+                                        <div class="d-flex justify-content-between align-items-center" id="btn">
+                                            <div class="cart-label"><?php echo __('total'); ?>: $ <span id="cart-total">0.00</span></div>
+                                            <div class="pay">
+                                                <input type="radio" name="payment" value="aba"> ABA
+                                                <input type="radio" name="payment" value="cash" class="ms-3"> Cash
+                                            </div>
+                                        </div>
+                                        <div class="btn_cart d-flex justify-content-between mt-2">
+                                            <button id="clear-all" class="btn btn-outline-secondary btn-sm"><?php echo __('cancel'); ?></button>
+                                            <button id="PayMent" class="btn btn-primary btn-sm"><?php echo __('pay_now'); ?></button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -186,4 +191,3 @@
                 </div>
             </div>
         </div>
- 
