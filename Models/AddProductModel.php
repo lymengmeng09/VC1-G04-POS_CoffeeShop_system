@@ -167,4 +167,80 @@ function getOrderDetails($orderId) {
     return $order;
 }
 
+function getTopSellingProducts($limit = 5) {
+    $query = "SELECT 
+                oi.product_id,
+                oi.product_name,
+                SUM(oi.quantity) as total_quantity,
+                SUM(oi.price * oi.quantity) as total_revenue
+              FROM order_items oi
+              GROUP BY oi.product_id, oi.product_name
+              ORDER BY total_quantity DESC
+              LIMIT :limit";
+    
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getTotalIncome($month = null) {
+    $query = "SELECT SUM(total_amount) as total_income 
+              FROM orders";
+    
+    if ($month) {
+        $query .= " WHERE MONTH(created_at) = :month AND YEAR(created_at) = YEAR(CURRENT_DATE)";
+    }
+    
+    $stmt = $this->conn->prepare($query);
+    
+    if ($month) {
+        $stmt->bindValue(':month', $month, PDO::PARAM_INT);
+    }
+    
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['total_income'] ?? 0;
+}
+function getMonthlySales($year = null) {
+    $query = "SELECT 
+                MONTH(created_at) as month,
+                SUM(total_amount) as total_sales
+              FROM orders";
+    
+    if ($year) {
+        $query .= " WHERE YEAR(created_at) = :year";
+    }
+    
+    $query .= " GROUP BY MONTH(created_at)
+                ORDER BY month";
+    
+    $stmt = $this->conn->prepare($query);
+    
+    if ($year) {
+        $stmt->bindValue(':year', $year, PDO::PARAM_INT);
+    }
+    
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+function getTotalPurchaseExpenses($month = null) {
+    $query = "SELECT SUM(total_amount) as total_expenses 
+              FROM purchases";
+    
+    if ($month) {
+        $query .= " WHERE MONTH(purchase_date) = :month AND YEAR(purchase_date) = YEAR(CURRENT_DATE)";
+    }
+    
+    $stmt = $this->conn->prepare($query);
+    
+    if ($month) {
+        $stmt->bindValue(':month', $month, PDO::PARAM_INT);
+    }
+    
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['total_expenses'] ?? 0;
+}
+
 }
