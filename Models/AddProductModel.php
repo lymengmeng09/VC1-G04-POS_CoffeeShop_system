@@ -1,20 +1,21 @@
 <?php
 require_once 'Database/Database.php';
+
 class AddProductModel
 {
     private $conn;
 
-    function __construct()
+    public function __construct()
     {
         $database = new Database();
         $this->conn = $database->getConnection();
     }
-    // Add this method to your model
-    function getProductsByCategory($category_id = null)
+
+    public function getProductsByCategory($category_id = null)
     {
         $query = "SELECT p.*, c.category_name 
-              FROM products p 
-              JOIN categories c ON p.category_id = c.category_id";
+                  FROM products p 
+                  JOIN categories c ON p.category_id = c.category_id";
 
         if ($category_id && $category_id !== 'all') {
             $query .= " WHERE p.category_id = :category_id";
@@ -32,14 +33,15 @@ class AddProductModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    function getCategories()
+    public function getCategories()
     {
         $query = "SELECT * FROM categories";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    function getProducts()
+
+    public function getProducts()
     {
         $query = "SELECT * FROM products ORDER BY product_id DESC";
         $stmt = $this->conn->prepare($query);
@@ -47,11 +49,10 @@ class AddProductModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Function to create a new product
-    function createProduct($data)
+    public function createProduct($data)
     {
         $stmt = $this->conn->prepare("INSERT INTO products (product_name, price, image_url, category_id)
-                  VALUES (:product_name, :price, :image_url, :category_id)");
+                                      VALUES (:product_name, :price, :image_url, :category_id)");
         return $stmt->execute([
             'product_name' => $data['product_name'],
             'price' => $data['price'],
@@ -60,8 +61,7 @@ class AddProductModel
         ]);
     }
 
-    // Get a product by ID
-    function getProductById($id)
+    public function getProductById($id)
     {
         $query = "SELECT * FROM products WHERE product_id = :id";
         $stmt = $this->conn->prepare($query);
@@ -70,177 +70,163 @@ class AddProductModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Update a product
-    function updateProduct($data)
+    public function updateProduct($data)
     {
-        // Check if we need to update the image
         if (!empty($data['image_url'])) {
             $query = "UPDATE products 
-                  SET product_name = :product_name, 
-                      price = :price, 
-                      image_url = :image_url,  
-                      category_id = :category_id 
-                  WHERE product_id = :product_id";
+                      SET product_name = :product_name, 
+                          price = :price, 
+                          image_url = :image_url,  
+                          category_id = :category_id 
+                      WHERE product_id = :product_id";
         } else {
             $query = "UPDATE products 
-                  SET product_name = :product_name, 
-                      price = :price, 
-                      category_id = :category_id 
-                  WHERE product_id = :product_id";
+                      SET product_name = :product_name, 
+                          price = :price, 
+                          category_id = :category_id 
+                      WHERE product_id = :product_id";
         }
 
         $stmt = $this->conn->prepare($query);
-
-        // Bind parameters
         $stmt->bindParam(':product_name', $data['product_name']);
         $stmt->bindParam(':price', $data['price']);
         $stmt->bindParam(':category_id', $data['category_id']);
         $stmt->bindParam(':product_id', $data['product_id']);
-        // Bind image_url only if it's included in the query
         if (!empty($data['image_url'])) {
             $stmt->bindParam(':image_url', $data['image_url']);
         }
 
-        // Execute the statement
         return $stmt->execute();
     }
 
-    // Delete a product
-    function deleteProduct($id)
+    public function deleteProduct($id)
     {
         $query = "DELETE FROM products WHERE product_id = :id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
-    // AddProductModel.php
-function createOrder($totalAmount) {
-    $stmt = $this->conn->prepare("INSERT INTO orders (total_amount) VALUES (:total)");
-    $stmt->execute(['total' => $totalAmount]);
-    return $this->conn->lastInsertId();
-}
 
-function createOrderItems($orderId, $items) {
-    foreach ($items as $item) {
-        $stmt = $this->conn->prepare("INSERT INTO order_items 
-            (order_id, product_id, product_name, price, quantity, category_id) 
-            VALUES (:order_id, :product_id, :name, :price, :quantity, :category_id)");
+    public function createOrder($totalAmount)
+    {
+        $stmt = $this->conn->prepare("INSERT INTO orders (total_amount, created_at) VALUES (:total, NOW())");
+        $stmt->execute(['total' => $totalAmount]);
+        return $this->conn->lastInsertId();
+    }
+
+    public function createOrderItems($orderId, $items)
+    {
+        foreach ($items as $item) {
+            $stmt = $this->conn->prepare("INSERT INTO order_items 
+                (order_id, product_id, product_name, price, quantity, category_id) 
+                VALUES (:order_id, :product_id, :name, :price, :quantity, :category_id)");
+            
+            $stmt->execute([
+                'order_id' => $orderId,
+                'product_id' => $item['product_id'],
+                'name' => $item['name'],
+                'price' => $item['price'],
+                'quantity' => $item['quantity'],
+                'category_id' => $item['category_id']
+            ]);
+        }
+        return true;
+    }
+
+    public function getOrderHistory()
+    {
+        $query = "SELECT o.*, 
+                  (SELECT COUNT(*) FROM order_items WHERE order_id = o.order_id) as item_count
+                  FROM orders o 
+                  ORDER BY o.created_at DESC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getOrderDetails($orderId)
+    {
+        $query = "SELECT o.*, 
+                  (SELECT COUNT(*) FROM order_items WHERE order_id = o.order_id) as item_count
+                  FROM orders o 
+                  WHERE o.order_id = :order_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute(['order_id' => $orderId]);
+        $order = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        $stmt->execute([
-            'order_id' => $orderId,
-            'product_id' => $item['product_id'],
-            'name' => $item['name'],
-            'price' => $item['price'],
-            'quantity' => $item['quantity'],
-            'category_id' => $item['category_id']
-        ]);
+        if (!$order) return null;
+        
+        $query = "SELECT * FROM order_items WHERE order_id = :order_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute(['order_id' => $orderId]);
+        $order['items'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        return $order;
     }
-    return true;
-}
 
-function getOrderHistory() {
-    $query = "SELECT o.*, 
-              (SELECT COUNT(*) FROM order_items WHERE order_id = o.order_id) as item_count
-              FROM orders o 
-              ORDER BY o.created_at DESC";
-    $stmt = $this->conn->prepare($query);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-function getOrderDetails($orderId) {
-    $query = "SELECT o.*, 
-              (SELECT COUNT(*) FROM order_items WHERE order_id = o.order_id) as item_count
-              FROM orders o 
-              WHERE o.order_id = :order_id";
-    $stmt = $this->conn->prepare($query);
-    $stmt->execute(['order_id' => $orderId]);
-    $order = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    if (!$order) return null;
-    
-    $query = "SELECT * FROM order_items WHERE order_id = :order_id";
-    $stmt = $this->conn->prepare($query);
-    $stmt->execute(['order_id' => $orderId]);
-    $order['items'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    return $order;
-}
-
-function getTopSellingProducts($limit = 5) {
-    $query = "SELECT 
-                oi.product_id,
-                oi.product_name,
-                SUM(oi.quantity) as total_quantity,
-                SUM(oi.price * oi.quantity) as total_revenue
-              FROM order_items oi
-              GROUP BY oi.product_id, oi.product_name
-              ORDER BY total_quantity DESC
-              LIMIT :limit";
-    
-    $stmt = $this->conn->prepare($query);
-    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-function getTotalIncome($month = null) {
-    $query = "SELECT SUM(total_amount) as total_income 
-              FROM orders";
-    
-    if ($month) {
-        $query .= " WHERE MONTH(created_at) = :month AND YEAR(created_at) = YEAR(CURRENT_DATE)";
+    public function getTopSellingProducts($startDate, $endDate, $limit = 5)
+    {
+        $query = "SELECT 
+                    oi.product_id,
+                    oi.product_name,
+                    SUM(oi.quantity) as total_quantity,
+                    SUM(oi.price * oi.quantity) as total_revenue
+                  FROM order_items oi
+                  JOIN orders o ON oi.order_id = o.order_id
+                  WHERE o.created_at BETWEEN :start_date AND :end_date
+                  GROUP BY oi.product_id, oi.product_name
+                  ORDER BY total_quantity DESC
+                  LIMIT :limit";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':start_date', $startDate . ' 00:00:00');
+        $stmt->bindValue(':end_date', $endDate . ' 23:59:59');
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
-    $stmt = $this->conn->prepare($query);
-    
-    if ($month) {
-        $stmt->bindValue(':month', $month, PDO::PARAM_INT);
+
+    public function getTotalIncome($startDate, $endDate)
+    {
+        $query = "SELECT COALESCE(SUM(total_amount), 0) as total_income 
+                  FROM orders
+                  WHERE created_at BETWEEN :start_date AND :end_date";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':start_date', $startDate . ' 00:00:00');
+        $stmt->bindValue(':end_date', $endDate . ' 23:59:59');
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return floatval($result['total_income'] ?? 0);
     }
-    
-    $stmt->execute();
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $result['total_income'] ?? 0;
-}
-function getMonthlySales($year = null) {
-    $query = "SELECT 
-                MONTH(created_at) as month,
-                SUM(total_amount) as total_sales
-              FROM orders";
-    
-    if ($year) {
-        $query .= " WHERE YEAR(created_at) = :year";
-    }
-    
-    $query .= " GROUP BY MONTH(created_at)
-                ORDER BY month";
-    
-    $stmt = $this->conn->prepare($query);
-    
-    if ($year) {
+
+    public function getMonthlySales($year)
+    {
+        $query = "SELECT 
+                    MONTH(created_at) as month,
+                    COALESCE(SUM(total_amount), 0) as total_sales
+                  FROM orders
+                  WHERE YEAR(created_at) = :year
+                  GROUP BY MONTH(created_at)
+                  ORDER BY month";
+        
+        $stmt = $this->conn->prepare($query);
         $stmt->bindValue(':year', $year, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-function getTotalPurchaseExpenses($month = null) {
-    $query = "SELECT SUM(total_amount) as total_expenses 
-              FROM purchases";
-    
-    if ($month) {
-        $query .= " WHERE MONTH(purchase_date) = :month AND YEAR(purchase_date) = YEAR(CURRENT_DATE)";
-    }
-    
-    $stmt = $this->conn->prepare($query);
-    
-    if ($month) {
-        $stmt->bindValue(':month', $month, PDO::PARAM_INT);
-    }
-    
-    $stmt->execute();
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $result['total_expenses'] ?? 0;
-}
 
+    public function getTotalPurchaseExpenses($startDate, $endDate)
+    {
+        $query = "SELECT COALESCE(SUM(total_amount), 0) as total_expenses 
+                  FROM purchases
+                  WHERE purchase_date BETWEEN :start_date AND :end_date";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':start_date', $startDate . ' 00:00:00');
+        $stmt->bindValue(':end_date', $endDate . ' 23:59:59');
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return floatval($result['total_expenses'] ?? 0);
+    }
 }

@@ -204,11 +204,9 @@
         height: 40vh;
     }
     
-    .card-body.px-3.py-4-5 .col-md-4,
-    .card-body.px-3.py-4-5 .col-md-8 {
-        width: 100%;
+    .mon{
+        margin-right: 20px;
     }
-    
     /* Profile avatar */
     .d-flex.align-items-center {
         flex-direction: column;

@@ -187,37 +187,72 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success" id="confirm-receipt">Confirm</button>
-                        <button type="button" class="btn btn-primary" id="ok-button" data-bs-dismiss="modal" style="padding: 10px 20px; font-size: 16px; margin-left: 45%;" >OK</button>
+                        <button type="button" class="btn btn-primary" id="ok-button" data-bs-dismiss="modal" style="padding: 10px 20px; font-size: 16px; margin-left: 45%;">OK</button>
                     </div>
                 </div>
             </div>
         </div>
         <!-- QR Code Modal -->
-        <div class="modal fade" id="qrCodeModal" tabindex="-1" aria-labelledby="qrCodeModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="qrCodeModalLabel"><?php echo __('scan_qr_code'); ?></h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- QR Code Modal -->
+<div class="modal fade" id="qrCodeModal" tabindex="-1" aria-labelledby="qrCodeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="qrCodeModalLabel"><?php echo __('scan_qr_code'); ?></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+                <div class="qrimg d-flex justify-content-center">
+                    <img id="qrCodeImage" src="views/assets/images/us.JPG" alt="USD QR Code" class="img-fluid" style="width: 400px;">
+                </div>
+                
+                <div class="mb-4 d-flex justify-content-center">
+                    <div class="form-check form-check-inline">
+                        <input class="currency-radio" type="radio" name="currency" id="currency-usd" value="usd" checked> US
                     </div>
-                        <img src="views/assets/images/qrcode.JPG" alt="QR Code" class="img-fluid" style="width: 500px;">
-                    <div class="modal-footer d-flex justify-content-center">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><?php echo __('close'); ?></button>
+                    <div class="form-check form-check-inline">
+                        <input class="currency-radio" type="radio" name="currency" id="currency-khr" value="khr"> KHR
                     </div>
                 </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><?php echo __('close'); ?></button>
             </div>
         </div>
-        <script>
-            document.getElementById('check-btn').addEventListener('click', function() {
-                // Check if the "aba" radio button is selected
-                const abaRadio = document.getElementById('payment-aba');
-                if (abaRadio.checked) {
-                    // Show the QR code modal using Bootstrap's modal method
-                    const qrCodeModal = new bootstrap.Modal(document.getElementById('qrCodeModal'));
-                    qrCodeModal.show();
-                } else {
-                    // Optional: Handle the case when "aba" is not selected (e.g., show an alert)
-                    alert('Please select ABA payment method to view the QR code.');
-                }
-            });
-        </script>
+    </div>
+</div>
+<script>
+document.getElementById('check-btn').addEventListener('click', function () {
+    // Check if the "aba" radio button is selected
+    const abaRadio = document.getElementById('payment-aba');
+    if (abaRadio.checked) {
+        // Reset to USD QR code when opening the modal
+        const qrCodeImage = document.getElementById('qrCodeImage');
+        qrCodeImage.src = 'views/assets/images/us.JPG';
+        qrCodeImage.alt = 'USD QR Code';
+        document.getElementById('currency-usd').checked = true;
+
+        // Show the QR code modal
+        const qrCodeModal = new bootstrap.Modal(document.getElementById('qrCodeModal'));
+        qrCodeModal.show();
+    } else {
+        // Alert if ABA is not selected
+        alert('Please select ABA payment method to view the QR code.');
+    }
+});
+
+// Handle currency selection
+document.querySelectorAll('.currency-radio').forEach(radio => {
+    radio.addEventListener('change', function () {
+        const currency = this.value;
+        const qrCodeImage = document.getElementById('qrCodeImage');
+
+        // Update QR code image based on currency
+        if (currency === 'usd') {
+            qrCodeImage.src = 'views/assets/images/us.JPG';
+            qrCodeImage.alt = 'USD QR Code';
+        } else if (currency === 'khr') {
+            qrCodeImage.src = 'views/assets/images/kh.JPG';
+            qrCodeImage.alt = 'KHR QR Code';
+        }
+    });
+});
+</script>
