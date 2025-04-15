@@ -25,7 +25,6 @@
         if (searchInput) {
             searchInput.addEventListener("input", filterProducts);
         }
-
         // Order buttons
         document.querySelectorAll('.btn-Order').forEach(button => {
             button.addEventListener('click', function() {

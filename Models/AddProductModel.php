@@ -1,20 +1,21 @@
 <?php
 require_once 'Database/Database.php';
+
 class AddProductModel
 {
     private $conn;
 
-    function __construct()
+    public function __construct()
     {
         $database = new Database();
         $this->conn = $database->getConnection();
     }
-    // Add this method to your model
-    function getProductsByCategory($category_id = null)
+
+    public function getProductsByCategory($category_id = null)
     {
         $query = "SELECT p.*, c.category_name 
-              FROM products p 
-              JOIN categories c ON p.category_id = c.category_id";
+                  FROM products p 
+                  JOIN categories c ON p.category_id = c.category_id";
 
         if ($category_id && $category_id !== 'all') {
             $query .= " WHERE p.category_id = :category_id";
@@ -32,14 +33,15 @@ class AddProductModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    function getCategories()
+    public function getCategories()
     {
         $query = "SELECT * FROM categories";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    function getProducts()
+
+    public function getProducts()
     {
         $query = "SELECT * FROM products ORDER BY product_id DESC";
         $stmt = $this->conn->prepare($query);
@@ -47,11 +49,10 @@ class AddProductModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Function to create a new product
-    function createProduct($data)
+    public function createProduct($data)
     {
         $stmt = $this->conn->prepare("INSERT INTO products (product_name, price, image_url, category_id)
-                  VALUES (:product_name, :price, :image_url, :category_id)");
+                                      VALUES (:product_name, :price, :image_url, :category_id)");
         return $stmt->execute([
             'product_name' => $data['product_name'],
             'price' => $data['price'],
@@ -60,8 +61,7 @@ class AddProductModel
         ]);
     }
 
-    // Get a product by ID
-    function getProductById($id)
+    public function getProductById($id)
     {
         $query = "SELECT * FROM products WHERE product_id = :id";
         $stmt = $this->conn->prepare($query);
@@ -70,43 +70,36 @@ class AddProductModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Update a product
-    function updateProduct($data)
+    public function updateProduct($data)
     {
-        // Check if we need to update the image
         if (!empty($data['image_url'])) {
             $query = "UPDATE products 
-                  SET product_name = :product_name, 
-                      price = :price, 
-                      image_url = :image_url,  
-                      category_id = :category_id 
-                  WHERE product_id = :product_id";
+                      SET product_name = :product_name, 
+                          price = :price, 
+                          image_url = :image_url,  
+                          category_id = :category_id 
+                      WHERE product_id = :product_id";
         } else {
             $query = "UPDATE products 
-                  SET product_name = :product_name, 
-                      price = :price, 
-                      category_id = :category_id 
-                  WHERE product_id = :product_id";
+                      SET product_name = :product_name, 
+                          price = :price, 
+                          category_id = :category_id 
+                      WHERE product_id = :product_id";
         }
 
         $stmt = $this->conn->prepare($query);
-
-        // Bind parameters
         $stmt->bindParam(':product_name', $data['product_name']);
         $stmt->bindParam(':price', $data['price']);
         $stmt->bindParam(':category_id', $data['category_id']);
         $stmt->bindParam(':product_id', $data['product_id']);
-        // Bind image_url only if it's included in the query
         if (!empty($data['image_url'])) {
             $stmt->bindParam(':image_url', $data['image_url']);
         }
 
-        // Execute the statement
         return $stmt->execute();
     }
 
-    // Delete a product
-    function deleteProduct($id)
+    public function deleteProduct($id)
     {
         $query = "DELETE FROM products WHERE product_id = :id";
         $stmt = $this->conn->prepare($query);
@@ -114,74 +107,126 @@ class AddProductModel
         return $stmt->execute();
     }
 
-    // Function to get the total number of products// Existing methods (getProductsByCategory, getCategories, etc.) remain unchanged...
-    public function insertOrder($data) {
-        try {
-            $sql = "INSERT INTO orders (customer_id, order_number, order_date, total_amount, payment_status, created_at, updated_at)
-                    VALUES (:customer_id, :order_number, :order_date, :total_amount, :payment_status, :created_at, :updated_at)";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->execute([
-                ':customer_id' => $data['customer_id'],
-                ':order_number' => $data['order_number'],
-                ':order_date' => $data['order_date'],
-                ':total_amount' => $data['total_amount'],
-                ':payment_status' => $data['payment_status'],
-                ':created_at' => $data['created_at'],
-                ':updated_at' => $data['updated_at']
-            ]);
-            return $this->conn->lastInsertId();
-        } catch (Exception $e) {
-            error_log("Insert Order Error: " . $e->getMessage());
-            return false;
-        }
+    public function createOrder($totalAmount)
+    {
+        $stmt = $this->conn->prepare("INSERT INTO orders (total_amount, created_at) VALUES (:total, NOW())");
+        $stmt->execute(['total' => $totalAmount]);
+        return $this->conn->lastInsertId();
     }
 
-    public function insertOrderItem($data) {
-        try {
-            $sql = "INSERT INTO order_items (order_id, product_id, quantity, price, subtotal)
-                    VALUES (:order_id, :product_id, :quantity, :price, :subtotal)";
-            $stmt = $this->conn->prepare($sql);
+    public function createOrderItems($orderId, $items)
+    {
+        foreach ($items as $item) {
+            $stmt = $this->conn->prepare("INSERT INTO order_items 
+                (order_id, product_id, product_name, price, quantity, category_id) 
+                VALUES (:order_id, :product_id, :name, :price, :quantity, :category_id)");
+            
             $stmt->execute([
-                ':order_id' => $data['order_id'],
-                ':product_id' => $data['product_id'],
-                ':quantity' => $data['quantity'],
-                ':price' => $data['price'],
-                ':subtotal' => $data['subtotal']
+                'order_id' => $orderId,
+                'product_id' => $item['product_id'],
+                'name' => $item['name'],
+                'price' => $item['price'],
+                'quantity' => $item['quantity'],
+                'category_id' => $item['category_id']
             ]);
-            return true;
-        } catch (Exception $e) {
-            error_log("Insert Order Item Error: " . $e->getMessage());
-            return false;
         }
-    }
-    public function getOrderReceipt($order_id) {
-        try {
-            $sql = "SELECT 
-                        o.order_id,
-                        o.customer_id,
-                        o.order_number,
-                        o.order_date,
-                        o.total_amount,
-                        o.payment_status,
-                        oi.order_item_id,
-                        oi.product_id,
-                        oi.quantity,
-                        oi.price,
-                        oi.subtotal,
-                        p.product_name
-                    FROM orders o
-                    LEFT JOIN order_items oi ON o.order_id = oi.order_id
-                    LEFT JOIN products p ON oi.product_id = p.product_id
-                    WHERE o.order_id = :order_id";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':order_id', $order_id);
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception $e) {
-            error_log("Get Order Receipt Error: " . $e->getMessage());
-            return false;
-        }
+        return true;
     }
 
-    // Keep
+    public function getOrderHistory()
+    {
+        $query = "SELECT o.*, 
+                  (SELECT COUNT(*) FROM order_items WHERE order_id = o.order_id) as item_count
+                  FROM orders o 
+                  ORDER BY o.created_at DESC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getOrderDetails($orderId)
+    {
+        $query = "SELECT o.*, 
+                  (SELECT COUNT(*) FROM order_items WHERE order_id = o.order_id) as item_count
+                  FROM orders o 
+                  WHERE o.order_id = :order_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute(['order_id' => $orderId]);
+        $order = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$order) return null;
+        
+        $query = "SELECT * FROM order_items WHERE order_id = :order_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute(['order_id' => $orderId]);
+        $order['items'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        return $order;
+    }
+
+    public function getTopSellingProducts($startDate, $endDate, $limit = 5)
+    {
+        $query = "SELECT 
+                    oi.product_id,
+                    oi.product_name,
+                    SUM(oi.quantity) as total_quantity,
+                    SUM(oi.price * oi.quantity) as total_revenue
+                  FROM order_items oi
+                  JOIN orders o ON oi.order_id = o.order_id
+                  WHERE o.created_at BETWEEN :start_date AND :end_date
+                  GROUP BY oi.product_id, oi.product_name
+                  ORDER BY total_quantity DESC
+                  LIMIT :limit";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':start_date', $startDate . ' 00:00:00');
+        $stmt->bindValue(':end_date', $endDate . ' 23:59:59');
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getTotalIncome($startDate, $endDate)
+    {
+        $query = "SELECT COALESCE(SUM(total_amount), 0) as total_income 
+                  FROM orders
+                  WHERE created_at BETWEEN :start_date AND :end_date";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':start_date', $startDate . ' 00:00:00');
+        $stmt->bindValue(':end_date', $endDate . ' 23:59:59');
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return floatval($result['total_income'] ?? 0);
+    }
+
+    public function getMonthlySales($year)
+    {
+        $query = "SELECT 
+                    MONTH(created_at) as month,
+                    COALESCE(SUM(total_amount), 0) as total_sales
+                  FROM orders
+                  WHERE YEAR(created_at) = :year
+                  GROUP BY MONTH(created_at)
+                  ORDER BY month";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':year', $year, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getTotalPurchaseExpenses($startDate, $endDate)
+    {
+        $query = "SELECT COALESCE(SUM(total_amount), 0) as total_expenses 
+                  FROM purchases
+                  WHERE purchase_date BETWEEN :start_date AND :end_date";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':start_date', $startDate . ' 00:00:00');
+        $stmt->bindValue(':end_date', $endDate . ' 23:59:59');
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return floatval($result['total_expenses'] ?? 0);
+    }
 }
