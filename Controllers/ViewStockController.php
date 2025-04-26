@@ -5,8 +5,10 @@ class ViewStockController extends BaseController {
     private $productModel;
     private $uploadDir = "uploads/";
     private $telegramBotToken = '7898878636:AAFtwwPFcVSIi256SkNUaKitGDS5eaOhq1o';
+    private $teamChatId = '6461561884'; // Specific chat ID for your team
 
-    public function __construct() {
+    public function __construct() 
+    {
         $this->productModel = new ProductModel();
         if (!file_exists($this->uploadDir)) {
             mkdir($this->uploadDir, 0777, true);
@@ -60,13 +62,14 @@ class ViewStockController extends BaseController {
     private function sendToTelegram($message, $specificChatIds = null) {
         error_log("sendToTelegram: Attempting to send message: " . substr($message, 0, 50));
         
-        $chatIds = $specificChatIds ?? $this->getAllChatIds();
+        // Use the team chat ID by default, unless specific chat IDs are provided
+        $chatIds = $specificChatIds ?? [$this->teamChatId];
         if (empty($chatIds)) {
-            error_log("sendToTelegram: No Telegram users found to broadcast to");
+            error_log("sendToTelegram: No chat IDs provided");
             return false;
         }
 
-        error_log("sendToTelegram: Broadcasting to " . count($chatIds) . " chat IDs: " . implode(', ', $chatIds));
+        error_log("sendToTelegram: Sending to " . count($chatIds) . " chat IDs: " . implode(', ', $chatIds));
         
         $successCount = 0;
         $url = "https://api.telegram.org/bot{$this->telegramBotToken}/sendMessage";
@@ -84,16 +87,13 @@ class ViewStockController extends BaseController {
             curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-            curl_setopt($ch, CURLOPT_VERBOSE, true); // Enable verbose output for debugging
-            curl_setopt($ch, CURLOPT_STDERR, fopen('php://stderr', 'w')); // Log curl details
-            
             $response = curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             $error = curl_error($ch);
             curl_close($ch);
             
             if ($response === false || $httpCode !== 200) {
-                error_log("sendToTelegram: Telegram API Error for chat $chatId: " . ($error ?: "HTTP $httpCode") . " - Response: " . $response);
+                error_log("sendToTelegram: Error for chat $chatId: " . ($error ?: "HTTP $httpCode") . " - Response: " . $response);
                 continue;
             }
             
@@ -102,14 +102,13 @@ class ViewStockController extends BaseController {
                 $successCount++;
                 error_log("sendToTelegram: Successfully sent to chat $chatId");
             } else {
-                error_log("sendToTelegram: Telegram API Failed for chat $chatId: " . ($result['description'] ?? 'Unknown error') . " - Response: " . json_encode($result));
+                error_log("sendToTelegram: Failed for chat $chatId: " . ($result['description'] ?? 'Unknown error'));
             }
         }
         
-        error_log("sendToTelegram: Broadcast completed. Sent to $successCount out of " . count($chatIds) . " users");
+        error_log("sendToTelegram: Completed. Sent to $successCount out of " . count($chatIds) . " chats");
         return $successCount > 0;
     }
-
     // New method to test Telegram sending
     public function testTelegram() {
         try {
@@ -498,5 +497,93 @@ class ViewStockController extends BaseController {
         }
 
     }
+    // In ViewStockController.php
+public function storeReceipt() {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+        return;
+    }
+
+    $data = json_decode(file_get_contents("php://input"), true);
+    error_log("Received order data: " . json_encode($data));
+
+    if (!$data || empty($data['items']) || !isset($data['customer_id'])) {
+        echo json_encode(['success' => false, 'message' => 'Invalid or missing data']);
+        return;
+    }
+
+    $customer_id = $data['customer_id'];
+    $total_amount = floatval($data['total']);
+    $items = $data['items'];
+    $order_number = uniqid('ORD-');
+    $timestamp = date('Y-m-d H:i:s');
+
+    $orderData = [
+        'customer_id' => $customer_id,
+        'order_number' => $order_number,
+        'order_date' => $timestamp,
+        'total_amount' => $total_amount,
+        'payment_status' => 'pending',
+        'created_at' => $timestamp,
+        'updated_at' => $timestamp
+    ];
+
+    $order_id = $this->productModel->insertOrder($orderData);
+    if (!$order_id) {
+        echo json_encode(['success' => false, 'message' => 'Failed to create order']);
+        return;
+    }
+
+    foreach ($items as $item) {
+        $subtotal = floatval($item['quantity']) * floatval($item['price']);
+        $itemData = [
+            'order_id' => $order_id,
+            'product_id' => $item['product_id'],
+            'quantity' => $item['quantity'],
+            'price' => floatval($item['price']),
+            'subtotal' => $subtotal
+        ];
+        if (!$this->productModel->insertOrderItem($itemData)) {
+            echo json_encode(['success' => false, 'message' => 'Failed to add order items']);
+            return;
+        }
+    }
+
+    $receiptData = $this->productModel->getOrderReceipt($order_id);
+    if ($receiptData) {
+        // Send to Telegram group
+        $totalPrice = 0;
+        $itemsText = array_map(function($item) use (&$totalPrice) {
+            $itemTotal = $item['quantity'] * $item['price'];
+            $totalPrice += $itemTotal;
+            return "📦 {$item['product_name']} - Qty: {$item['quantity']} - \${$itemTotal}";
+        }, $receiptData);
+        $message = "🛒 <b>New Order #{$order_number}</b>\n" .
+                   "🕒 Date: {$timestamp}\n" .
+                   "👤 Customer ID: {$customer_id}\n" .
+                   "➖➖➖➖➖➖➖➖➖\n" .
+                   "Items:\n" . implode("\n", $itemsText) . "\n" .
+                   "➖➖➖➖➖➖➖➖➖\n" .
+                   "💰 Total: \${$totalPrice}";
+        $this->sendToTelegram($message);
+
+        echo json_encode([
+            'success' => true,
+            'order_id' => $order_id,
+            'receipt' => $receiptData
+        ]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Order created but failed to generate receipt']);
+    }
+}
+
+public function getReceipt($order_id) {
+    $receiptData = $this->productModel->getOrderReceipt($order_id);
+    if ($receiptData) {
+        echo json_encode(['success' => true, 'receipt' => $receiptData]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Receipt not found']);
+    }
+}
 }
 
