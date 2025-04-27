@@ -19,8 +19,12 @@
             </div>
 
             <input type="hidden" name="id" value="<?php echo htmlspecialchars($product['id']); ?>">
-            <button type="submit" class="btn btn-success"><?php echo __('submit'); ?></button>
-            <a href="/viewStock" class="btn btn-outline-secondary"><?php echo __('cancel'); ?></a>
-        </form>
+            <div class="class-button">
+
+                <button type="submit" class="btn btn-success"><?php echo __('submit'); ?></button>
+                <a href="/viewStock" class="btn btn-outline-secondary"><?php echo __('cancel'); ?></a>
+            </div>
+            </form>
     </div>
 </div>
+ 

@@ -97,7 +97,7 @@
                                 <a href="#" class="text-secondary bi-three-dots-vertical" data-bs-toggle="dropdown"
                                     aria-expanded="false" style="margin-right:10px;">
                                 </a>
-                                <ul class="dropdown-menu" style="min-width: 120px; padding: 0.5rem 0;">
+                                <ul class="dropdown-menu" style="min-width: 100px;">
                                     <!-- Edit Link -->
                                     <li class="edit"><a href="/edit_product?id=<?= $product['id'] ?>"
                                             class="edit-link bi-pencil"> Edit</a></li>
