@@ -11,7 +11,12 @@ class ProductModel {
     }
 
     public function getAllProducts() {
-        $query = "SELECT * FROM " . $this->table;
+        $query = "
+            SELECT *
+              FROM {$this->table}
+             ORDER BY (quantity = 0) DESC,  
+                      quantity ASC           
+        ";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
