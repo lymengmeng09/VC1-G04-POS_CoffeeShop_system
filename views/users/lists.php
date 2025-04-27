@@ -42,7 +42,7 @@
                 <th><?php echo __('email'); ?></th>
                 <th><?php echo __('role'); ?></th>
                 <?php if (AccessControl::isAdmin()): ?>
-                    <th>Action</th>
+                    <th><?php echo __('Action'); ?></th>
                 <?php endif; ?>
             </tr>
         </thead>

@@ -44,7 +44,7 @@
                 <?php endif; ?>
                 <!-- Save and Cancel Buttons -->
                 <button type="submit" class="btn btn-primary mt-2"><?php echo __('save'); ?></button>
-                <a href="/list-users" class="btn btn-secondary mt-2"><?php echo __('cancel'); ?></a>
+                <a href="/list-users" class="btn btn-outline-secondary mt-2"><?php echo __('cancel'); ?></a>
             </form>
         </div>
     </div>

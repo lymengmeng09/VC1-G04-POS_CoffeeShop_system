@@ -7,7 +7,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-4 text-center">
-                        <img src="<?= BASE_URL ?>/<?= htmlspecialchars($product['image_url']) ?>" 
+                        <img src="/<?= htmlspecialchars($product['image_url']) ?>" 
                              alt="<?= htmlspecialchars($product['name']) ?>" 
                              class="img-fluid rounded mb-3" style="max-height: 200px;">
                     </div>

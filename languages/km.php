@@ -34,6 +34,7 @@ return [
     'Product image' => 'រូបភាពផលិតផល',
     'add_product' => 'បន្ថែមផលិតផល',
     'edit_product' => 'កែប្រែផលិតផល',
+    'Delete Product' => 'លុបផលិតផល',
     'product_management' => 'ការគ្រប់គ្រងផលិតផល',
     'search_products_placeholder' => 'ស្វែងរកផលិតផល...',
     'all' => 'ទាំងអស់',
@@ -48,6 +49,9 @@ return [
     'order_receipt' => 'បង្កាន់ដៃបញ្ជាទិញ',
     'confirm' => 'បញ្ជាក់',
     'Select a category' => 'ជ្រើសរើសប្រភេទផលិតផល',
+    'Enter product name' => 'បញ្ចូលឈ្មោះផលិតផល',
+    'Enter price' => 'បញ្ចូលតម្លៃ',
+
 
     // Users
     'username' => 'ឈ្មោះអ្នកប្រើប្រាស់',
@@ -83,6 +87,8 @@ return [
     'confirm_password_label' => 'បញ្ជាក់ពាក្យសម្ងាត់',
     'confirm_password_placeholder' => 'បញ្ជាក់ពាក្យសម្ងាត់របស់អ្នក',
     'select_role' => 'ជ្រើសរើសតួនាទី',
+    'status'=>'ស្ថានភាព',
+    'Action'=>'សកម្មភាព',
 
     // Messages
     'confirm_delete' => 'តើអ្នកប្រាកដថាចង់លុបធាតុនេះមែនទេ?',
@@ -128,4 +134,43 @@ return [
     'Today' => 'ថ្ងៃនេះ',
     'This Week' => 'សប្តាហ៍នេះ',
     'This Month' => 'ខែនេះ',
+
+    //dashboard
+    'Expenses' => 'ប្រាក់ចំណាយ',
+    'Incomes' => 'ប្រាក់ចំំណូល',
+    'Profits' => 'ប្រាក់ចំណេញ',
+    'Sales Report'=> 'របាយការណ៍លក់',
+    'Top Selling Products' => 'ផលិតផលលក់ដាច់បំផុត',
+    'Top Selling Products Details' => 'ព័ត៌មានលម្អិតអំពីផលិតផលដែលលក់ដាច់ជាងគេ',
+    'Sold' => 'បានលក់',
+    'Revenue' =>'ប្រាក់ចំណូល',
+    'units' => 'កែវ',
+    'Date Range' => 'កាលបរិច្ឆេទ',
+    'to' => 'ដល់',
+    'Target Coffee Dashboard' => 'ផ្ទាំងគ្រប់គ្រងហាង Target Coffee',
+
+    //stock
+    'Stock Products' => 'ផលិតផលស្តុក',
+    'New' => 'ផលិតផលថ្មី',
+    'Existing' => 'ផលិតផលមានស្រាប់',
+    'Stock Quantity' => 'បរិមាណស្តុក',
+    'Add New Products' => 'បន្ថែមផលិតផលថ្មី',
+    'Completed' => 'រួចរាល់',
+    'Add More' => 'បន្ថែម',
+    'Total Price' =>'តម្លៃសរុប',
+    'Update Existing Product' => 'ធ្វើបច្ចុប្បន្នភាពផលិតផលដែលមានស្រាប់',
+    'Select Product' => 'ជ្រើសរើសផលិតផល',
+    'Select a product' => 'ជ្រើសរើសផលិតផលមួយ',
+
+    //history
+    'Order History'=>'ប្រវត្តិនៃការបញ្ជាទិញ',
+    'order id' => 'លេខរៀង',
+    'total amount'=> 'តម្លៃសរុប',
+    'item count' => 'ចំនួន',
+    'date' => 'កាលបរិច្ឆេទ',
+    'View details' => 'មើលព័ត៌មានលម្អិត',
+    'order details'=>'ព័ត៌មានលម្អិតបញ្ជាទិញ',
+    'Total Cost'=> 'តម្លៃសរុប',
+    
+    
 ];
