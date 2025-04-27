@@ -52,7 +52,7 @@ $currentLang = LanguageHelper::getCurrentLang();
          <div class="shop me-3">
             <a href="/products" id="cart-icon">
            <i class="bi bi-cart-fill" style="font-size: 28px;"></i>
-            <span class="count_cart" id="cart-count">0</span>
+            <span class="count_cart" id="cart-count"></span>
             </a>
         </div>
 
