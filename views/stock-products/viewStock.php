@@ -85,10 +85,15 @@
                         <td class="fw-semibold text-primary">$<?= number_format($product['price'], 2) ?></td>
                         <td class="fw-semibold text-center"> <?= $product['quantity'] ?> </td>
                         <td>
-                            <span class="badge bg-<?= $product['quantity'] == 0 ? 'danger' : 'success' ?> p-2">
-                                <?= $product['quantity'] == 0 ? 'Out of Stock' : 'In Stock' ?>
-                            </span>
+                            <?php if ($product['quantity'] == 0): ?>
+                                <span class="badge bg-danger p-2">Out of Stock</span>
+                            <?php elseif ($product['quantity'] <= 5): ?>
+                                <span class="badge bg-warning text-dark p-2">Low Stock</span>
+                            <?php else: ?>
+                                <span class="badge bg-success p-2">In Stock</span>
+                            <?php endif; ?>
                         </td>
+
                         <td class="text-center m-l">
                             <div class="dropdown">
                                 <a href="#" class="text-secondary bi-three-dots-vertical" data-bs-toggle="dropdown"

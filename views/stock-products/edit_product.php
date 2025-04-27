@@ -22,21 +22,12 @@
             </div>
 
             <input type="hidden" name="id" value="<?php echo htmlspecialchars($product['id']); ?>">
-<<<<<<< HEAD
-            <div class="d-flex">
-                <button type="submit" class="btn btn-success m-2"><?php echo __('submit'); ?></button>
-                <a href="/viewStock" class="btn btn-outline-secondary m-2"><?php echo __('cancel'); ?></a>
-            </div>
-
-        </form>
-=======
             <div class="class-button">
 
                 <button type="submit" class="btn btn-success"><?php echo __('submit'); ?></button>
                 <a href="/viewStock" class="btn btn-outline-secondary"><?php echo __('cancel'); ?></a>
             </div>
             </form>
->>>>>>> 16b6257edbcf98745a8aa9b4465d5d196d8ae730
     </div>
 </div>
  
