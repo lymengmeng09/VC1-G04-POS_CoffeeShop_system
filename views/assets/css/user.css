@@ -17,9 +17,6 @@
 .btn-reset{
     border: none; background:none; color: rgb(21, 185, 21);
 }
-.table thead tr th{
-    color: #8E5D43;
-}
 
 /* Add border to the top of the table */
 .table {
@@ -33,7 +30,7 @@
 .table tbody td{
     font-size: medium;
 }
-h5{
+h5, h3{
     color: #673E20;
 }
 .star{

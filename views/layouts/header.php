@@ -27,8 +27,13 @@
   <link rel="stylesheet" href="/views/assets/css/navbar.css">
   <link rel="stylesheet" href="/views/assets/css/create.css">
   <link href="https://fonts.googleapis.com/css2?family=Siemreap&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bokor&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/views/assets/css/purchase.css">
   <link rel="stylesheet" href="/views/assets/css/history.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
 </head>
 <style>
   html[lang="km"] * {

@@ -15,9 +15,23 @@ form{
   display: flex;
   align-items: center;
 }
-
-
-/* order Style */
- .card-body{
-  width: 90%;
- }
+.cart-label {
+  font-weight: bold;
+}
+.cart-price {
+  font-weight: bold;
+  color: #333;
+}
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+.btn:hover .dropdown-toggle::after,
+.dropdown-toggle:hover::after {
+    border-top-color: white !important; /* Your theme color */
+    /* OR specific color: */
+    /* border-top-color: #ff0000 !important; */
+}
+#cart-table-body tr td:nth-child(3) {
+  color: #006222; /* Black text */
+}
