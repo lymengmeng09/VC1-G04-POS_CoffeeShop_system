@@ -51,10 +51,7 @@
                 placeholder="Search products...">
         </div>
         <div class="action-buttons mt-2">
-        <button class="btn btn-primary me-4">
-        <i class="material-icons me-2 "style="position: relative; top: 4px;">qr_code_scanner</i>
-        <a href="/scanner">Scan Barcode</a>
-            </button>
+       
             <!-- Existing Button -->
             <button class="btn btn-primary me-4" data-bs-toggle="modal" data-bs-target="#updateProductModal">
                 <i class="bi bi-upload"></i> Existing

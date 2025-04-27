@@ -9,7 +9,6 @@ require_once "Controllers/AddProductController.php";
 require_once "Controllers/ViewStockController.php";
 require_once "Middleware/AuthMiddleware.php";
 require_once "Controllers/PurchaseController.php";
-require_once "Controllers/ScannerController.php";
 require_once "Controllers/OrderHistoryController.php";
 
  
@@ -90,6 +89,8 @@ $route->get("/order-history", [AddProductController::class, 'history']);
 // Purchase history routes
 $route->get("/purchase-history", [PurchaseController::class, 'index']);
 $route->get("/purchase-history/export", [PurchaseController::class, 'exportCsv']);
+
+
 
 
 
