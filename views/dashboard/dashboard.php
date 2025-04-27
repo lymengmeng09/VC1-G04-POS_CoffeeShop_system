@@ -29,7 +29,7 @@ $endDate = $endDate ?? date('Y-m-d');
             <div class="row">
                 <div class="col-6 col-lg-4 col-md-6">
                     <div class="card shadow-sm">
-                        <div class="card-body px-3 py-4-5">
+                        <div class="card-body px-3 py-4-5 Expenses">
                             <div class="row">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="me-3">
@@ -54,7 +54,7 @@ $endDate = $endDate ?? date('Y-m-d');
                 </div>
                 <div class="col-6 col-lg-4 col-md-6">
                     <div class="card shadow-sm">
-                        <div class="card-body px-3 py-4-5">
+                        <div class="card-body px-3 py-4-5 Income">
                             <div class="row">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="me-3">
@@ -79,7 +79,7 @@ $endDate = $endDate ?? date('Y-m-d');
                 </div>
                 <div class="col-6 col-lg-4 col-md-6">
                     <div class="card shadow-sm">
-                        <div class="card-body px-3 py-4-5">
+                        <div class="card-body px-3 py-4-5  Profits">
                             <div class="row">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="me-3">
