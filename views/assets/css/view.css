@@ -62,8 +62,20 @@ body {
   cursor: pointer;
 }
 
- 
+.class-button {
+  display: flex;
 
+  margin-top: 20px;
+
+}
+.btn-outline-secondary{
+  margin-left: 15px;
+}
+
+
+#deleteForm{
+  display: flex;
+}
 .products-section {
   padding: 20px 0;
 }
@@ -759,7 +771,7 @@ Recept style
 #receiptModal .modal-content {
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  color: #fff;
+  color: #000000;
 }
 
 #receiptModal .modal-header {
@@ -770,7 +782,7 @@ Recept style
 
 #receiptModal .modal-title {
   font-weight: bold;
-  color: #fff;
+  color: #000000;
 }
 
 #receiptModal .btn-close {
@@ -800,19 +812,22 @@ Recept style
 }
 
 #receiptModal .table thead {
-  background: #f8f9fa;
+  background: #8508237a;
+  color: #000000;
 }
 
 #receiptModal .table thead th {
-  padding: 10px;
+  
   text-align: center;
   font-weight: bold;
+  color: black;
+
 }
 
-#receiptModal .table tbody td {
-  padding: 10px;
+#receiptModal .table tbody td { 
   text-align: center;
   border-bottom: 1px solid #dee2e6;
+ 
 }
 
 /* Total Price Row */
