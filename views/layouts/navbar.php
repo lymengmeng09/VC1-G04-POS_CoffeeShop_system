@@ -49,14 +49,12 @@ $currentLang = LanguageHelper::getCurrentLang();
             </div>
 
 
-            <div class="shop me-3">
-                <a href="javascript:void(0)" id="cart-icon">
-                    <i class="bi bi-cart-fill" style="font-size: 28px;"></i>
-                    <span class="count_cart" id="cart-count">0</span>
-                    <a href="/views/products/list-product.php"></a>
-                </a>
-               
-            </div>
+         <div class="shop me-3">
+            <a href="/products" id="cart-icon">
+           <i class="bi bi-cart-fill" style="font-size: 28px;"></i>
+            <span class="count_cart" id="cart-count">0</span>
+            </a>
+        </div>
 
             <!-- Avatar Dropdown -->
             <div class="profile">
