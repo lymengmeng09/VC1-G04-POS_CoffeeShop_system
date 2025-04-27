@@ -64,7 +64,21 @@ document.addEventListener('DOMContentLoaded', function() {
       removeIcon.style.display = entries.length > 1 ? 'inline-block' : 'none';
     });
   }
+///function searchProduct
 
+document.querySelector('.search-input').addEventListener('input', function() {
+  const searchText = this.value.toLowerCase(); 
+  const rows = document.querySelectorAll('tbody tr');
+
+  rows.forEach(row => {
+      const productName = row.querySelector('td span').textContent.toLowerCase();
+      if (productName.includes(searchText)) {
+          row.style.display = '';
+      } else {
+          row.style.display = 'none';
+      }
+  });
+});
   // Function to handle image preview and cancel
   function setupImagePreview(input) {
     const inputId = input.id;

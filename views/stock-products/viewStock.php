@@ -51,10 +51,7 @@
                 placeholder="<?php echo __('search_products_placeholder'); ?>">
         </div>
         <div class="action-buttons mt-2">
-        <button class="btn btn-primary me-4">
-        <i class="material-icons me-2 "style="position: relative; top: 4px;">qr_code_scanner</i>
-        <a href="/scanner">Scan Barcode</a>
-            </button>
+       
             <!-- Existing Button -->
             <button class="btn btn-primary me-4" data-bs-toggle="modal" data-bs-target="#updateProductModal">
                 <i class="bi bi-upload"></i> <?php echo __('Existing'); ?>
@@ -88,16 +85,21 @@
                         <td class="fw-semibold text-primary">$<?= number_format($product['price'], 2) ?></td>
                         <td class="fw-semibold text-center"> <?= $product['quantity'] ?> </td>
                         <td>
-                            <span class="badge bg-<?= $product['quantity'] == 0 ? 'danger' : 'success' ?> p-2">
-                                <?= $product['quantity'] == 0 ? 'Out of Stock' : 'In Stock' ?>
-                            </span>
+                            <?php if ($product['quantity'] == 0): ?>
+                                <span class="badge bg-danger p-2">Out of Stock</span>
+                            <?php elseif ($product['quantity'] <= 5): ?>
+                                <span class="badge bg-warning text-dark p-2">Low Stock</span>
+                            <?php else: ?>
+                                <span class="badge bg-success p-2">In Stock</span>
+                            <?php endif; ?>
                         </td>
+
                         <td class="text-center m-l">
                             <div class="dropdown">
                                 <a href="#" class="text-secondary bi-three-dots-vertical" data-bs-toggle="dropdown"
                                     aria-expanded="false" style="margin-right:10px;">
                                 </a>
-                                <ul class="dropdown-menu" style="min-width: 120px; padding: 0.5rem 0;">
+                                <ul class="dropdown-menu" style="min-width: 100px;">
                                     <!-- Edit Link -->
                                     <li class="edit">
                                         <a href="/edit_product?id=<?= $product['id'] ?>" class="edit-link">

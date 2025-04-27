@@ -25,11 +25,10 @@ $endDate = $endDate ?? date('Y-m-d');
 
 <div class="page-content">
     <section class="row">
-        <div class="col-12 col-lg-9">
             <div class="row">
                 <div class="col-6 col-lg-4 col-md-6">
                     <div class="card shadow-sm">
-                        <div class="card-body px-3 py-4-5">
+                        <div class="card-body px-3 py-4-5 Expenses">
                             <div class="row">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="me-3">
@@ -54,7 +53,7 @@ $endDate = $endDate ?? date('Y-m-d');
                 </div>
                 <div class="col-6 col-lg-4 col-md-6">
                     <div class="card shadow-sm">
-                        <div class="card-body px-3 py-4-5">
+                        <div class="card-body px-3 py-4-5 Income">
                             <div class="row">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="me-3">
@@ -79,7 +78,7 @@ $endDate = $endDate ?? date('Y-m-d');
                 </div>
                 <div class="col-6 col-lg-4 col-md-6">
                     <div class="card shadow-sm">
-                        <div class="card-body px-3 py-4-5">
+                        <div class="card-body px-3 py-4-5  Profits">
                             <div class="row">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="me-3">
@@ -147,40 +146,6 @@ $endDate = $endDate ?? date('Y-m-d');
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-12 col-lg-3">
-            <div class="card shadow-sm">
-                <div class="card-body py-4 px-5">
-                    <div class="d-flex align-items-center">
-                        <div class="avatar avatar-xl">
-                            <img src="/views/assets/images/faces/1.jpg" alt="Face 1"
-                                 onerror="this.src='https://via.placeholder.com/150';">
-                        </div>
-                        <div class="ms-3 name">
-                            <h4 class="font-bold"><?php echo htmlspecialchars($user['name']); ?></h4>
-                            <h6 class="text-muted mb-0">@targetcoffee</h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card shadow-sm">
-                <div class="card-header">
-                    <h4>Recent Team Members</h4>
-                </div>
-                <div class="card-content pb-4">
-                    <div class="recent-message d-flex px-4 py-3">
-                        <div class="avatar avatar-lg">
-                            <img src="/views/assets/images/faces/2.jpg" alt="Face 2"
-                                 onerror="this.src='https://via.placeholder.com/150';">
-                        </div>
-                        <div class="name ms-4">
-                            <h5 class="mb-1">Lymeng Phorng</h5>
-                            <h6 class="text-muted mb-0">@mengmeng</h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </section>
 </div>
 
@@ -247,18 +212,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 datasets: [{
                     data: topProductsQuantities,
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.7)',
-                        'rgba(54, 162, 235, 0.7)',
-                        'rgba(255, 206, 86, 0.7)',
-                        'rgba(75, 192, 192, 0.7)',
-                        'rgba(153, 102, 255, 0.7)'
+                        '#724816',
+                        '#925F49',
+                        '#A8783E',
+                        '#9BA36A',
+                        '#F0DAAE'
                     ],
                     borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)'
+                        '#724816',
+                        '#925F49',
+                        '#A8783E',
+                        '#9BA36A',
+                        '#F0DAAE'
                     ],
                     borderWidth: 1
                 }]
