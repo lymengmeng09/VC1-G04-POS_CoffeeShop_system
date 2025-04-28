@@ -17,12 +17,12 @@ $currentLang = LanguageHelper::getCurrentLang();
 
     <div class="d-flex justify-content-between align-items-center w-100">
         <!-- Left Side: Logo -->
-        <div class="d-flex align-items-center">
+        <div class="d-flex justify-content-start align-items-center">
             <img src="/views/assets/images/logo.png" alt="Logo" class="navbar-brand">
         </div>
         <div class="d-flex justify-content-end align-items-center">
             <!-- Language Switcher Button -->
-            <div class="dropdown me-3" >
+            <div class="dropdown me-3">
                 <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <?php if ($currentLang === 'en'): ?>
                         <img src="../../views/assets/images/logo/english.png" alt="" class="lang">
@@ -49,12 +49,12 @@ $currentLang = LanguageHelper::getCurrentLang();
             </div>
 
 
-         <div class="shop me-3">
-            <a href="/products" id="cart-icon">
-           <i class="bi bi-cart-fill" style="font-size: 28px;"></i>
-            <span class="count_cart" id="cart-count"></span>
-            </a>
-        </div>
+            <div class="shop me-3">
+                <a href="/products" id="cart-icon">
+                    <i class="bi bi-cart-fill" style="font-size: 28px;"></i>
+                    <span class="count_cart" id="cart-count"></span>
+                </a>
+            </div>
 
             <!-- Avatar Dropdown -->
             <div class="profile">

@@ -202,51 +202,89 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Handle payment option selection
+    document.querySelectorAll('.payment-option').forEach(option => {
+        option.addEventListener('click', function () {
+            const paymentMethod = this.dataset.payment;
+
+            if (paymentMethod === 'aba') {
+                // Show QR code modal for ABA payment
+                const qrCodeModal = new bootstrap.Modal(document.getElementById('qrCodeModal'));
+                qrCodeModal.show();
+
+                // Hide payment options modal
+                bootstrap.Modal.getInstance(document.getElementById('paymentModal')).hide();
+            } else {
+                // For cash payment, generate receipt directly
+                generateReceipt();
+                // Hide payment options modal
+                bootstrap.Modal.getInstance(document.getElementById('paymentModal')).hide();
+            }
+        });
+    });
+
+    document.getElementById('confirm-aba-payment')?.addEventListener('click', function () {
+        const qrModal = bootstrap.Modal.getInstance(document.getElementById('qrCodeModal'));
+        qrModal.hide();
+
+        // Small delay to allow Bootstrap to clean up
+        setTimeout(() => {
+            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+            document.body.classList.remove('modal-open');
+            generateReceipt();
+        }, 150);
+    });
+
+    // Remove the old PayMent button event listener and replace it with:
     function generateReceipt() {
+        if (cart.length === 0) {
+            showError("Your cart is empty!");
+            return;
+        }
+
         let totalPrice = 0;
         const now = new Date();
         const receiptItems = cart.map((item) => {
             const itemTotal = item.quantity * item.price;
             totalPrice += itemTotal;
             return `
-                <tr>
-                    <td>${item.name}</td>
-                    <td>${item.quantity}</td>
-                    <td>$${item.price.toFixed(2)}</td>
-                    <td>$${itemTotal.toFixed(2)}</td>
-                    <td>${now.toISOString().slice(0, 10)}</td>
-                </tr>
-            `;
+            <tr>
+                <td>${item.name}</td>
+                <td>${item.quantity}</td>
+                <td>$${item.price.toFixed(2)}</td>
+                <td>$${itemTotal.toFixed(2)}</td>
+                <td>${now.toISOString().slice(0, 10)}</td>
+            </tr>
+        `;
         }).join("");
 
         elements.receiptContent.innerHTML = `
-            <p class="action-text"><strong>Action:</strong> Ordered</p>
-            <div class="header-recept">
-                <img src="/views/assets/images/logo.png" alt="Logo">
-                <h2>Order Receipt</h2>
-            </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Quantity</th>
-                        <th>Price($)</th>
-                        <th>Total($)</th>
-                        <th>Timestamp</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${receiptItems || '<tr><td colspan="5">No items in cart</td></tr>'}
-                    <tr class="total-row">
-                        <td colspan="3"><strong>TOTAL PRICE</strong></td>
-                        <td colspan="2"><strong>$${totalPrice.toFixed(2)}</strong></td>
-                    </tr>
-                </tbody>
-            </table>
-        `;
+        <p class="action-text"><strong>Action:</strong> Ordered</p>
+        <div class="header-recept">
+            <img src="/views/assets/images/logo.png" alt="Logo">
+            <h2>Order Receipt</h2>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Price($)</th>
+                    <th>Total($)</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${receiptItems || '<tr><td colspan="5">No items in cart</td></tr>'}
+                <tr class="total-row">
+                    <td colspan="3"><strong>TOTAL PRICE</strong></td>
+                    <td colspan="2"><strong>$${totalPrice.toFixed(2)}</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    `;
         elements.receiptModal.show();
     }
-
     function saveAsPDF() {
         try {
             const { jsPDF } = window.jspdf;
@@ -299,7 +337,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     }
-    
+
     function saveOrderToServer() {
         const orderData = {
             items: cart.map((item) => ({
@@ -342,6 +380,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 elements.okButton.innerHTML = "OK";
             });
     }
- 
- 
+
+
 });
