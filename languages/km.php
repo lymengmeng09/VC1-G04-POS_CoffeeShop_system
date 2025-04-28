@@ -161,6 +161,9 @@ return [
     'Update Existing Product' => 'ធ្វើបច្ចុប្បន្នភាពផលិតផលដែលមានស្រាប់',
     'Select Product' => 'ជ្រើសរើសផលិតផល',
     'Select a product' => 'ជ្រើសរើសផលិតផលមួយ',
+    'Out of Stock' => 'អស់ពីស្តុក',
+    'Low In Stock' => 'មានតិចក្នុងស្តុក',
+    'In Stock' => 'មានក្នុងស្តុក',
     
 
     //history

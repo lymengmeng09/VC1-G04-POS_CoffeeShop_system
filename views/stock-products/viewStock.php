@@ -22,7 +22,7 @@
     ?>
 
     <div class="header d-flex justify-content-between align-items-center my-4">
-        <h1>Stock Products</h1>
+        <h1><?php echo __('Stock Products'); ?></h1>
     </div>
 
     <div class="notification-dropdown" id="notificationDropdown" style="display: none;">
@@ -31,14 +31,14 @@
 
     <div class="search-section mt-2">
         <div class="search-bar">
-            <input type="text" class="form-control search-input" style="background: rgba(190, 190, 190, 0.11);" placeholder="Search products...">
+            <input type="text" class="form-control search-input" style="background: rgba(190, 190, 190, 0.11);" placeholder="<?php echo __('search_products_placeholder'); ?>">
         </div>
         <div class="action-buttons mt-2">
             <button class="btn btn-primary me-4" data-bs-toggle="modal" data-bs-target="#updateProductModal">
-                <i class="bi bi-upload"></i> Existing
+                <i class="bi bi-upload"></i> <?php echo __('Existing'); ?>
             </button>
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal">
-                <i class="bi bi-plus-circle"></i> New
+                <i class="bi bi-plus-circle"></i> <?php echo __('New'); ?>
             </button>
         </div>
     </div>
@@ -47,11 +47,11 @@
             <table class="table table-hover align-middle table-bordered">
                 <thead class="text-white">
                     <tr>
-                        <th class="text-white">Product</th>
-                        <th class="text-white">Price</th>
-                        <th class="text-white">Stock</th>
-                        <th class="text-white">Status</th>
-                        <th class="text-white">Action</th>
+                        <th class="text-white"><?php echo __('products'); ?></th>
+                        <th class="text-white"><?php echo __('price'); ?></th>
+                        <th class="text-white"><?php echo __('stock'); ?></th>
+                        <th class="text-white"><?php echo __('status'); ?></th>
+                        <th class="text-white"><?php echo __('Action'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -65,21 +65,21 @@
                         <td class="fw-semibold text-center"> <?= $product['quantity'] ?> </td>
                         <td>
                             <?php if ($product['quantity'] == 0): ?>
-                                <span class="badge bg-danger p-2">Out of Stock</span>
+                                <span class="badge bg-danger p-2"><?php echo __('Out of Stock'); ?></span>
                             <?php elseif ($product['quantity'] <= 5): ?>
-                                <span class="badge bg-warning text-dark p-2">Low Stock</span>
+                                <span class="badge bg-warning text-dark p-2"><?php echo __('Low In Stock'); ?></span>
                             <?php else: ?>
-                                <span class="badge bg-success p-2">In Stock</span>
+                                <span class="badge bg-success p-2"><?php echo __('In Stock'); ?></span>
                             <?php endif; ?>
                         </td>
                         <td class="text-center m-l">
                             <div class="dropdown">
                                 <a href="#" class="text-secondary bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right:10px;"></a>
                                 <ul class="dropdown-menu" style="min-width: 100px;">
-                                    <li class="edit"><a href="/edit_product?id=<?= $product['id'] ?>" class="edit-link bi-pencil"> Edit</a></li>
+                                    <li class="edit"><a href="/edit_product?id=<?= $product['id'] ?>" class="edit-link bi-pencil"> <?php echo __('edit'); ?></a></li>
                                     <li>
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal" class="dropdown-item btn-delete bi-trash" onclick="setDeleteModal(<?= $product['id'] ?>, '<?= htmlspecialchars($product['name']) ?>')">
-                                            Delete
+                                            <?php echo __('delete'); ?>
                                         </a>
                                     </li>
                                 </ul>
@@ -98,17 +98,17 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Delete Product</h5>
+                <h5 class="modal-title" id="deleteModalLabel"><?php echo __('Delete Product'); ?></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete <strong id="productName"></strong>?
+                <?php echo __('are_you_sure_delete'); ?> <strong id="productName"></strong>?
             </div>
             <div class="modal-footer">
                 <form id="deleteForm" method="POST">
                     <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger"><?php echo __('delete'); ?></button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><?php echo __('cancel'); ?></button>
                 </form>
             </div>
         </div>
@@ -120,7 +120,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addProductModalLabel">Add New Product(s)</h5>
+                <h5 class="modal-title" id="addProductModalLabel"><?php echo __('Add New Products'); ?></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -129,24 +129,24 @@
                         <div class="product-entry mb-3">
                             <div class="row g-3 align-items-end">
                                 <div class="col-md-3">
-                                    <label for="addName-0" class="form-label">Product Name</label>
+                                    <label for="addName-0" class="form-label"><?php echo __('product_name'); ?></label>
                                     <input type="text" class="form-control" id="addName-0" name="name[]" required>
                                 </div>
                                 <div class="col-md-2">
-                                    <label for="addPrice-0" class="form-label">Price</label>
+                                    <label for="addPrice-0" class="form-label"><?php echo __('price'); ?></label>
                                     <input type="number" step="0.01" class="form-control" id="addPrice-0" name="price[]" required>
                                 </div>
                                 <div class="col-md-2">
-                                    <label for="addQuantity-0" class="form-label">Stock Quantity</label>
+                                    <label for="addQuantity-0" class="form-label"><?php echo __('Stock Quantity'); ?></label>
                                     <input type="number" class="form-control" id="addQuantity-0" name="quantity[]" required>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="addImage-0" class="form-label">Upload Image</label>
+                                    <label for="addImage-0" class="form-label"><?php echo __('upload_image'); ?></label>
                                     <input type="file" class="form-control custom-file-input" id="addImage-0" name="image[]" accept="image/jpeg,image/png,image/gif" required>
                                     <div class="image-preview mt-2" id="preview-addImage-0" style="display: none;">
                                         <img src="" alt="Image Preview" style="max-width: 100px; max-height: 100px;">
                                         <button type="button" class="btn btn-sm btn-danger cancel-upload mt-1" data-input-id="addImage-0">
-                                            Cancel
+                                        <?php echo __('cancel'); ?>
                                         </button>
                                     </div>
                                 </div>
@@ -157,8 +157,8 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-outline-primary" id="add-more-product">Add More</button>
-                        <button type="submit" class="btn btn-success">Completed</button>
+                        <button type="button" class="btn btn-outline-primary" id="add-more-product"><?php echo __('Add More'); ?></button>
+                        <button type="submit" class="btn btn-success"><?php echo __('Completed'); ?></button>
                     </div>
                 </form>
             </div>
@@ -171,7 +171,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="updateProductModalLabel">Update Existing Product</h5>
+                <h5 class="modal-title" id="updateProductModalLabel"><?php echo __('Update Existing Product'); ?></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -180,9 +180,9 @@
                         <div class="product-entry mb-3">
                             <div class="row g-3 align-items-end">
                                 <div class="col-md-3">
-                                    <label for="updateProduct-0" class="form-label">Select Product</label>
+                                    <label for="updateProduct-0" class="form-label"><?php echo __('Select Product'); ?></label>
                                     <select class="form-control update-product" id="updateProduct-0" name="product_id[]" required>
-                                        <option value="">Select a product...</option>
+                                        <option value=""><?php echo __('Select a product'); ?>...</option>
                                         <?php foreach ($products as $product) : ?>
                                         <option value="<?= $product['id'] ?>" data-price="<?= $product['price'] ?>">
                                             <?= htmlspecialchars($product['name']) ?>
@@ -191,15 +191,15 @@
                                     </select>
                                 </div>
                                 <div class="col-md-2">
-                                    <label for="updatePrice-0" class="form-label">Price</label>
+                                    <label for="updatePrice-0" class="form-label"><?php echo __('price'); ?></label>
                                     <input type="number" step="0.01" class="form-control update-price" id="updatePrice-0" name="price[]" required>
                                 </div>
                                 <div class="col-md-2">
-                                    <label for="updateQuantity-0" class="form-label">Quantity</label>
+                                    <label for="updateQuantity-0" class="form-label"><?php echo __('quantity'); ?></label>
                                     <input type="number" class="form-control update-quantity" id="updateQuantity-0" name="quantity[]" required>
                                 </div>
                                 <div class="col-md-2">
-                                    <label for="totalPrice-0" class="form-label">Total Price</label>
+                                    <label for="totalPrice-0" class="form-label"><?php echo __('Total Price'); ?></label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
                                         <input type="text" class="form-control total-price" id="totalPrice-0" readonly>
@@ -212,8 +212,8 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-outline-primary" id="add-more">Add More</button>
-                        <button type="submit" class="btn btn-success">Completed</button>
+                        <button type="button" class="btn btn-outline-primary" id="add-more"><?php echo __('Add More'); ?></button>
+                        <button type="submit" class="btn btn-success"><?php echo __('Completed'); ?></button>
                     </div>
                 </form>
             </div>
