@@ -37,7 +37,7 @@
                                 <polyline points="17 8 12 3 7 8"></polyline>
                                 <line x1="12" y1="3" x2="12" y2="15"></line>
                             </svg>
-                            <p>Upload Image</p>
+                            <p><?php echo __('upload_image'); ?></p>
                         </div>
                         <!-- Display existing image if available -->
                         <?php if (!empty($product['image_url'])): ?>

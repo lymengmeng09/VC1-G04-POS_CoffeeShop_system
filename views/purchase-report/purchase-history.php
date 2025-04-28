@@ -36,7 +36,7 @@
         </div>
     </div>
     <div class="filter-group">
-        <label>Date Range</label>
+        <label><?php echo __('Date Range'); ?></label>
         <div class="date-range-buttons">
             <div class="date-filter">
                 <button type="button" class="date-range-btn" data-range="today"><?php echo __('Today'); ?></button>
@@ -46,7 +46,7 @@
             </div>
             <div class="date-inputs">
                 <input type="date" id="start-date" name="start_date" value="<?php echo $startDate; ?>">
-                <span>to</span>
+                <span><?php echo __('to'); ?></span>
                 <input type="date" id="end-date" name="end_date" value="<?php echo $endDate; ?>">
             </div>
         </div>
@@ -56,11 +56,11 @@
         <table id="purchases-table">
             <thead>
                 <tr>
-                    <th style="text-align: left;">Products Name</th>
-                    <th>Qty</th>
-                    <th>Price</th>
-                    <th>Date</th>
-                    <th>Total Cost</th>
+                    <th style="text-align: left;"><?php echo __('product_name'); ?></th>
+                    <th><?php echo __('quantity'); ?></th>
+                    <th><?php echo __('price'); ?></th>
+                    <th><?php echo __('date'); ?></th>
+                    <th><?php echo __('Total Cost'); ?></th>
                 </tr>
             </thead>
             <tbody id="purchases-body">
