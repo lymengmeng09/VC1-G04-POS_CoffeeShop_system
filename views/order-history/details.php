@@ -1,9 +1,8 @@
-<h5><?php echo __('order_details'); ?> - Order #<?= htmlspecialchars($order['order_id']) ?></h5>
+<h5><?php echo __('order details'); ?> - <?php echo __('order id'); ?> <?= htmlspecialchars($order['order_id']) ?></h5>
 <div class="card">
     <div class="card-body">
-        <p><strong><?php echo __('total_amount'); ?>:</strong> $<?= number_format($order['total_amount'], 2) ?></p>
+        <p><strong><?php echo __('total amount'); ?>:</strong> $<?= number_format($order['total_amount'], 2) ?></p>
         <p><strong><?php echo __('date'); ?>:</strong> <?= htmlspecialchars($order['created_at']) ?></p>
-        <h6><?php echo __('items'); ?>:</h6>
         <table class="table">
             <thead>
                 <tr>
@@ -24,6 +23,9 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <a href="/order-history" class="btn btn-secondary"><?php echo __('back'); ?></a>
+        <a href="/order-history" class="btn btn-secondary" style="background-color:rgb(141, 140, 140); color: white; outline: none;">
+            <?php echo __('back'); ?>
+        </a>
+
     </div>
 </div>

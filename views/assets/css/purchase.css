@@ -145,15 +145,6 @@ h1 {
     background-color: #6b4e31;
 }
 
-.btn-secondary {
-    background-color: #f2ece2;
-    color: #5c4033;
-    border: 1px solid #d9c8a9;
-}
-
-.btn-secondary:hover {
-    background-color: #e6dfd4;
-}
 
 /* Table styles */
 .table-container {
