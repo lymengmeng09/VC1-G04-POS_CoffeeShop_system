@@ -56,13 +56,6 @@
     margin-right: 8px !important;
   }
   
-  /* Fix for button with icon alignment */
-  .btn-outline-secondary {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-  
   /* Fix for dropdown toggle icon spacing */
   .dropdown-toggle::after {
     margin-left: 8px !important;

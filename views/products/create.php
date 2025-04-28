@@ -1,4 +1,4 @@
- <h5>Create Menu</h5>
+ <h5><?php echo __('create_menu'); ?></h5>
     <div class="card">
            
         <div class="card-body">
@@ -22,7 +22,7 @@
                 </div>
                 <div class="form-group">
                     <label for="productName"><?php echo __('product_name'); ?></label>
-                    <input type="text" class="form-control" id="productName" name="product_name" placeholder="Enter product name" required>
+                    <input type="text" class="form-control" id="productName" name="product_name" placeholder="<?php echo __('Enter product name'); ?>" required>
                 </div>
                 <div class="form-group">
                     <label for="category_id"><?php echo __('category'); ?>:</label>
@@ -35,7 +35,7 @@
                 </div>
                 <div class="form-group">
                     <label for="price"><?php echo __('price'); ?></label>
-                    <input type="number" class="form-control" id="price" name="price" placeholder="Enter price" required step="0.01">
+                    <input type="number" class="form-control" id="price" name="price" placeholder="<?php echo __('Enter price'); ?>" required step="0.01">
                 </div>
                 <div class="btu-save-cancel d-flex gap-2 mt-3">
                     <button type="submit" class="btn btn-success"><?php echo __('submit'); ?></button>
