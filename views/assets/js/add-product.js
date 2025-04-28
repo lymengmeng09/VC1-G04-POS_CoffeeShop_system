@@ -262,7 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <p class="action-text"><strong>Action:</strong> Ordered</p>
         <div class="header-recept">
             <img src="/views/assets/images/logo.png" alt="Logo">
-            <h2>Order Receipt</h2>
+            <h2>Invoice</h2>
         </div>
         <table class="table">
             <thead>
