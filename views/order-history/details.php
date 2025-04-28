@@ -23,6 +23,9 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <a href="/order-history" class="btn btn-outline-secondary"><?php echo __('back'); ?></a>
+        <a href="/order-history" class="btn btn-secondary" style="background-color:rgb(141, 140, 140); color: white; outline: none;">
+            <?php echo __('back'); ?>
+        </a>
+
     </div>
 </div>

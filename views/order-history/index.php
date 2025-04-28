@@ -1,4 +1,4 @@
-<h5><?php echo __('Order History'); ?></h5>
+<h3><?php echo __('Order History'); ?></h3>
 <div class="card">
     <div class="card-body">
         <table class="table">
