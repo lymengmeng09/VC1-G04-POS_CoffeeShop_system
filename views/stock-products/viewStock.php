@@ -83,7 +83,7 @@
                             <span class="fw-bold"> <?= htmlspecialchars($product['name']) ?> </span>
                         </td>
                         <td class="fw-semibold text-primary">$<?= number_format($product['price'], 2) ?></td>
-                        <td class="fw-semibold text-center"> <?= $product['quantity'] ?> </td>
+                        <td class="fw-semibold text-center"> <?= $product['quantity'] ?></td>
                         <td>
                             <?php if ($product['quantity'] == 0): ?>
                                 <span class="badge bg-danger p-2">Out of Stock</span>
@@ -94,7 +94,7 @@
                             <?php endif; ?>
                         </td>
 
-                        <td class="text-center m-l">
+                        <td class="text-center">
                             <div class="dropdown">
                                 <a href="#" class="text-secondary bi-three-dots-vertical" data-bs-toggle="dropdown"
                                     aria-expanded="false" style="margin-right:10px;">
