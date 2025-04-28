@@ -156,7 +156,7 @@
                                 </button>
                                 <button class="btn btn-outline-primary payment-option" data-payment="aba" style="width: 120px;">
                                     <i class="bi bi-credit-card fs-3"></i><br>
-                                    ABA
+                                    QR Code
                                 </button>
                             </div>
                         </div>
