@@ -234,110 +234,192 @@ document.addEventListener("DOMContentLoaded", () => {
             generateReceipt();
         }, 150);
     });
-
-    // Remove the old PayMent button event listener and replace it with:
+///handle receipt generation and PDF download
     function generateReceipt() {
         if (cart.length === 0) {
             showError("Your cart is empty!");
             return;
         }
-
+    
         let totalPrice = 0;
         const now = new Date();
         const receiptItems = cart.map((item) => {
             const itemTotal = item.quantity * item.price;
             totalPrice += itemTotal;
             return `
-            <tr>
-                <td>${item.name}</td>
-                <td>${item.quantity}</td>
-                <td>$${item.price.toFixed(2)}</td>
-                <td>$${itemTotal.toFixed(2)}</td>
-                <td>${now.toISOString().slice(0, 10)}</td>
-            </tr>
-        `;
-        }).join("");
-
-        elements.receiptContent.innerHTML = `
-        <p class="action-text"><strong>Action:</strong> Ordered</p>
-        <div class="header-recept">
-            <img src="/views/assets/images/logo.png" alt="Logo">
-            <h2>Invoice</h2>
-        </div>
-        <table class="table">
-            <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                    <th>Price($)</th>
-                    <th>Total($)</th>
-                    <th>Timestamp</th>
+                    <td>${item.name}</td>
+                    <td>${item.quantity}</td>
+                    <td>$${item.price.toFixed(2)}</td>
+                    <td>$${itemTotal.toFixed(2)}</td>
+                    <td>${now.toISOString().slice(0, 10)}</td>
                 </tr>
-            </thead>
-            <tbody>
-                ${receiptItems || '<tr><td colspan="5">No items in cart</td></tr>'}
-                <tr class="total-row">
-                    <td colspan="3"><strong>TOTAL PRICE</strong></td>
-                    <td colspan="2"><strong>$${totalPrice.toFixed(2)}</strong></td>
-                </tr>
-            </tbody>
-        </table>
-    `;
+            `;
+        }).join("");
+    
+        // Calculate subtotals for each product
+        const productSubtotals = {};
+        cart.forEach((item) => {
+            const itemTotal = item.quantity * item.price;
+            if (productSubtotals[item.name]) {
+                productSubtotals[item.name] += itemTotal;
+            } else {
+                productSubtotals[item.name] = itemTotal;
+            }
+        });
+    
+        // Generate subtotal table rows
+        const subtotalRows = Object.keys(productSubtotals)
+            .map((productName) => {
+                return `
+                    <tr>
+                        <td>${productName}</td>
+                        <td>$${productSubtotals[productName].toFixed(2)}</td>
+                    </tr>
+                `;
+            })
+            .join("");
+    
+        // Update the receipt content with the new subtotal table
+        elements.receiptContent.innerHTML = `
+            <p class="action-text"><strong>Action:</strong> Ordered</p>
+            <div class="header-recept">
+                <img src="/views/assets/images/logo.png" alt="Logo">
+                <h2>Invoice</h2>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Price($)</th>
+                        <th>Total($)</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${receiptItems || '<tr><td colspan="5">No items in cart</td></tr>'}
+                </tbody>
+            </table>
+            <div style="margin-top: 20px;">
+                <h3 style=" margin-left: 40%">Subtotal</h3>
+                <table class="table" style="text-align: center; width: 60%; margin-left: 36%">
+                    <thead style="background-color: #f5eee5;">
+                        <tr>
+                            <th style="color: #6c4b3c;">NAME</th>
+                            <th style="color: #6c4b3c;">SUBTOTAL($)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${subtotalRows}
+                    </tbody>
+                </table>
+                <div style="text-align: center; margin-top: 10px;">
+                    <div style="display: inline-block; border: 1px solid #ccc; padding: 6px 8px; border-radius: 10px;  margin-left: 66%">
+                        <strong style="font-size: 18px;">Total</strong> 
+                        <strong style="font-size: 18px;">$${totalPrice.toFixed(2)}</strong>
+                    </div>
+                </div>
+            </div>
+        `;
         elements.receiptModal.show();
     }
+    
     function saveAsPDF() {
         try {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             const now = new Date();
-
+    
+            // Header
             doc.setFont("helvetica", "bold");
             doc.setFontSize(18);
             doc.setTextColor(40, 40, 40);
             doc.text("Target Coffee", 105, 20, null, null, "center");
-
+    
             doc.setFontSize(12);
             doc.setFont("helvetica", "normal");
             doc.setTextColor(60, 60, 60);
             doc.text(`Date: ${now.toLocaleDateString()}`, 20, 30);
             doc.text(`Time: ${now.toLocaleTimeString()}`, 20, 38);
-
+    
+            // Calculate total price and prepare main table data
             let totalPrice = 0;
             const tableData = cart.map((item) => {
                 const itemTotal = item.quantity * item.price;
                 totalPrice += itemTotal;
-                return [item.name, item.quantity, `$${item.price.toFixed(2)}`, `$${itemTotal.toFixed(2)}`];
+                return [
+                    item.name,
+                    item.quantity,
+                    `$${item.price.toFixed(2)}`,
+                    `$${itemTotal.toFixed(2)}`,
+                    now.toISOString().slice(0, 10)
+                ];
             });
-
+            doc.text("Invoice ", 105, finalY, null, null, "center");
+            // Main receipt table
             doc.autoTable({
                 startY: 45,
-                head: [["Item", "Quantity", "Price", "Total"]],
+                head: [["Name", "Quantity", "Price($)", "Total($)", "Timestamp"]],
                 body: tableData,
                 theme: "grid",
-                headStyles: { fillColor: [100, 100, 255], textColor: 255, fontStyle: "bold" },
+                headStyles: { fillColor: [108, 75, 60], textColor: 255, fontStyle: "bold" },
                 alternateRowStyles: { fillColor: [240, 240, 240] },
                 margin: { left: 20, right: 20 },
-                styles: { fontSize: 12, cellPadding: 5 },
+                styles: { fontSize: 10, cellPadding: 4 },
             });
-
+    
+            // Calculate subtotals for each product
+            const productSubtotals = {};
+            cart.forEach((item) => {
+                const itemTotal = item.quantity * item.price;
+                if (productSubtotals[item.name]) {
+                    productSubtotals[item.name] += itemTotal;
+                } else {
+                    productSubtotals[item.name] = itemTotal;
+                }
+            });
+    
+            // Prepare subtotal table data
+            const subtotalData = Object.keys(productSubtotals).map((productName) => {
+                return [productName, `$${productSubtotals[productName].toFixed(2)}`];
+            });
+    
+            // Subtotal table
             let finalY = doc.lastAutoTable.finalY + 10;
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(14);
+            doc.text("Subtotal", 105, finalY, null, null, "center");
+    
+            doc.autoTable({
+                startY: finalY + 5,
+                head: [["Name", "Subtotal($)"]],
+                body: subtotalData,
+                theme: "grid",
+                headStyles: { fillColor: [245, 238, 229], textColor: [108, 75, 60], fontStyle: "bold" },
+                alternateRowStyles: { fillColor: [240, 240, 240] },
+                margin: { left: 90}, // Mimics the 60% width and centered alignment
+                styles: { fontSize: 10, cellPadding: 4 },
+            });
+    
+            // Total price
+            finalY = doc.lastAutoTable.finalY + 10;
             doc.setFontSize(14);
             doc.setFont("helvetica", "bold");
             doc.setTextColor(0, 0, 0);
-            doc.text("TOTAL:", 130, finalY);
+            doc.text("Total", 150, finalY);
             doc.text(`$${totalPrice.toFixed(2)}`, 170, finalY);
-
+    
             doc.save(`receipt_${now.getTime()}.pdf`);
         } catch (error) {
             console.error("Error generating PDF:", error);
             showError("Failed to generate PDF: " + error.message);
         } finally {
             if (elements.receiptModal) {
-                elements.receiptModal.hide(); // Ensure modal hides even if PDF generation fails
+                elements.receiptModal.hide();
             }
         }
     }
-
     function saveOrderToServer() {
         const orderData = {
             items: cart.map((item) => ({
