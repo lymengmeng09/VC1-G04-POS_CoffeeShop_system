@@ -1,4 +1,4 @@
-<h5><?php echo __('order details'); ?> - <?php echo __('order id'); ?> #<?= htmlspecialchars($order['order_id']) ?></h5>
+<h5><?php echo __('order details'); ?> - <?php echo __('order id'); ?> <?= htmlspecialchars($order['order_id']) ?></h5>
 <div class="card">
     <div class="card-body">
         <p><strong><?php echo __('total amount'); ?>:</strong> $<?= number_format($order['total_amount'], 2) ?></p>

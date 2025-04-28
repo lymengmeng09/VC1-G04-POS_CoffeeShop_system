@@ -28,7 +28,7 @@ return [
     // Products
     'product_name' => 'ឈ្មោះផលិតផល',
     'price' => 'តម្លៃ',
-    'quantity' => 'បរិមាណ',
+    'quantity' => 'ចំនួន',
     'description' => 'ការពិពណ៌នា',
     'category' => 'ប្រភេទ',
     'Product image' => 'រូបភាពផលិតផល',
@@ -161,16 +161,21 @@ return [
     'Update Existing Product' => 'ធ្វើបច្ចុប្បន្នភាពផលិតផលដែលមានស្រាប់',
     'Select Product' => 'ជ្រើសរើសផលិតផល',
     'Select a product' => 'ជ្រើសរើសផលិតផលមួយ',
+    
 
     //history
     'Order History'=>'ប្រវត្តិនៃការបញ្ជាទិញ',
     'order id' => 'លេខរៀង',
     'total amount'=> 'តម្លៃសរុប',
-    'item count' => 'ចំនួន',
+    'total_amount'=> 'តម្លៃសរុប',
+    'item_count' => 'ចំនួន',
     'date' => 'កាលបរិច្ឆេទ',
     'View details' => 'មើលព័ត៌មានលម្អិត',
-    'order details'=>'ព័ត៌មានលម្អិតបញ្ជាទិញ',
+    'view_details' => 'មើលព័ត៌មានលម្អិត',
+    'order details'=>'ព័ត៌មានបញ្ជាទិញលម្អិត',
     'Total Cost'=> 'តម្លៃសរុប',
+    'order_id'=> 'លេខរៀងបញ្ជាទិញ',
+    'actions'=> 'សកម្មភាព',
     
     
 ];
