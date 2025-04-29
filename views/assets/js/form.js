@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize password visibility toggles
   initPasswordToggles()
+
+  setupPasswordTogglePosition()
 })
 
 // Function to add validation styles if not already in stylesheet
@@ -214,21 +216,59 @@ function initPasswordFormsValidation() {
 // Function to update toggle icon position based on validation state
 function updateToggleIconPosition(inputField) {
   // Find the associated toggle icon
-  const parent = inputField.parentElement
-  if (!parent) return
+  const parent = inputField.parentElement;
+  if (!parent) return;
 
-  const toggleIcon = parent.querySelector(".toggle-password")
-  if (!toggleIcon) return
+  const toggleIcon = parent.querySelector(".toggle-password");
+  if (!toggleIcon) return;
 
   // Check if the input field has validation error
   if (inputField.classList.contains("is-invalid")) {
-    // Move the icon to 40% when there's an error
-    toggleIcon.style.top = "58%"
+    // Move the icon down when there's an error
+    toggleIcon.style.top = "54%";
   } else {
-    // Remove the inline style to let the original CSS take effect
-    toggleIcon.style.removeProperty("top")
+    // Reset to default position
+    toggleIcon.style.removeProperty("top");
   }
 }
+function setupPasswordTogglePosition() {
+  // Get all password fields
+  const passwordFields = document.querySelectorAll('.password-field, .confirm-password-field');
+  
+  // Update position on input
+  passwordFields.forEach(input => {
+    input.addEventListener('input', () => updateToggleIconPosition(input));
+  });
+
+  // Update all positions before form submission
+  document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', function() {
+      passwordFields.forEach(input => {
+        if (form.contains(input)) {
+          updateToggleIconPosition(input);
+        }
+      });
+    });
+  });
+}
+// Initialize positions for all password fields on page load
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('.password-field, .confirm-password-field').forEach(input => {
+    updateToggleIconPosition(input);
+    
+    // Update on input changes
+    input.addEventListener('input', () => updateToggleIconPosition(input));
+  });
+
+  // Also update when Bootstrap validation occurs
+  document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('invalid', (e) => {
+      if (e.target.matches('.password-field, .confirm-password-field')) {
+        updateToggleIconPosition(e.target);
+      }
+    }, true);
+  });
+});
 
 // Function to initialize password toggles
 function initPasswordToggles() {

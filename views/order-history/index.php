@@ -4,9 +4,9 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th><?php echo __('order_id'); ?></th>
-                    <th><?php echo __('total_amount'); ?></th>
-                    <th><?php echo __('item_count'); ?></th>
+                    <th><?php echo __('order id'); ?></th>
+                    <th><?php echo __('Total amount'); ?></th>
+                    <th><?php echo __('item count'); ?></th>
                     <th><?php echo __('date'); ?></th>
                     <th><?php echo __('actions'); ?></th>
                 </tr>
@@ -19,7 +19,7 @@
                         <td><?= htmlspecialchars($order['item_count']) ?></td>
                         <td><?= htmlspecialchars($order['created_at']) ?></td>
                         <td>
-                            <a href="/order-history/details/<?= htmlspecialchars($order['order_id']) ?>" class="btn btn-sm btn-primary"><?php echo __('view_details'); ?></a>
+                            <a href="/order-history/details/<?= htmlspecialchars($order['order_id']) ?>" class="btn btn-sm btn-primary"><?php echo __('View details'); ?></a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

@@ -248,7 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
             showError("Your cart is empty!");
             return;
         }
-    
+
         let totalPrice = 0;
         const now = new Date();
         const receiptItems = cart.map((item) => {
@@ -264,7 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </tr>
             `;
         }).join("");
-    
+
         const productSubtotals = {};
         cart.forEach((item) => {
             const itemTotal = item.quantity * item.price;
@@ -274,7 +274,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 productSubtotals[item.name] = itemTotal;
             }
         });
-    
+
         const subtotalRows = Object.keys(productSubtotals)
             .map((productName) => {
                 return `
@@ -285,7 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
             })
             .join("");
-    
+
         elements.receiptContent.innerHTML = `
             <p class="action-text"><strong>Action:</strong> Ordered</p>
             <div class="header-recept">
@@ -321,7 +321,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </table>
                 <div style="text-align: center; margin-top: 10px;">
                     <div style="display: inline-block; border: 1px solid #ccc; padding: 6px 8px; border-radius: 10px; margin-left: 66%">
-                        <strong style="font-size: 18px;">Total</strong>
+                        <strong style="font-size: 18px;">Total</strong> 
                         <strong style="font-size: 18px;">$${totalPrice.toFixed(2)}</strong>
                     </div>
                 </div>
@@ -329,73 +329,74 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
         elements.receiptModal.show();
     }
-    
     function saveAsPDF() {
-        if (cart.length === 0) {
-            showError("Your cart is empty!");
-            return;
-        }
-    
-        const isValidCart = cart.every(item =>
-            item.name &&
-            Number.isFinite(item.price) &&
-            Number.isFinite(item.quantity)
-        );
-        if (!isValidCart) {
-            showError("Invalid cart data!");
-            return;
-        }
-    
         try {
-            if (!window.jspdf || !window.jspdf.jsPDF || !jsPDF.prototype.autoTable) {
-                throw new Error("jsPDF or autoTable plugin is not loaded!");
-            }
-    
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             const now = new Date();
     
-            // Header
+            // === CONFIGURATION ===
+            const logo = {
+                url: "/views/assets/images/logo.png",
+                width: 30,
+                height: 30,
+                x: (doc.internal.pageSize.getWidth() - 30) / 2,
+                y: 10,
+            };
+    
+            const headerY = logo.y + logo.height + 10;
+    
+            // === ADD LOGO ===
+            doc.addImage(logo.url, "PNG", logo.x, logo.y, logo.width, logo.height);
+    
+            // === HEADER INFO ===
             doc.setFont("helvetica", "bold");
             doc.setFontSize(18);
             doc.setTextColor(40, 40, 40);
-            doc.text("Target Coffee", 105, 20, null, null, "center");
+            doc.text("Target Coffee", 105, headerY, null, null, "center");
     
-            doc.setFontSize(12);
             doc.setFont("helvetica", "normal");
+            doc.setFontSize(12);
             doc.setTextColor(60, 60, 60);
-            doc.text(`Date: ${now.toLocaleDateString()}`, 20, 30);
-            doc.text(`Time: ${now.toLocaleTimeString()}`, 20, 38);
+            doc.text(`Date: ${now.toLocaleDateString()}`, 20, headerY + 10);
+            doc.text(`Time: ${now.toLocaleTimeString()}`, 20, headerY + 18);
+            doc.text(`Phone: 081 369 639`, 130, headerY + 10);
+            doc.text(`Address: #1D, St. 371 (St. Sola)`, 130, headerY + 18);
     
-            // Main Table
+            // === BUILD TABLE DATA FROM CART ===
             let totalPrice = 0;
-            const tableData = cart.map((item) => {
+            const tableData = cart.map(item => {
                 const itemTotal = item.quantity * item.price;
                 totalPrice += itemTotal;
                 return [
-                    item.name || "Unknown Product",
-                    item.quantity || 1,
-                    `$${Number(item.price).toFixed(2)}`,
+                    item.name,
+                    item.quantity,
+                    `$${item.price.toFixed(2)}`,
                     `$${itemTotal.toFixed(2)}`,
-                    now.toISOString().slice(0, 10)
+                    now.toISOString().slice(0, 10),
                 ];
             });
     
-            doc.text("Invoice", 105, 45, null, null, "center");
+            // === MAIN TABLE ===
+            const tableStartY = headerY + 45;
             doc.autoTable({
-                startY: 50,
+                startY: tableStartY,
                 head: [["Name", "Quantity", "Price($)", "Total($)", "Timestamp"]],
                 body: tableData,
                 theme: "grid",
-                headStyles: { fillColor: [108, 75, 60], textColor: 255 },
+                headStyles: {
+                    fillColor: [108, 75, 60],
+                    textColor: 255,
+                    fontStyle: "bold"
+                },
                 alternateRowStyles: { fillColor: [240, 240, 240] },
                 margin: { left: 20, right: 20 },
                 styles: { fontSize: 10, cellPadding: 4 },
             });
     
-            // Subtotals
+            // === PRODUCT SUBTOTALS ===
             const productSubtotals = {};
-            cart.forEach((item) => {
+            cart.forEach(item => {
                 const itemTotal = item.quantity * item.price;
                 productSubtotals[item.name] = (productSubtotals[item.name] || 0) + itemTotal;
             });
@@ -404,30 +405,36 @@ document.addEventListener("DOMContentLoaded", () => {
                 return [name, `$${subtotal.toFixed(2)}`];
             });
     
-            let finalY = doc.lastAutoTable.finalY + 10;
+            // === SUBTOTAL TABLE ===
+            let nextY = doc.lastAutoTable.finalY + 10;
             doc.setFont("helvetica", "bold");
             doc.setFontSize(14);
-            doc.text("Subtotal", 105, finalY, null, null, "center");
+            doc.text("Subtotal", 125, nextY, null, null, "center");
     
             doc.autoTable({
-                startY: finalY + 5,
+                startY: nextY + 5,
                 head: [["Name", "Subtotal($)"]],
                 body: subtotalData,
                 theme: "grid",
-                headStyles: { fillColor: [245, 238, 229], textColor: [108, 75, 60] },
+                headStyles: {
+                    fillColor: [245, 238, 229],
+                    textColor: [108, 75, 60],
+                    fontStyle: "bold"
+                },
                 alternateRowStyles: { fillColor: [240, 240, 240] },
-                margin: { left: 90 },
+                margin: { left: 70 },
                 styles: { fontSize: 10, cellPadding: 4 },
             });
     
-            // Total
-            finalY = doc.lastAutoTable.finalY + 10;
+            // === TOTAL PRICE ===
+            nextY = doc.lastAutoTable.finalY + 10;
             doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
             doc.setTextColor(0, 0, 0);
-            doc.text("Total", 150, finalY);
-            doc.text(`$${totalPrice.toFixed(2)}`, 170, finalY);
+            doc.text("Total", 150, nextY);
+            doc.text(`$${totalPrice.toFixed(2)}`, 170, nextY);
     
-            // Save PDF directly
+            // === SAVE PDF ===
             doc.save(`receipt_${now.getTime()}.pdf`);
     
         } catch (error) {
@@ -436,8 +443,6 @@ document.addEventListener("DOMContentLoaded", () => {
         } finally {
             if (elements.receiptModal) {
                 elements.receiptModal.hide();
-                document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-                document.body.classList.remove('modal-open');
             }
         }
     }
@@ -483,6 +488,6 @@ document.addEventListener("DOMContentLoaded", () => {
             .finally(() => {
                 elements.okButton.disabled = false;
                 elements.okButton.innerHTML = "OK";
-                });
+            });
     }
 });
