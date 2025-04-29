@@ -37,7 +37,7 @@
                       required 
                     />
                     <!-- Eye icon for toggling password visibility -->
-                    <i class="fa fa-eye position-absolute toggle-password" id="togglePassword" style="cursor: pointer; right: 10px; top: 40px; z-index: 10;"></i>
+                    <i class="fa fa-eye position-absolute toggle-password" id="togglePassword" style="cursor: pointer; right: 10px;  z-index: 10;"></i>
                     <div class="invalid-feedback">
                       <?php echo isset($errors['password']) ? __($errors['password']) : __('password_required'); ?>
                     </div>
