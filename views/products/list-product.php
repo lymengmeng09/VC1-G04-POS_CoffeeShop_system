@@ -193,7 +193,7 @@
                             <?php echo __('are_you_sure_delete'); ?> <strong id="modalProductName"></strong>?
                         </div>
                         <div class="modal-footer">
-                            <form id="deleteForm" method="POST" action="/products/delete/<?= htmlspecialchars($product['product_id']) ?>">
+                            <form id="deleteForm" method="POST">
                                 <input type="hidden" name="_method" value="DELETE">
                                 <button type="submit" class="btn btn-danger"><?php echo __('delete'); ?></button>
                                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><?php echo __('cancel'); ?></button>
