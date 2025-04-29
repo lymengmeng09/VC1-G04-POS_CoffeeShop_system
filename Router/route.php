@@ -26,7 +26,6 @@ $route->get("/viewStock", [ViewStockController::class, 'index'])
 $route->post("/add-product", [ViewStockController::class, 'add']);
 $route->get("/edit_product", [ViewStockController::class, 'edit']);
 $route->put("/update_product", [ViewStockController::class, 'update']);
-$route->post('/scanner', [ScannerController::class, 'checkScanner']);
 $route->delete("/delete_product/{id}", [ViewStockController::class, 'destroy']);
 
 

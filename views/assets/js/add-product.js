@@ -1,5 +1,131 @@
 document.addEventListener("DOMContentLoaded", () => {
     // Element References
+    const productsPerPage = 8; // Number of products per page
+    const productItems = document.querySelectorAll('.product-item');
+    const totalProducts = productItems.length;
+    const totalPages = Math.ceil(totalProducts / productsPerPage);
+    let currentPage = 1;
+    
+    // DOM elements
+    const paginationContainer = document.getElementById('pagination-container');
+    const prevButton = document.getElementById('prev-page');
+    const nextButton = document.getElementById('next-page');
+    
+    // Function to show products for current page
+    function showPage(page) {
+        const startIndex = (page - 1) * productsPerPage;
+        const endIndex = Math.min(startIndex + productsPerPage, totalProducts);
+        
+        productItems.forEach((item, index) => {
+            item.style.display = (index >= startIndex && index < endIndex) ? 'block' : 'none';
+        });
+    }
+    
+    // Function to create pagination buttons
+    function setupPagination() {
+        // Clear existing page numbers (except prev/next)
+        const pageItems = document.querySelectorAll('.page-number');
+        pageItems.forEach(item => item.remove());
+        
+        // Always show first page button
+        if (totalPages > 0) {
+            createPageButton(1);
+        }
+        
+        // Show current page and nearby pages
+        let startPage = Math.max(2, currentPage - 1);
+        let endPage = Math.min(totalPages - 1, currentPage + 1);
+        
+        // Add ellipsis if needed before middle pages
+        if (startPage > 2) {
+            createEllipsis();
+        }
+        
+        // Add middle pages
+        for (let i = startPage; i <= endPage; i++) {
+            createPageButton(i);
+        }
+        
+        // Add ellipsis if needed after middle pages
+        if (endPage < totalPages - 1) {
+            createEllipsis();
+        }
+        
+        // Always show last page button if there are multiple pages
+        if (totalPages > 1) {
+            createPageButton(totalPages);
+        }
+        
+        // Update active state
+        document.querySelectorAll('.page-link').forEach(link => {
+            if (parseInt(link.textContent) === currentPage) {
+                link.parentElement.classList.add('active');
+            } else {
+                link.parentElement.classList.remove('active');
+            }
+        });
+        
+        // Update prev/next button states
+        prevButton.parentElement.classList.toggle('disabled', currentPage === 1);
+        nextButton.parentElement.classList.toggle('disabled', currentPage === totalPages);
+    }
+    
+    // Helper function to create a page button
+    function createPageButton(pageNumber) {
+        const pageItem = document.createElement('li');
+        pageItem.className = 'page-item page-number';
+        
+        const pageLink = document.createElement('a');
+        pageLink.className = 'page-link';
+        pageLink.href = '#';
+        pageLink.textContent = pageNumber;
+        
+        pageLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            currentPage = pageNumber;
+            showPage(currentPage);
+            setupPagination();
+        });
+        
+        pageItem.appendChild(pageLink);
+        nextButton.parentElement.before(pageItem);
+    }
+    
+    // Helper function to create ellipsis
+    function createEllipsis() {
+        const ellipsisItem = document.createElement('li');
+        ellipsisItem.className = 'page-item disabled page-number';
+        
+        const ellipsisSpan = document.createElement('span');
+        ellipsisSpan.className = 'page-link';
+        ellipsisSpan.textContent = '...';
+        
+        ellipsisItem.appendChild(ellipsisSpan);
+        nextButton.parentElement.before(ellipsisItem);
+    }
+    
+    // Event listeners for prev/next buttons
+    prevButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (currentPage > 1) {
+            currentPage--;
+            showPage(currentPage);
+            setupPagination();
+        }
+    });
+    
+    nextButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (currentPage < totalPages) {
+            currentPage++;
+            showPage(currentPage);
+            setupPagination();
+        }
+    });
+    
+    // Initialize pagination
+    showPage(currentPage);
+    setupPagination();
     const elements = {
         cartTable: document.getElementById("cart-table"),
         cartTableBody: document.getElementById("cart-table-body"),

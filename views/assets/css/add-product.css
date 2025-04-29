@@ -35,3 +35,37 @@ form{
 #cart-table-body tr td:nth-child(3) {
   color: #006222; /* Black text */
 }
+.pagination {
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.page-item {
+  margin: 2px;
+}
+
+.page-item.active .page-link {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+
+.page-link {
+  color: #007bff;
+  min-width: 40px;
+  text-align: center;
+  border-radius: 4px !important;
+}
+
+.page-item.disabled .page-link {
+  color: #6c757d;
+  background-color: transparent;
+  border-color: #dee2e6;
+}
+
+.page-link:hover {
+  z-index: 2;
+  color: #0056b3;
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+}

@@ -112,6 +112,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Inside your product grid div, after the product items -->
                             <?php endforeach; ?>
                         </div>
                     </div>
@@ -139,6 +140,21 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                        <div class="col-12">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center" id="pagination-container">
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" id="prev-page">&lt;</a>
+                                    </li>
+                                    <!-- Page numbers will be inserted here by JavaScript -->
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" id="next-page">&gt;</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
             </div>
 
             <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
@@ -177,7 +193,7 @@
                             <?php echo __('are_you_sure_delete'); ?> <strong id="modalProductName"></strong>?
                         </div>
                         <div class="modal-footer">
-                            <form id="deleteForm" method="POST">
+                            <form id="deleteForm" method="POST" action="/products/delete/<?= htmlspecialchars($product['product_id']) ?>">
                                 <input type="hidden" name="_method" value="DELETE">
                                 <button type="submit" class="btn btn-danger"><?php echo __('delete'); ?></button>
                                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><?php echo __('cancel'); ?></button>
