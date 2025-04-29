@@ -1,13 +1,17 @@
 .toggle-password {
     color: rgba(0, 0, 0, 0.647);
-    top: 80%;
+    top: 75%;
     transform: translateY(-50%);
     z-index: 1;
     /* Ensure it's above the input */
 }
-.is-invalid ~ .toggle-password {
+/* .is-invalid ~ .toggle-password {
     top: 58% !important;
-}
+} */
+ /* In your stylesheet */
+.form-control.is-invalid ~ .toggle-password {
+    top: 54% !important;
+  }
 .btn-delete{
     border: none; background:none; color: #f03e50;
 }
