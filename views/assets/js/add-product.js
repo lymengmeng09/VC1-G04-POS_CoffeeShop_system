@@ -338,8 +338,8 @@ document.addEventListener("DOMContentLoaded", () => {
             // === CONFIGURATION ===
             const logo = {
                 url: "/views/assets/images/logo.png",
-                width: 30,
-                height: 30,
+                width: 40,
+                height: 23,
                 x: (doc.internal.pageSize.getWidth() - 30) / 2,
                 y: 10,
             };
