@@ -22,6 +22,17 @@ document.addEventListener("DOMContentLoaded", () => {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     let cartVisible = JSON.parse(localStorage.getItem("cartVisible")) || false;
 
+    // Placeholder for showError and showSuccess (replace with your actual implementation)
+    function showError(message) {
+        console.error(message);
+        alert(`Error: ${message}`); // Replace with your UI notification system (e.g., Bootstrap toast)
+    }
+
+    function showSuccess(message) {
+        console.log(message);
+        alert(`Success: ${message}`); // Replace with your UI notification system
+    }
+
     // Initialization
     updateCartCount(); // Update cart count on all pages
     updateCartDisplay(); // Update cart table on order page
@@ -82,6 +93,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (elements.confirmReceiptBtn) {
         elements.confirmReceiptBtn.addEventListener("click", saveAsPDF);
+    } else {
+        console.warn("Confirm Receipt button not found in DOM!");
     }
 
     if (elements.cartIcon) {
@@ -119,8 +132,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function saveCart() {
         localStorage.setItem("cart", JSON.stringify(cart));
         localStorage.setItem("cartVisible", JSON.stringify(cartVisible));
-        updateCartCount(); // Update cart count on all pages
-        updateCartDisplay(); // Update cart table on order page
+        updateCartCount();
+        updateCartDisplay();
     }
 
     function clearCart() {
@@ -128,8 +141,8 @@ document.addEventListener("DOMContentLoaded", () => {
         cartVisible = false;
         localStorage.setItem("cart", JSON.stringify(cart));
         localStorage.setItem("cartVisible", JSON.stringify(cartVisible));
-        updateCartCount(); // Update cart count on all pages
-        updateCartDisplay(); // Update cart table on order page
+        updateCartCount();
+        updateCartDisplay();
         toggleCart(false);
     }
 
@@ -143,7 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updateCartDisplay() {
-        if (!elements.cartTableBody) return; // Skip if not on order page
+        if (!elements.cartTableBody) return;
         const totalItems = cart.reduce((total, item) => total + (item.quantity || 0), 0);
         elements.cartTableBody.innerHTML = "";
         let total = 0;
@@ -177,7 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function toggleCart(show) {
-        if (!elements.cartSection || !elements.productGrid) return; // Skip if not on order page
+        if (!elements.cartSection || !elements.productGrid) return;
         cartVisible = show;
         localStorage.setItem("cartVisible", JSON.stringify(cartVisible));
 
@@ -208,16 +221,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const paymentMethod = this.dataset.payment;
 
             if (paymentMethod === 'aba') {
-                // Show QR code modal for ABA payment
                 const qrCodeModal = new bootstrap.Modal(document.getElementById('qrCodeModal'));
                 qrCodeModal.show();
-
-                // Hide payment options modal
                 bootstrap.Modal.getInstance(document.getElementById('paymentModal')).hide();
             } else {
-                // For cash payment, generate receipt directly
                 generateReceipt();
-                // Hide payment options modal
                 bootstrap.Modal.getInstance(document.getElementById('paymentModal')).hide();
             }
         });
@@ -227,20 +235,20 @@ document.addEventListener("DOMContentLoaded", () => {
         const qrModal = bootstrap.Modal.getInstance(document.getElementById('qrCodeModal'));
         qrModal.hide();
 
-        // Small delay to allow Bootstrap to clean up
         setTimeout(() => {
             document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
             document.body.classList.remove('modal-open');
             generateReceipt();
         }, 150);
     });
-///handle receipt generation and PDF download
+
+    // Receipt Generation
     function generateReceipt() {
         if (cart.length === 0) {
             showError("Your cart is empty!");
             return;
         }
-    
+
         let totalPrice = 0;
         const now = new Date();
         const receiptItems = cart.map((item) => {
@@ -256,8 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </tr>
             `;
         }).join("");
-    
-        // Calculate subtotals for each product
+
         const productSubtotals = {};
         cart.forEach((item) => {
             const itemTotal = item.quantity * item.price;
@@ -267,8 +274,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 productSubtotals[item.name] = itemTotal;
             }
         });
-    
-        // Generate subtotal table rows
+
         const subtotalRows = Object.keys(productSubtotals)
             .map((productName) => {
                 return `
@@ -279,8 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
             })
             .join("");
-    
-        // Update the receipt content with the new subtotal table
+
         elements.receiptContent.innerHTML = `
             <p class="action-text"><strong>Action:</strong> Ordered</p>
             <div class="header-recept">
@@ -302,7 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </tbody>
             </table>
             <div style="margin-top: 20px;">
-                <h3 style=" margin-left: 40%">Subtotal</h3>
+                <h3 style="margin-left: 40%">Subtotal</h3>
                 <table class="table" style="text-align: center; width: 60%; margin-left: 36%">
                     <thead style="background-color: #f5eee5;">
                         <tr>
@@ -315,7 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     </tbody>
                 </table>
                 <div style="text-align: center; margin-top: 10px;">
-                    <div style="display: inline-block; border: 1px solid #ccc; padding: 6px 8px; border-radius: 10px;  margin-left: 66%">
+                    <div style="display: inline-block; border: 1px solid #ccc; padding: 6px 8px; border-radius: 10px; margin-left: 66%">
                         <strong style="font-size: 18px;">Total</strong> 
                         <strong style="font-size: 18px;">$${totalPrice.toFixed(2)}</strong>
                     </div>
@@ -324,102 +329,136 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
         elements.receiptModal.show();
     }
-    
-    function saveAsPDF() {
-        try {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            const now = new Date();
-    
-            // Header
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(18);
-            doc.setTextColor(40, 40, 40);
-            doc.text("Target Coffee", 105, 20, null, null, "center");
-    
-            doc.setFontSize(12);
-            doc.setFont("helvetica", "normal");
-            doc.setTextColor(60, 60, 60);
-            doc.text(`Date: ${now.toLocaleDateString()}`, 20, 30);
-            doc.text(`Time: ${now.toLocaleTimeString()}`, 20, 38);
-    
-            // Calculate total price and prepare main table data
-            let totalPrice = 0;
-            const tableData = cart.map((item) => {
-                const itemTotal = item.quantity * item.price;
-                totalPrice += itemTotal;
-                return [
-                    item.name,
-                    item.quantity,
-                    `$${item.price.toFixed(2)}`,
-                    `$${itemTotal.toFixed(2)}`,
-                    now.toISOString().slice(0, 10)
-                ];
-            });
-            doc.text("Invoice ", 105, finalY, null, null, "center");
-            // Main receipt table
-            doc.autoTable({
-                startY: 45,
-                head: [["Name", "Quantity", "Price($)", "Total($)", "Timestamp"]],
-                body: tableData,
-                theme: "grid",
-                headStyles: { fillColor: [108, 75, 60], textColor: 255, fontStyle: "bold" },
-                alternateRowStyles: { fillColor: [240, 240, 240] },
-                margin: { left: 20, right: 20 },
-                styles: { fontSize: 10, cellPadding: 4 },
-            });
-    
-            // Calculate subtotals for each product
-            const productSubtotals = {};
-            cart.forEach((item) => {
-                const itemTotal = item.quantity * item.price;
-                if (productSubtotals[item.name]) {
-                    productSubtotals[item.name] += itemTotal;
-                } else {
-                    productSubtotals[item.name] = itemTotal;
+
+    // PDF Generation
+        function saveAsPDF() {
+            if (cart.length === 0) {
+                showError("Your cart is empty!");
+                return;
+            }
+
+            // Validate cart data
+            const isValidCart = cart.every(item => 
+                item.name && 
+                Number.isFinite(item.price) && 
+                Number.isFinite(item.quantity)
+            );
+            if (!isValidCart) {
+                showError("Invalid cart data!");
+                return;
+            }
+
+            try {
+                // Check if jsPDF and autoTable are available
+                if (!window.jspdf || !window.jspdf.jsPDF || !jsPDF.prototype.autoTable) {
+                    throw new Error("jsPDF or autoTable plugin is not loaded!");
                 }
-            });
-    
-            // Prepare subtotal table data
-            const subtotalData = Object.keys(productSubtotals).map((productName) => {
-                return [productName, `$${productSubtotals[productName].toFixed(2)}`];
-            });
-    
-            // Subtotal table
-            let finalY = doc.lastAutoTable.finalY + 10;
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(14);
-            doc.text("Subtotal", 105, finalY, null, null, "center");
-    
-            doc.autoTable({
-                startY: finalY + 5,
-                head: [["Name", "Subtotal($)"]],
-                body: subtotalData,
-                theme: "grid",
-                headStyles: { fillColor: [245, 238, 229], textColor: [108, 75, 60], fontStyle: "bold" },
-                alternateRowStyles: { fillColor: [240, 240, 240] },
-                margin: { left: 90}, // Mimics the 60% width and centered alignment
-                styles: { fontSize: 10, cellPadding: 4 },
-            });
-    
-            // Total price
-            finalY = doc.lastAutoTable.finalY + 10;
-            doc.setFontSize(14);
-            doc.setFont("helvetica", "bold");
-            doc.setTextColor(0, 0, 0);
-            doc.text("Total", 150, finalY);
-            doc.text(`$${totalPrice.toFixed(2)}`, 170, finalY);
-    
-            doc.save(`receipt_${now.getTime()}.pdf`);
-        } catch (error) {
-            console.error("Error generating PDF:", error);
-            showError("Failed to generate PDF: " + error.message);
-        } finally {
-            if (elements.receiptModal) {
-                elements.receiptModal.hide();
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                const now = new Date();
+
+                // Header
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(18);
+                doc.setTextColor(40, 40, 40);
+                doc.text("Target Coffee", 105, 20, null, null, "center");
+
+                doc.setFontSize(12);
+                doc.setFont("helvetica", "normal");
+                doc.setTextColor(60, 60, 60);
+                doc.text(`Date: ${now.toLocaleDateString()}`, 20, 30);
+                doc.text(`Time: ${now.toLocaleTimeString()}`, 20, 38);
+
+                // Main table data
+                let totalPrice = 0;
+                const tableData = cart.map((item) => {
+                    const itemTotal = item.quantity * item.price;
+                    totalPrice += itemTotal;
+                    return [
+                        item.name || "Unknown Product",
+                        item.quantity || 1,
+                        `$${Number(item.price).toFixed(2)}`,
+                        `$${itemTotal.toFixed(2)}`,
+                        now.toISOString().slice(0, 10)
+                    ];
+                });
+
+                doc.text("Invoice", 105, 45, null, null, "center");
+                doc.autoTable({
+                    startY: 50,
+                    head: [["Name", "Quantity", "Price($)", "Total($)", "Timestamp"]],
+                    body: tableData,
+                    theme: "grid",
+                    headStyles: { fillColor: [108, 75, 60], textColor: 255, fontStyle: "bold" },
+                    alternateRowStyles: { fillColor: [240, 240, 240] },
+                    margin: { left: 20, right: 20 },
+                    styles: { fontSize: 10, cellPadding: 4 },
+                });
+
+                // Subtotal table
+                const productSubtotals = {};
+                cart.forEach((item) => {
+                    const itemTotal = item.quantity * item.price;
+                    if (productSubtotals[item.name]) {
+                        productSubtotals[item.name] += itemTotal;
+                    } else {
+                        productSubtotals[item.name] = itemTotal;
+                    }
+                });
+
+                const subtotalData = Object.keys(productSubtotals).map((productName) => {
+                    return [productName, `$${productSubtotals[productName].toFixed(2)}`];
+                });
+
+                let finalY = doc.lastAutoTable.finalY + 10;
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(14);
+                doc.text("Subtotal", 105, finalY, null, null, "center");
+
+                doc.autoTable({
+                    startY: finalY + 5,
+                    head: [["Name", "Subtotal($)"]],
+                    body: subtotalData,
+                    theme: "grid",
+                    headStyles: { fillColor: [245, 238, 229], textColor: [108, 75, 60], fontStyle: "bold" },
+                    alternateRowStyles: { fillColor: [240, 240, 240] },
+                    margin: { left: 90 },
+                    styles: { fontSize: 10, cellPadding: 4 },
+                });
+
+                // Total price
+                finalY = doc.lastAutoTable.finalY + 10;
+                doc.setFontSize(14);
+                doc.setFont("helvetica", "bold");
+                doc.setTextColor(0, 0, 0);
+                doc.text("Total", 150, finalY);
+                doc.text(`$${totalPrice.toFixed(2)}`, 170, finalY);
+
+                // Download PDF using Blob for better compatibility
+                const pdfOutput = doc.output('blob');
+                const url = URL.createObjectURL(pdfOutput);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `receipt_${now.getTime()}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error("Error generating PDF:", error);
+                showError("Failed to generate PDF: " + error.message);
+            } finally {
+                if (elements.receiptModal) {
+                    elements.receiptModal.hide();
+                    // Clean up modal backdrop
+                    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+                    document.body.classList.remove('modal-open');
+                }
             }
         }
-    }
+
+    // Save Order to Server
     function saveOrderToServer() {
         const orderData = {
             items: cart.map((item) => ({
@@ -462,6 +501,4 @@ document.addEventListener("DOMContentLoaded", () => {
                 elements.okButton.innerHTML = "OK";
             });
     }
-
-
 });
