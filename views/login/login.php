@@ -44,7 +44,6 @@
                   </div>
                   <div class="text-center pt-1 mb-4 pb-1"> 
                     <button class="btn text-light fa-lg gradient-custom-2 mb-2" type="submit"><?php echo __('login_button'); ?></button><br> 
-                    <a class="text-muted" href="#!"><?php echo __('forgot_password'); ?></a> 
                   </div>
                   <!-- <p class="text-center"><a href="/login/register"><?php echo __('register_prompt'); ?></a></p> -->
                 </form>

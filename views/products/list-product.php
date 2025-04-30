@@ -228,6 +228,7 @@
                     </div>
                 </div>
             </div>
+            
             <!-- Receipt Modal -->
             <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -245,7 +246,9 @@
                         </div>
                     </div>
                 </div>
+                
             </div>
+            
 
 
             <script>

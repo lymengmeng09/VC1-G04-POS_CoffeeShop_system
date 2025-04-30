@@ -148,6 +148,17 @@ document.addEventListener("DOMContentLoaded", () => {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     let cartVisible = JSON.parse(localStorage.getItem("cartVisible")) || false;
 
+    // Placeholder for showError and showSuccess (replace with your actual implementation)
+    function showError(message) {
+        console.error(message);
+        alert(`Error: ${message}`); // Replace with your UI notification system (e.g., Bootstrap toast)
+    }
+
+    function showSuccess(message) {
+        console.log(message);
+        alert(`Success: ${message}`); // Replace with your UI notification system
+    }
+
     // Initialization
     updateCartCount(); // Update cart count on all pages
     updateCartDisplay(); // Update cart table on order page
@@ -208,6 +219,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (elements.confirmReceiptBtn) {
         elements.confirmReceiptBtn.addEventListener("click", saveAsPDF);
+    } else {
+        console.warn("Confirm Receipt button not found in DOM!");
     }
 
     if (elements.cartIcon) {
@@ -245,8 +258,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function saveCart() {
         localStorage.setItem("cart", JSON.stringify(cart));
         localStorage.setItem("cartVisible", JSON.stringify(cartVisible));
-        updateCartCount(); // Update cart count on all pages
-        updateCartDisplay(); // Update cart table on order page
+        updateCartCount();
+        updateCartDisplay();
     }
 
     function clearCart() {
@@ -254,8 +267,8 @@ document.addEventListener("DOMContentLoaded", () => {
         cartVisible = false;
         localStorage.setItem("cart", JSON.stringify(cart));
         localStorage.setItem("cartVisible", JSON.stringify(cartVisible));
-        updateCartCount(); // Update cart count on all pages
-        updateCartDisplay(); // Update cart table on order page
+        updateCartCount();
+        updateCartDisplay();
         toggleCart(false);
     }
 
@@ -269,7 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updateCartDisplay() {
-        if (!elements.cartTableBody) return; // Skip if not on order page
+        if (!elements.cartTableBody) return;
         const totalItems = cart.reduce((total, item) => total + (item.quantity || 0), 0);
         elements.cartTableBody.innerHTML = "";
         let total = 0;
@@ -303,7 +316,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function toggleCart(show) {
-        if (!elements.cartSection || !elements.productGrid) return; // Skip if not on order page
+        if (!elements.cartSection || !elements.productGrid) return;
         cartVisible = show;
         localStorage.setItem("cartVisible", JSON.stringify(cartVisible));
 
@@ -334,16 +347,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const paymentMethod = this.dataset.payment;
 
             if (paymentMethod === 'aba') {
-                // Show QR code modal for ABA payment
                 const qrCodeModal = new bootstrap.Modal(document.getElementById('qrCodeModal'));
                 qrCodeModal.show();
-
-                // Hide payment options modal
                 bootstrap.Modal.getInstance(document.getElementById('paymentModal')).hide();
             } else {
-                // For cash payment, generate receipt directly
                 generateReceipt();
-                // Hide payment options modal
                 bootstrap.Modal.getInstance(document.getElementById('paymentModal')).hide();
             }
         });
@@ -353,7 +361,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const qrModal = bootstrap.Modal.getInstance(document.getElementById('qrCodeModal'));
         qrModal.hide();
 
-        // Small delay to allow Bootstrap to clean up
         setTimeout(() => {
             document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
             document.body.classList.remove('modal-open');
@@ -361,7 +368,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 150);
     });
 
-    // Remove the old PayMent button event listener and replace it with:
+    // Receipt Generation
     function generateReceipt() {
         if (cart.length === 0) {
             showError("Your cart is empty!");
@@ -374,41 +381,78 @@ document.addEventListener("DOMContentLoaded", () => {
             const itemTotal = item.quantity * item.price;
             totalPrice += itemTotal;
             return `
-            <tr>
-                <td>${item.name}</td>
-                <td>${item.quantity}</td>
-                <td>$${item.price.toFixed(2)}</td>
-                <td>$${itemTotal.toFixed(2)}</td>
-                <td>${now.toISOString().slice(0, 10)}</td>
-            </tr>
-        `;
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.quantity}</td>
+                    <td>$${item.price.toFixed(2)}</td>
+                    <td>$${itemTotal.toFixed(2)}</td>
+                    <td>${now.toISOString().slice(0, 10)}</td>
+                </tr>
+            `;
         }).join("");
 
+        const productSubtotals = {};
+        cart.forEach((item) => {
+            const itemTotal = item.quantity * item.price;
+            if (productSubtotals[item.name]) {
+                productSubtotals[item.name] += itemTotal;
+            } else {
+                productSubtotals[item.name] = itemTotal;
+            }
+        });
+
+        const subtotalRows = Object.keys(productSubtotals)
+            .map((productName) => {
+                return `
+                    <tr>
+                        <td>${productName}</td>
+                        <td>$${productSubtotals[productName].toFixed(2)}</td>
+                    </tr>
+                `;
+            })
+            .join("");
+
         elements.receiptContent.innerHTML = `
-        <p class="action-text"><strong>Action:</strong> Ordered</p>
-        <div class="header-recept">
-            <img src="/views/assets/images/logo.png" alt="Logo">
-            <h2>Order Receipt</h2>
-        </div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                    <th>Price($)</th>
-                    <th>Total($)</th>
-                    <th>Timestamp</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${receiptItems || '<tr><td colspan="5">No items in cart</td></tr>'}
-                <tr class="total-row">
-                    <td colspan="3"><strong>TOTAL PRICE</strong></td>
-                    <td colspan="2"><strong>$${totalPrice.toFixed(2)}</strong></td>
-                </tr>
-            </tbody>
-        </table>
-    `;
+            <p class="action-text"><strong>Action:</strong> Ordered</p>
+            <div class="header-recept">
+                <img src="/views/assets/images/logo.png" alt="Logo">
+                <h2>Invoice</h2>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Price($)</th>
+                        <th>Total($)</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${receiptItems || '<tr><td colspan="5">No items in cart</td></tr>'}
+                </tbody>
+            </table>
+            <div style="margin-top: 20px;">
+                <h3 style="margin-left: 40%">Subtotal</h3>
+                <table class="table" style="text-align: center; width: 60%; margin-left: 36%">
+                    <thead style="background-color: #f5eee5;">
+                        <tr>
+                            <th style="color: #6c4b3c;">NAME</th>
+                            <th style="color: #6c4b3c;">SUBTOTAL($)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${subtotalRows}
+                    </tbody>
+                </table>
+                <div style="text-align: center; margin-top: 10px;">
+                    <div style="display: inline-block; border: 1px solid #ccc; padding: 6px 8px; border-radius: 10px; margin-left: 66%">
+                        <strong style="font-size: 18px;">Total</strong> 
+                        <strong style="font-size: 18px;">$${totalPrice.toFixed(2)}</strong>
+                    </div>
+                </div>
+            </div>
+        `;
         elements.receiptModal.show();
     }
     function saveAsPDF() {
@@ -416,54 +460,120 @@ document.addEventListener("DOMContentLoaded", () => {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             const now = new Date();
-
+    
+            // === CONFIGURATION ===
+            const logo = {
+                url: "/views/assets/images/logo.png",
+                width: 40,
+                height: 23,
+                x: (doc.internal.pageSize.getWidth() - 30) / 2,
+                y: 10,
+            };
+    
+            const headerY = logo.y + logo.height + 10;
+    
+            // === ADD LOGO ===
+            doc.addImage(logo.url, "PNG", logo.x, logo.y, logo.width, logo.height);
+    
+            // === HEADER INFO ===
             doc.setFont("helvetica", "bold");
             doc.setFontSize(18);
             doc.setTextColor(40, 40, 40);
-            doc.text("Target Coffee", 105, 20, null, null, "center");
-
-            doc.setFontSize(12);
+            doc.text("Target Coffee", 105, headerY, null, null, "center");
+    
             doc.setFont("helvetica", "normal");
+            doc.setFontSize(12);
             doc.setTextColor(60, 60, 60);
-            doc.text(`Date: ${now.toLocaleDateString()}`, 20, 30);
-            doc.text(`Time: ${now.toLocaleTimeString()}`, 20, 38);
-
+            doc.text(`Date: ${now.toLocaleDateString()}`, 20, headerY + 10);
+            doc.text(`Time: ${now.toLocaleTimeString()}`, 20, headerY + 18);
+            doc.text(`Phone: 081 369 639`, 130, headerY + 10);
+            doc.text(`Address: #1D, St. 371 (St. Sola)`, 130, headerY + 18);
+    
+            // === BUILD TABLE DATA FROM CART ===
             let totalPrice = 0;
-            const tableData = cart.map((item) => {
+            const tableData = cart.map(item => {
                 const itemTotal = item.quantity * item.price;
                 totalPrice += itemTotal;
-                return [item.name, item.quantity, `$${item.price.toFixed(2)}`, `$${itemTotal.toFixed(2)}`];
+                return [
+                    item.name,
+                    item.quantity,
+                    `$${item.price.toFixed(2)}`,
+                    `$${itemTotal.toFixed(2)}`,
+                    now.toISOString().slice(0, 10),
+                ];
             });
-
+    
+            // === MAIN TABLE ===
+            const tableStartY = headerY + 45;
             doc.autoTable({
-                startY: 45,
-                head: [["Item", "Quantity", "Price", "Total"]],
+                startY: tableStartY,
+                head: [["Name", "Quantity", "Price($)", "Total($)", "Timestamp"]],
                 body: tableData,
                 theme: "grid",
-                headStyles: { fillColor: [100, 100, 255], textColor: 255, fontStyle: "bold" },
+                headStyles: {
+                    fillColor: [108, 75, 60],
+                    textColor: 255,
+                    fontStyle: "bold"
+                },
                 alternateRowStyles: { fillColor: [240, 240, 240] },
                 margin: { left: 20, right: 20 },
-                styles: { fontSize: 12, cellPadding: 5 },
+                styles: { fontSize: 10, cellPadding: 4 },
             });
-
-            let finalY = doc.lastAutoTable.finalY + 10;
+    
+            // === PRODUCT SUBTOTALS ===
+            const productSubtotals = {};
+            cart.forEach(item => {
+                const itemTotal = item.quantity * item.price;
+                productSubtotals[item.name] = (productSubtotals[item.name] || 0) + itemTotal;
+            });
+    
+            const subtotalData = Object.entries(productSubtotals).map(([name, subtotal]) => {
+                return [name, `$${subtotal.toFixed(2)}`];
+            });
+    
+            // === SUBTOTAL TABLE ===
+            let nextY = doc.lastAutoTable.finalY + 10;
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(14);
+            doc.text("Subtotal", 125, nextY, null, null, "center");
+    
+            doc.autoTable({
+                startY: nextY + 5,
+                head: [["Name", "Subtotal($)"]],
+                body: subtotalData,
+                theme: "grid",
+                headStyles: {
+                    fillColor: [245, 238, 229],
+                    textColor: [108, 75, 60],
+                    fontStyle: "bold"
+                },
+                alternateRowStyles: { fillColor: [240, 240, 240] },
+                margin: { left: 70 },
+                styles: { fontSize: 10, cellPadding: 4 },
+            });
+    
+            // === TOTAL PRICE ===
+            nextY = doc.lastAutoTable.finalY + 10;
             doc.setFontSize(14);
             doc.setFont("helvetica", "bold");
             doc.setTextColor(0, 0, 0);
-            doc.text("TOTAL:", 130, finalY);
-            doc.text(`$${totalPrice.toFixed(2)}`, 170, finalY);
-
+            doc.text("Total", 150, nextY);
+            doc.text(`$${totalPrice.toFixed(2)}`, 170, nextY);
+    
+            // === SAVE PDF ===
             doc.save(`receipt_${now.getTime()}.pdf`);
+    
         } catch (error) {
             console.error("Error generating PDF:", error);
             showError("Failed to generate PDF: " + error.message);
         } finally {
             if (elements.receiptModal) {
-                elements.receiptModal.hide(); // Ensure modal hides even if PDF generation fails
+                elements.receiptModal.hide();
             }
         }
     }
-
+    
+    // Save Order to Server
     function saveOrderToServer() {
         const orderData = {
             items: cart.map((item) => ({
@@ -506,6 +616,4 @@ document.addEventListener("DOMContentLoaded", () => {
                 elements.okButton.innerHTML = "OK";
             });
     }
-
-
 });

@@ -1049,7 +1049,7 @@ Recept style
 /* stye recept  */
 .contact-info {
   font-family: Arial, sans-serif;
-  background-color: #fdf6e3;
+  
   padding: 10px;
   width: 260px;
   position: relative;
@@ -1062,7 +1062,8 @@ Recept style
   align-items: center;
  
 }
-
+ 
+ 
 .icon-circle {
   width: 30px;
   height: 30px;

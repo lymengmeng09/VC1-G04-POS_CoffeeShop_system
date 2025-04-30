@@ -51,7 +51,7 @@ return [
     'Select a category' => 'ជ្រើសរើសប្រភេទផលិតផល',
     'Enter product name' => 'បញ្ចូលឈ្មោះផលិតផល',
     'Enter price' => 'បញ្ចូលតម្លៃ',
-
+    'Invoice' => 'វិក្កយបត្រ',
 
     // Users
     'username' => 'ឈ្មោះអ្នកប្រើប្រាស់',

@@ -473,30 +473,34 @@ class ViewStockController extends BaseController {
                 error_log("notifyStockChange: Product not found for ID: $productId");
                 return;
             }
-            
-            $timestamp = date('m/d/Y h:i A', time());
+    
+            // Set timezone to Cambodia
+            $timezone = new DateTimeZone('Asia/Phnom_Penh');
+            $datetime = new DateTime('now', $timezone);
+            $timestamp = $datetime->format('m/d/Y h:i A');
+    
             $message = "📦 <b>Stock $action!</b> " . ($action === "Deleted" ? "🗑️" : "✨") . "\n" .
             "➖➖➖➖➖➖➖➖➖\n" .
             "🕒 <b>Time:</b> <i>{$timestamp}</i>\n";
- 
- if ($action !== "Deleted") {
-     $message .= "📛 <b>Name:</b> " . htmlspecialchars($product['name']) . "\n" .
-                 "💰 <b>Price:</b> $" . number_format($product['price'], 2) . "\n" .
-                 "📦 <b>Quantity:</b> " . $product['quantity'] . "\n" .
-                 ($action === "Updated" ? "🔄 <b>Change:</b> " . ($product['quantity'] > 0 ? "Stock updated" : "Out of stock!") . "\n" : "");
- } else {
-     $message .= "🆔 <b>Product ID:</b> $productId\n" .
-                 "❌ <b>Status:</b> Removed from stock\n";
- }
- 
- $message .= "➖➖➖➖➖➖➖➖➖";
- $this->sendToTelegram($message);
-            
+    
+            if ($action !== "Deleted") {
+                $message .= "📛 <b>Name:</b> " . htmlspecialchars($product['name']) . "\n" .
+                            "💰 <b>Price:</b> $" . number_format($product['price'], 2) . "\n" .
+                            "📦 <b>Quantity:</b> " . $product['quantity'] . "\n" .
+                            ($action === "Updated" ? "🔄 <b>Change:</b> " . ($product['quantity'] > 0 ? "Stock updated" : "Out of stock!") . "\n" : "");
+            } else {
+                $message .= "🆔 <b>Product ID:</b> $productId\n" .
+                            "❌ <b>Status:</b> Removed from stock\n";
+            }
+    
+            $message .= "➖➖➖➖➖➖➖➖➖";
+            $this->sendToTelegram($message);
+    
         } catch (Exception $e) {
             error_log("Error in notifyStockChange: " . $e->getMessage());
         }
-
     }
+    
     // In ViewStockController.php
 public function storeReceipt() {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
